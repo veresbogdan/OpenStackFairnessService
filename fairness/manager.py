@@ -21,6 +21,8 @@ def main():
     # nri._get_values()
     print "Number of CPUs: ", nri.cpu
     print "Memory size: ", nri.memory
+    print "Disk read speed: ", nri.disk_io
+    print "Network throughput: ", nri.network_io
 
 
 if __name__ == '__main__':
