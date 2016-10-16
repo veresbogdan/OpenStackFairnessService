@@ -10,7 +10,7 @@ def _get_disk_speeds():
     speeds = 0
     try:
         disks = list()
-        output = execute('lsblk', '-io', 'KNAME,TYPE', run_as_root=True)
+        output = subprocess.check_output(['lsblk', '-io', 'KNAME,TYPE'])
         # print output
         if output is not None:
             for line in output.splitlines():
@@ -29,13 +29,6 @@ def _get_disk_speeds():
     except subprocess.CalledProcessError:
         print "An error in _get_disk_speeds() has ocured: Command 'exit 1' returned non-zero exit status 1"
     print "speeds: ", speeds
-
-
-def execute(*cmd, **kwargs):
-    """Convenience wrapper around oslo's execute() method."""
-    if 'run_as_root' in kwargs and 'root_helper' not in kwargs:
-        kwargs['root_helper'] = _get_root_helper()
-    return processutils.execute(*cmd, **kwargs)
 
 if __name__ == '__main__':
     _get_disk_speeds()
