@@ -49,4 +49,5 @@ def _get_installed_memory():
     return None
 
 if __name__ == '__main__':
+    _get_disk_speeds()
     _get_installed_memory()

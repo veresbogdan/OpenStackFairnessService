@@ -1,5 +1,6 @@
 from fairness.libvirt_driver import Connection
 import subprocess
+import multiprocessing
 
 
 class NRI:
@@ -12,13 +13,17 @@ class NRI:
         NRI._get_values(self)
 
     def _get_values(self):
-        conn = Connection()
-        conn.connect()
-        node_info = conn.get_info()
+        # conn = Connection()
+        # conn.connect()
+        # node_info = conn.get_info()
         # print node_info
-        self.cpu = node_info[2]
+        # self.cpu = node_info[2]
+        self.cpu = NRI._get_cpu_count(self)
         self.memory = NRI._get_installed_memory(self)
         self.disk_io = NRI._get_disk_speeds(self)
+
+    def _get_cpu_count(self):
+        return multiprocessing.cpu_count()
 
     def _get_disk_speeds(self):
         """ Returns the sum of all disk speeds in bytes/s

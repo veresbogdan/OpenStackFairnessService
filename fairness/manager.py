@@ -12,17 +12,17 @@
 #         set priorities of v on according to hv(v) and hu(o(v))
 from fairness.nri import NRI
 from fairness.libvirt_driver import Connection
+import sys
 
 
 def main():
     nri = NRI()
-    # print nri.cpu
-    # print nri.memory
-    # nri._get_values()
     print "Number of CPUs: ", nri.cpu
     print "Memory size: ", nri.memory
     print "Disk read speed: ", nri.disk_io
     print "Network throughput: ", nri.network_io
+
+    print sys.platform
 
 
 if __name__ == '__main__':
