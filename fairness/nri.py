@@ -2,7 +2,7 @@ from fairness.libvirt_driver import Connection
 
 
 class NRI:
-    """ This class represents the NRI data model """
+    """ This class represents the NRI data model (node resource information) """
     def __init__(self):
         self.cpu = None         # amount of CPU cores on the compute node, normalized by the node's BogoMIPS
         self.memory = None      # total amount of installed memory in kilobytes
