@@ -47,7 +47,6 @@ class NRI:
                     speeds += int(speed_in_bytes)
         except subprocess.CalledProcessError:
             print "An error in _get_disk_speeds() has ocured: Command 'exit 1' returned non-zero exit status 1"
-        print "speeds: ", speeds
         return speeds
 
     def _get_installed_memory(self):
@@ -60,7 +59,6 @@ class NRI:
             output = subprocess.check_output(['free', '-k'])
             if output is not None:
                 memory = int(output.splitlines()[1].strip().split()[1])
-                print memory
                 return memory
             return None
         except subprocess.CalledProcessError:
