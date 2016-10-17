@@ -30,5 +30,23 @@ def _get_disk_speeds():
         print "An error in _get_disk_speeds() has ocured: Command 'exit 1' returned non-zero exit status 1"
     print "speeds: ", speeds
 
+
+def _get_installed_memory():
+    """ Get the amount of installed memory in kilobytes
+
+    :return: Installed memory in kilobytes
+    :rtype: int
+    """
+    try:
+        output = subprocess.check_output(['free', '-k'])
+        if output is not None:
+            memory = int(output.splitlines()[1].strip().split()[1])
+            print memory
+            return memory
+        return None
+    except subprocess.CalledProcessError:
+        pass
+    return None
+
 if __name__ == '__main__':
-    _get_disk_speeds()
+    _get_installed_memory()
