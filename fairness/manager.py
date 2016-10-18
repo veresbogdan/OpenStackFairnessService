@@ -17,12 +17,12 @@ import sys
 
 def main():
     nri = NRI()
-    print "Number of CPUs: ", nri.cpu
-    print "Memory size: ", nri.memory
-    print "Disk read speed: ", nri.disk_io
-    print "Network throughput: ", nri.network_io
+    print "CPU weighted by BogoMIPS: ", nri.cpu
+    print "Memory size in kilobytes: ", nri.memory
+    print "Disk read speed in bytes/s: ", nri.disk_io
+    print "Theoretical network throughput in bytes/s: ", nri.network_io
 
-    print sys.platform
+    # print sys.platform
 
 
 if __name__ == '__main__':
