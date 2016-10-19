@@ -76,11 +76,13 @@ class NRI:
 
     @staticmethod
     def _get_disk_speeds():
-        """ Returns the sum of all disk speeds in bytes/s
+        """ Returns the sum of all disk speeds in bytes/s. Every disk is
+        tested 3 times.
 
         :return: Combined disk speeds in bytes/s
         :rtype: int
         """
+        iterations = 3
         speeds = 0
         try:
             disks = list()
@@ -91,23 +93,29 @@ class NRI:
                     if line_segments[len(line_segments) - 1] == 'disk':
                         disks.append(line_segments[0])
             for disk in disks:
-                output = subprocess.check_output(['sudo', 'hdparm', '-t', '/dev/' + disk])
-                # From man hdparm:
-                # -t	Perform  timings  of  device  reads  for benchmark and comparison purposes.
-                # For meaningful results, this operation should be repeated 2-3 times on an
-                # otherwise inactive system (no other active processes) with at least a couple
-                # of megabytes of free memory.  This displays the speed of reading through the
-                # buffer cache to the disk without any prior caching  of  data.
-                # This measurement  is  an indication of how fast the drive can sustain sequential
-                # data reads under Linux, without any filesystem overhead.
-                # To ensure accurate measurements, the buffer cache is flushed during the
-                # processing of -t using the BLKFLSBUF ioctl.
+                inner_sum_speed = 0
+                for i in range(iterations):
+                    output = subprocess.check_output(['sudo', 'hdparm', '-t', '/dev/' + disk])
+                    # From man hdparm:
+                    # -t	Perform  timings  of  device  reads  for benchmark and comparison purposes.
+                    # For meaningful results, this operation should be repeated 2-3 times on an
+                    # otherwise inactive system (no other active processes) with at least a couple
+                    # of megabytes of free memory.  This displays the speed of reading through the
+                    # buffer cache to the disk without any prior caching  of  data.
+                    # This measurement  is  an indication of how fast the drive can sustain sequential
+                    # data reads under Linux, without any filesystem overhead.
+                    # To ensure accurate measurements, the buffer cache is flushed during the
+                    # processing of -t using the BLKFLSBUF ioctl.
+                    if output is not None:
+                        lines = output.splitlines()
+                        line_segments = lines[2].split(' ')
+                        speed_in_mbs = line_segments[len(line_segments) - 2]
+                        speed_in_bytes = float(speed_in_mbs) * 1000000
+                        inner_sum_speed += int(speed_in_bytes)
+
                 if output is not None:
-                    lines = output.splitlines()
-                    line_segments = lines[2].split(' ')
-                    speed_in_mbs = line_segments[len(line_segments) - 2]
-                    speed_in_bytes = float(speed_in_mbs) * 1000000
-                    speeds += int(speed_in_bytes)
+                    speeds += inner_sum_speed / iterations
+
         except subprocess.CalledProcessError:
             print "An error in _get_disk_speeds() has ocured: Command 'exit 1' returned non-zero exit status 1"
         return speeds
