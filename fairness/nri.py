@@ -1,4 +1,3 @@
-from fairness.libvirt_driver import Connection
 import subprocess
 import multiprocessing
 import re
