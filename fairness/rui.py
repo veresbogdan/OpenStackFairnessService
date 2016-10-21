@@ -12,6 +12,16 @@ class RUI:
 
     def _get_values(self):
         conn = Connection()
-        conn.connect()
-        domain = conn.get_domain('instance-0000000a')
-        print domain
+        # conn.connect()
+        domainIDs = conn.get_domain_IDs()
+        if len(domainIDs) == 0:
+            print(' No VM in running state')
+        else:
+            for domainID in domainIDs:
+                print(' ' + str(domainID))
+                state, maxmem, mem, cpus, cput = conn.get_domain_info(domainID)
+                print('The state is ' + str(state))
+                print('The max memory is ' + str(maxmem))
+                print('The memory is ' + str(mem))
+                print('The number of cpus is ' + str(cpus))
+                print('The cpu time is ' + str(cput))

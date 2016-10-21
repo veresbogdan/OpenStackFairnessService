@@ -11,6 +11,7 @@
 #     for every VM v hosted by ni :
 #         set priorities of v on according to hv(v) and hu(o(v))
 from fairness.nri import NRI
+from fairness.rui import RUI
 from fairness.libvirt_driver import Connection
 import sys
 
@@ -18,12 +19,12 @@ import sys
 def main():
     nri = NRI()
     print "CPU weighted by BogoMIPS: ", nri.cpu
-    print "Memory size in kilobytes: ", nri.memory
+    print "Host memory size in kilobytes: ", nri.memory
     print "Disk read speed in bytes/s: ", nri.disk_io
     print "Theoretical network throughput in bytes/s: ", nri.network_io
 
-    # print sys.platform
-
+    rui = RUI()
+    rui._get_values()
 
 if __name__ == '__main__':
     main()
