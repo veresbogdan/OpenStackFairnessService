@@ -17,13 +17,22 @@ class Connection:
 
 
     def get_domain_info(self, domainID):
-        dom = self.conn.lookupByID(domainID)
-        if dom == None:
-            print('Failed to find the domain ' + domainID)
-            exit(1)
+        dom = Connection.domain_lookup(self, domainID)
         return dom.info()
 
 
     def get_info(self):
         return self.conn.getInfo()
+
+    def get_ostype(self, domainID):
+        dom = Connection.domain_lookup(self, domainID)
+        type = dom.OSType()
+        print('The OS type of the domain is "' + type + '"')
+
+    def domain_lookup(self, domainID):
+        dom = self.conn.lookupByID(domainID)
+        if dom == None:
+            print('Failed to find the domain ' + domainID)
+            exit(1)
+        return dom
 

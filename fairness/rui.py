@@ -23,5 +23,5 @@ class RUI:
                 print('The state is ' + str(state))
                 print('The max memory is ' + str(maxmem))
                 print('The memory is ' + str(mem))
-                print('The number of cpus is ' + str(cpus))
+                print('The number of vcpus is ' + str(cpus))
                 print('The cpu time is ' + str(cput))
