@@ -15,11 +15,9 @@ class Connection:
             print('Failed to get a list of domain IDs')
         return domainIDs
 
-
     def get_domain_info(self, domainID):
         dom = Connection.domain_lookup(self, domainID)
         return dom.info()
-
 
     def get_info(self):
         return self.conn.getInfo()
@@ -27,7 +25,7 @@ class Connection:
     def get_ostype(self, domainID):
         dom = Connection.domain_lookup(self, domainID)
         type = dom.OSType()
-        print('The OS type of the domain is "' + type + '"')
+        print('The OS type of the domain is: ' + type)
 
     def domain_lookup(self, domainID):
         dom = self.conn.lookupByID(domainID)
@@ -35,4 +33,10 @@ class Connection:
             print('Failed to find the domain ' + domainID)
             exit(1)
         return dom
+
+    def get_vcpu_stats(self, domainID):
+        dom = self.conn.lookupByID(domainID)
+        print "CPU stat in nanoseconds: ", dom.getCPUStats(True)
+
+
 

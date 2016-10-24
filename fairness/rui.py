@@ -25,3 +25,6 @@ class RUI:
                 print('The memory is ' + str(mem))
                 print('The number of vcpus is ' + str(cpus))
                 print('The cpu time is ' + str(cput))
+
+                conn.get_vcpu_stats(domainID)
+                conn.get_ostype(domainID)
