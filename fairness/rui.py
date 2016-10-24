@@ -28,3 +28,4 @@ class RUI:
 
                 conn.get_vcpu_stats(domainID)
                 conn.get_ostype(domainID)
+                conn.get_memory_stats(domainID)

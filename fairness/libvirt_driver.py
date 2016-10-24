@@ -38,5 +38,7 @@ class Connection:
         dom = self.conn.lookupByID(domainID)
         print "CPU stat in nanoseconds: ", dom.getCPUStats(True)
 
-
+    def get_memory_stats(self, domainID):
+        dom = self.conn.lookupByID(domainID)
+        print "Memory stats: ", dom.memoryStats()
 
