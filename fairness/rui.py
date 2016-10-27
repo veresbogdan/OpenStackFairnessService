@@ -19,13 +19,11 @@ class RUI:
         else:
             for domainID in domainIDs:
                 print(' ' + str(domainID))
-                state, maxmem, mem, cpus, cput = conn.get_domain_info(domainID)
-                print('The state is ' + str(state))
-                print('The max memory is ' + str(maxmem))
-                print('The memory is ' + str(mem))
-                print('The number of vcpus is ' + str(cpus))
-                print('The cpu time is ' + str(cput))
-
+                conn.get_domain_info(domainID)
+                print ""
                 conn.get_vcpu_stats(domainID)
-                conn.get_ostype(domainID)
                 conn.get_memory_stats(domainID)
+                print " Network stats:"
+                conn.get_network_stats(domainID)
+                print " Disk stats:"
+                conn.get_disk_stats(domainID)
