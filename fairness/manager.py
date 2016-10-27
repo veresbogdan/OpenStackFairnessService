@@ -26,5 +26,37 @@ def main():
     rui = RUI()
     rui._get_values()
 
+
+    # Routine 1:
+    # Collect NRI on the current node
+    # Send NRI to next node
+    # Receive NRI from the last nodes in the ring
+    # Do it on start up and check every X seconds if there was some change in the infrastructure
+    # (e.g. new nodes or died nodes). If changes happened, re-do collecting and advertising procedure.
+
+    # Routine 2:
+    # Collect information about the VMs on the node.
+    # Do it on start up and check every X seconds if there was some change in the VMs
+    # (e.g. new VM or changed VM). If changes happened, re-do collecting procedure.
+
+    # Routine 3:
+    # Collect RUI of living VMs
+    # send RUI to the next node.
+    # Receive RUI from the last node in the ring
+
+    # Stage 4:
+    # Calculate node heavinesses
+    # Send heaviness to the next node
+    # Receive the heaviness vector of the last node in the ring
+    #
+
+    # Stage 5:
+    # Calculate user heavinesses
+    # Map the heaviness to priorities
+
+    # Stage 6:
+    # Reallocate resources via libvirt
+
+
 if __name__ == '__main__':
     main()
