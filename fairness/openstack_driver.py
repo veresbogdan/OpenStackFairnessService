@@ -21,7 +21,7 @@ params = urllib.urlencode({
 
 headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
 conn = httplib.HTTPConnection("http://openstack-controller:35357")
-conn.request("POST", "/cgi-bin/query", params, headers)
+conn.request("POST", "/v3", params, headers)
 response = conn.getresponse()
 print response.status, response.reason
 data = response.read()
