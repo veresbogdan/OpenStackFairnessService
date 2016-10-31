@@ -10,10 +10,9 @@
 #     apply hu to calculate the heaviness of all u element of U
 #     for every VM v hosted by ni :
 #         set priorities of v on according to hv(v) and hu(o(v))
+
 from fairness.nri import NRI
 from fairness.rui import RUI
-from fairness.libvirt_driver import Connection
-import sys
 
 
 def main():
