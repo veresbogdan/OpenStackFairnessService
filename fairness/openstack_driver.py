@@ -27,5 +27,5 @@ import json
 r = requests.post(url, data=json.dumps(payload))
 
 # Response, status etc
-r.text
-r.status_code
+print r.text
+print r.status_code
