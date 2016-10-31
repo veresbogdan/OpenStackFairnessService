@@ -1,7 +1,8 @@
 from fairness.libvirt_driver import Connection
 
-class RUI:
+class RUI(object):
     """ This class represents the RUI data model (resource utilizaton information) """
+
     def __init__(self):
         self.cpu_time = None
         self.memory_used = None

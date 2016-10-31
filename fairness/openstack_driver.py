@@ -16,7 +16,7 @@ payload = {
                     "domain": {
                         "name": "default"
                     },
-                    "password": "wasserfall"
+                    "password": "wasserfall" # to take from config file: name, psw and domain.
                 }
             }
         }
