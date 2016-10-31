@@ -1,6 +1,6 @@
-import httplib, urllib
-
-params = urllib.urlencode({
+import requests
+url = 'http://openstack-controller:35357/v3/'
+payload = {
     "auth": {
         "identity": {
             "methods": [
@@ -12,18 +12,20 @@ params = urllib.urlencode({
                     "domain": {
                         "name": "Default"
                     },
-                    "password": "wasserfall"
+                    "password": "devstacker"
                 }
             }
         }
     }
-})
+}
 
-headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-conn = httplib.HTTPConnection("http://openstack-controller:35357")
-conn.request("POST", "/v3", params, headers)
-response = conn.getresponse()
-print response.status, response.reason
-data = response.read()
-conn.close()
-print data
+# POST with form-encoded data
+# r = requests.post(url, data=payload)
+
+# POST with JSON
+import json
+r = requests.post(url, data=json.dumps(payload))
+
+# Response, status etc
+r.text
+r.status_code
