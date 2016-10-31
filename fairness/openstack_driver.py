@@ -10,9 +10,9 @@ payload = {
                 "user": {
                     "name": "admin",
                     "domain": {
-                        "name": "admin"
+                        "name": "default"
                     },
-                    "password": "devstacker"
+                    "password": "wasserfall"
                 }
             }
         }
