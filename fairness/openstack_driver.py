@@ -1,4 +1,8 @@
 import requests
+
+# to use this, the fairness user with admin rights has to be created on openStack:
+#   $ openstack user create --domain default --password-prompt fairness // use "wasserfall" as the password
+#   $ openstack role add --project service --user fairness admin
 url = 'http://openstack-controller:35357/v3/auth/tokens'
 payload = {
     "auth": {
@@ -8,7 +12,7 @@ payload = {
             ],
             "password": {
                 "user": {
-                    "name": "nova",
+                    "name": "fairness",
                     "domain": {
                         "name": "default"
                     },
