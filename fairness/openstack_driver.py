@@ -1,5 +1,5 @@
 import requests
-url = 'http://openstack-controller:35357/v3/'
+url = 'http://openstack-controller:35357/v3/auth/tokens'
 payload = {
     "auth": {
         "identity": {
