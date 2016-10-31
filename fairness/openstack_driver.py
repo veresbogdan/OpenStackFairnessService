@@ -8,7 +8,7 @@ payload = {
             ],
             "password": {
                 "user": {
-                    "name": "admin",
+                    "name": "nova",
                     "domain": {
                         "name": "default"
                     },
