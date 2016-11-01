@@ -35,11 +35,8 @@ class OpenStackConnection(object):
             }
         }
 
-        # POST with form-encoded data
-        r = requests.post(url, data=payload)
-
         # POST with JSON
-        # r = requests.post(url, data=json.dumps(payload))
+        r = requests.post(url, data=json.dumps(payload))
 
         # Response, status etc
         print r.text
