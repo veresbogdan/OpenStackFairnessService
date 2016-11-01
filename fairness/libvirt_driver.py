@@ -2,11 +2,12 @@ import libvirt
 from xml.etree import ElementTree
 
 
-class Connection:
+class Connection(object):
     """This class represents the connection to libvirt"""
+
     def __init__(self):
         self.conn = libvirt.open('qemu:///system')
-        if self.conn == None:
+        if self.conn is None:
             print('Failed to open connection to qemu:///system')
             exit(1)
 

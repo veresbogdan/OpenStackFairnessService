@@ -10,10 +10,10 @@
 #     apply hu to calculate the heaviness of all u element of U
 #     for every VM v hosted by ni :
 #         set priorities of v on according to hv(v) and hu(o(v))
+
 from fairness.nri import NRI
 from fairness.rui import RUI
-from fairness.libvirt_driver import Connection
-import sys
+from fairness.openstack_driver import OpenStackConnection
 
 
 def main():
@@ -25,6 +25,9 @@ def main():
 
     rui = RUI()
     rui._get_values()
+
+    open_stack_connection = OpenStackConnection()
+    open_stack_connection.authenticate()
 
 
     # Routine 1:

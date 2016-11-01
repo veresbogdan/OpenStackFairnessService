@@ -2,16 +2,17 @@ import subprocess
 import multiprocessing
 import re
 
+
 # TODO: make a periodic task that checks every second if there is a new nova node. If yes then NRI should be gathered and communicated.
-class NRI:
+class NRI(object):
     """ This class represents the NRI data model (node resource information) """
 
     MAX_NETWORK_THROUGHPUT = 1000
 
     def __init__(self):
-        self.cpu = None         # amount of CPU cores on the compute node, normalized by the node's BogoMIPS
-        self.memory = None      # total amount of installed memory in kilobytes
-        self.disk_io = None     # combined disk read speeds of all disks in bytes/s
+        self.cpu = None  # amount of CPU cores on the compute node, normalized by the node's BogoMIPS
+        self.memory = None  # total amount of installed memory in kilobytes
+        self.disk_io = None  # combined disk read speeds of all disks in bytes/s
         self.network_io = None  # network throughput in bytes/s
         NRI._get_values(self)
 
