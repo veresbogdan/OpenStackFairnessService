@@ -9,6 +9,9 @@ import json
 class OpenStackConnection(object):
     """ This class is to make OpenStack API calls. """
 
+    def __init__(self):
+        pass
+
     @staticmethod
     def authenticate():
         """ The first step to call any other OpenStack API is to authenticate
