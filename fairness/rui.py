@@ -1,4 +1,4 @@
-from fairness.libvirt_driver import Connection
+from fairness.libvirt_driver import LibvirtConnection
 
 class RUI(object):
     """ This class represents the RUI data model (resource utilizaton information) """
@@ -12,8 +12,7 @@ class RUI(object):
         self.network_bytes_transmitted = None
 
     def _get_values(self):
-        conn = Connection()
-        # conn.connect()
+        conn = LibvirtConnection()
         domainIDs = conn.get_domain_IDs()
         if len(domainIDs) == 0:
             print(' No VM in running state')
