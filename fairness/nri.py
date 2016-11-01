@@ -4,7 +4,6 @@ import multiprocessing
 import re
 
 
-# TODO: make a periodic task that checks every second if there is a new nova node. If yes then NRI should be gathered and communicated.
 class NRI(object):
     """ This class represents the NRI data model (node resource information) """
 
@@ -24,7 +23,7 @@ class NRI(object):
         """
         self.cpu = NRI._get_cpu_count_weighted(self)
         self.memory = NRI._get_installed_memory()
-        self.disk_io = NRI._get_disk_speeds()
+        # self.disk_io = NRI._get_disk_speeds()
         self.network_io = NRI._get_network_throughput(self)
 
     def _get_cpu_count_weighted(self):
@@ -126,7 +125,7 @@ class NRI(object):
                     speeds += inner_sum_speed / iterations
 
         except subprocess.CalledProcessError:
-            print "An error in _get_disk_speeds() has ocured: Command 'exit 1' returned non-zero exit status 1"
+            print ("An error in _get_disk_speeds() has ocured: Command 'exit 1' returned non-zero exit status 1")
         return speeds
 
     def _get_network_throughput(self):

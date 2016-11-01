@@ -2,7 +2,7 @@ import libvirt
 from xml.etree import ElementTree
 
 
-class Connection(object):
+class LibvirtConnection(object):
     """This class represents the connection to libvirt"""
 
     def __init__(self):
@@ -19,7 +19,7 @@ class Connection(object):
 
     # for VM infos
     def get_domain_info(self, domainID):
-        dom = Connection.domain_lookup(self, domainID)
+        dom = LibvirtConnection.domain_lookup(self, domainID)
         state, maxmem, mem, cpus, cput = dom.info()
         print('The state is ' + str(state))
         print('The max memory is ' + str(maxmem))
