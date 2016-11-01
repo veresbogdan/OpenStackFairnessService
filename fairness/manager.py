@@ -15,6 +15,7 @@ from fairness.nri import NRI
 from fairness.rui import RUI
 from fairness.openstack_driver import OpenStackConnection
 
+
 def main():
     nri = NRI()
     print "CPU weighted by BogoMIPS: ", nri.cpu
