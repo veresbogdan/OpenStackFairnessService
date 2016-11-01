@@ -25,7 +25,7 @@ class Receiver:
             socket.send("Received")
 
             # start new thread to manage each request
-            thread.start_new_thread(self.manage_message, (self, message,))
+            thread.start_new_thread(self.manage_message, (self, message))
 
     def manage_message(self, message):
         if message is not None:
