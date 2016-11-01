@@ -17,14 +17,12 @@ class NRI(object):
         NRI._get_values(self)
 
     def _get_values(self):
-        # conn = Connection()
-        # conn.connect()
-        # node_info = conn.get_info()
-        # print node_info
-        # self.cpu = node_info[2]
+        """ Retrieve the values for NRI and fill the object fields.
+        :return: None
+        """
         self.cpu = NRI._get_cpu_count_weighted(self)
         self.memory = NRI._get_installed_memory()
-        # self.disk_io = NRI._get_disk_speeds()
+        self.disk_io = NRI._get_disk_speeds()
         self.network_io = NRI._get_network_throughput(self)
 
     def _get_cpu_count_weighted(self):
