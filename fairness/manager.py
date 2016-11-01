@@ -27,7 +27,7 @@ def main():
     rui._get_values()
 
     open_stack_connection = OpenStackConnection()
-    open_stack_connection.authenticate()
+    token = open_stack_connection.authenticate()
 
 
     # Routine 1:

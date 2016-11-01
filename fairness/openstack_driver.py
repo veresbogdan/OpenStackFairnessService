@@ -41,3 +41,9 @@ class OpenStackConnection(object):
         # Response, status etc
         print r.text
         print r.status_code
+
+        r_in_json = json.load(r)
+
+        print r_in_json
+
+        #return token
