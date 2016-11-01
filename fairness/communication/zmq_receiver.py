@@ -44,7 +44,7 @@ class Receiver:
                 if key.__contains__('nri'):
                     print "got Nri"
                     if self.nri_sent < 2:
-                        self.nri.server_nris = json_msj
+                        self.nri.server_nris[key] = json_msj[key]
                         sender.send_nri(self.nri)
                         Receiver.nri_sent += 1
 
