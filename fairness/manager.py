@@ -26,9 +26,12 @@ def main():
     rui = RUI()
     rui._get_values()
 
+    # connect to Openstack API
     open_stack_connection = OpenStackConnection()
     token = open_stack_connection.authenticate()
     print token
+
+
 
     # Routine 1:
     # Collect NRI on the current node
@@ -39,25 +42,21 @@ def main():
 
     # Routine 2:
     # Collect information about the VMs on the node.
-    # Do it on start up and check every X seconds if there was some change in the VMs
-    # (e.g. new VM or changed VM). If changes happened, re-do collecting procedure.
+    # Do it on start up and re-collect information every X seconds for the case that
+    # there was some changes in the VMs
 
     # Routine 3:
     # Collect RUI of living VMs
-    # send RUI to the next node.
-    # Receive RUI from the last node in the ring
-
-    # Stage 4:
     # Calculate node heavinesses
     # Send heaviness to the next node
     # Receive the heaviness vector of the last node in the ring
-    #
+    # update heaviness vector with own heaviness
 
-    # Stage 5:
+    # Routine 4:
     # Calculate user heavinesses
     # Map the heaviness to priorities
 
-    # Stage 6:
+    # Routine 5:
     # Reallocate resources via libvirt
 
 

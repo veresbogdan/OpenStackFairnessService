@@ -17,7 +17,6 @@ class OpenStackConnection(object):
         """ The first step to call any other OpenStack API is to authenticate
         with the identity service (keystone). This call returns the X-Auth-Token
         for further calls to other APIs. """
-
         url = 'http://openstack-controller:35357/v3/auth/tokens'
         payload = {
             "auth": {
@@ -37,13 +36,9 @@ class OpenStackConnection(object):
                 }
             }
         }
-
         # POST with JSON
         r = requests.post(url, data=json.dumps(payload))
-
-
         # Response, status etc
         # print r.text
         # print r.status_code
         return r.headers['X-Subject-Token']
-
