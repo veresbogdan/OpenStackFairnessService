@@ -14,7 +14,7 @@
 from fairness.nri import NRI
 from fairness.rui import RUI
 from fairness.openstack_driver import OpenStackConnection
-from fairness.communication.zmq_receiver import Receiver
+# from fairness.communication.zmq_receiver import Receiver
 
 
 def main():
