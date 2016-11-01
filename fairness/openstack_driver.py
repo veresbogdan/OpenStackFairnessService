@@ -41,9 +41,9 @@ class OpenStackConnection(object):
         # POST with JSON
         r = requests.post(url, data=json.dumps(payload))
 
-        # Response, status etc
-        print r.text
-        print r.status_code
-        print r.headers
 
-        #return token
+        # Response, status etc
+        # print r.text
+        # print r.status_code
+        return r.headers['X-Subject-Token']
+
