@@ -1,3 +1,4 @@
+import socket
 import subprocess
 import multiprocessing
 import re
@@ -7,6 +8,7 @@ class NRI(object):
     """ This class represents the NRI data model (node resource information) """
 
     MAX_NETWORK_THROUGHPUT = 1000
+    server_nris = {}
 
     def __init__(self):
         self.cpu = None  # amount of CPU cores on the compute node, normalized by the node's BogoMIPS
@@ -26,6 +28,15 @@ class NRI(object):
 
     def _get_cpu_count_weighted(self):
         return multiprocessing.cpu_count() * self._get_bogomips()
+
+    @staticmethod
+    def _get_public_ip_address():
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = (s.getsockname()[0])
+        s.close()
+
+        return ip
 
     @staticmethod
     def _get_bogomips():
