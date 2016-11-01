@@ -1,4 +1,5 @@
 import requests
+import json
 
 # to use this, the fairness user with admin rights has to be created on openStack:
 #   $ openstack user create --domain default --password-prompt fairness // use "wasserfall" as the password
@@ -35,11 +36,10 @@ class OpenStackConnection(object):
         }
 
         # POST with form-encoded data
-        # r = requests.post(url, data=payload)
+        r = requests.post(url, data=payload)
 
         # POST with JSON
-        import json
-        r = requests.post(url, data=json.dumps(payload))
+        # r = requests.post(url, data=json.dumps(payload))
 
         # Response, status etc
         print r.text
