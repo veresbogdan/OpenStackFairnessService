@@ -28,7 +28,7 @@ def main():
 
     open_stack_connection = OpenStackConnection()
     token = open_stack_connection.authenticate()
-
+    print token
 
     # Routine 1:
     # Collect NRI on the current node
