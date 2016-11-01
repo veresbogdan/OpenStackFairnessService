@@ -27,8 +27,7 @@ def main():
     rui._get_values()
 
     open_stack_connection = OpenStackConnection()
-    token = open_stack_connection.authenticate()
-    print token
+    open_stack_connection.authenticate()
 
     # Routine 1:
     # Collect NRI on the current node
