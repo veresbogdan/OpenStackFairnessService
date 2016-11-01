@@ -4,16 +4,19 @@ import zmq
 import json
 
 from fairness.communication.zmq_sender import Sender
+from fairness.nri import NRI
 
 
 class Receiver:
-    nri_sent = False
+    nri_sent = 0
 
-    def __init__(self):
+    def __init__(self, nri=None):
+        self.nri = nri
+
         context = zmq.Context()
         socket = context.socket(zmq.REP)
         # get own ip here from the manager
-        socket.bind("tcp://192.168.1.103:5555")
+        socket.bind("tcp://" + NRI._get_public_ip_address() + ":5555")
 
         while True:
             #  Wait for next request from clients
@@ -22,28 +25,29 @@ class Receiver:
             socket.send("Received")
 
             # start new thread to manage each request
-            thread.start_new_thread(Receiver.manage_message, (message,))
+            thread.start_new_thread(Receiver.manage_message, (self, message,))
 
-    @staticmethod
-    def manage_message(message):
+    def manage_message(self, message):
         if message is not None:
+            sender = Sender()
+
             json_msj = json.loads(message)
 
-            if 'start' in json_msj:
-                print "got start"
-                if not Receiver.nri_sent:
-                    sender = Sender()
-                    sender.send_nri()
-                    Receiver.nri_sent = True
-                    # send also rui
+            for key in json_msj.keys():
+                if key.__contains__('start'):
+                    print "got start"
+                    if Receiver.nri_sent < 2:
+                        sender.send_nri(self.nri)
+                        Receiver.nri_sent += 1
+                        # send also rui
 
-            if 'nri' in json_msj:
-                print "got Nri"
-                if not Receiver.nri_sent:
-                    sender = Sender()
-                    sender.send_nri()
-                    Receiver.nri_sent = True
-                # do actual stuff here with nri
+                if key.__contains__('nri'):
+                    print "got Nri"
+                    if Receiver.nri_sent < 2:
+                        sender.send_nri(self.nri)
+                        Receiver.nri_sent += 1
+                    #do work here
+
 
 # just for test purposes (remove this)
-Receiver()
+Receiver(NRI())
