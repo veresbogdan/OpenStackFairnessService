@@ -46,6 +46,6 @@ class OpenStackConnection(object):
     @staticmethod
     def list_users():
         url = 'http://openstack-controller:35357/v3/users'
-        r = requests.get(url)
+        r = requests.get(url, auth=('fairness', 'wasserfall'))
         print r.text
         print r.status_code
