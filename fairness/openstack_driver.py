@@ -26,7 +26,7 @@ class OpenStackConnection(object):
                     ],
                     "password": {
                         "user": {
-                            "name": "fairness",
+                            "name": "admin",
                             "domain": {
                                 "name": "default"
                             },
