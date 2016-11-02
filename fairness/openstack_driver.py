@@ -38,14 +38,12 @@ class OpenStackConnection(object):
         }
         # POST with JSON
         r = requests.post(url, data=json.dumps(payload))
-        # Response, status etc
-        # print r.text
-        # print r.status_code
         return r.headers['X-Subject-Token']
 
     @staticmethod
-    def list_users():
+    def list_users(token):
         url = 'http://openstack-controller:35357/v3/users'
-        r = requests.get(url, auth=('fairness', 'wasserfall'))
+        headers = {'X-Auth-Token': token}
+        r = requests.get(url, headers=headers)
         print r.text
         print r.status_code
