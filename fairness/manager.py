@@ -31,6 +31,8 @@ def main():
     token = open_stack_connection.authenticate()
     print token
 
+    open_stack_connection.list_users()
+
 
 
     # Routine 1:

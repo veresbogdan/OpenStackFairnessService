@@ -42,3 +42,10 @@ class OpenStackConnection(object):
         # print r.text
         # print r.status_code
         return r.headers['X-Subject-Token']
+
+    @staticmethod
+    def list_users():
+        url = 'http://openstack-controller:35357/v3/users'
+        r = requests.get(url)
+        print r.text
+        print r.status_code
