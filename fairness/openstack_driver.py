@@ -50,4 +50,4 @@ class IdentityApiConnection(object):
         print r.status_code
         json_text = json.loads(r.text)
         for i in range(len(json_text["users"])):
-            print json_text[i]['name']
+            print json_text['users'][i]['name']
