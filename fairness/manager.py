@@ -29,9 +29,8 @@ def main():
     # connect to Openstack API
     open_stack_connection = IdentityApiConnection()
     token = open_stack_connection.authenticate()
-    print token
-
-    open_stack_connection.list_users(token)
+    user_list = open_stack_connection.list_users(token)
+    print user_list
 
 
 

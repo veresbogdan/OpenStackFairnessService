@@ -7,7 +7,7 @@ import json
 
 
 class IdentityApiConnection(object):
-    """ This class is to make OpenStack API calls. """
+    """ This class is to make Keystone API calls. """
 
     def __init__(self):
         pass
@@ -46,8 +46,6 @@ class IdentityApiConnection(object):
         url = 'http://openstack-controller:35357/v3/users'
         headers = {'X-Auth-Token': token}
         r = requests.get(url, headers=headers)
-        print r.text
-        print r.status_code
         json_text = json.loads(r.text)
         for i in range(len(json_text["users"])):
-            print json_text['users'][i]['name']
+            return [i for i in json_text['users'][i]['name']]
