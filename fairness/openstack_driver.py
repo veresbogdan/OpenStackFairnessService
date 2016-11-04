@@ -38,7 +38,6 @@ class IdentityApiConnection(object):
         }
         # POST with JSON
         r = requests.post(url, data=json.dumps(payload))
-        print r.headers
         return r.headers['X-Subject-Token']
 
     @staticmethod
@@ -47,5 +46,7 @@ class IdentityApiConnection(object):
         headers = {'X-Auth-Token': token}
         r = requests.get(url, headers=headers)
         json_text = json.loads(r.text)
+        user_list = []
         for i in range(len(json_text["users"])):
-            return [i for i in json_text['users'][i]['name']]
+            user_list.append(json_text['users'][i]['name'])
+        return user_list
