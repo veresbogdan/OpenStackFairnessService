@@ -45,6 +45,8 @@ class IdentityApiConnection(object):
         url = 'http://openstack-controller:35357/v3/users'
         headers = {'X-Auth-Token': token}
         r = requests.get(url, headers=headers)
+        print type(r)
+        print type(r.text)
         text = r.text
         print r.status_code
         json_obj = json.load(text)
