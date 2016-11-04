@@ -38,6 +38,7 @@ class IdentityApiConnection(object):
         }
         # POST with JSON
         r = requests.post(url, data=json.dumps(payload))
+        print r.headers
         return r.headers['X-Subject-Token']
 
     @staticmethod
