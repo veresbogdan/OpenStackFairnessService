@@ -48,4 +48,4 @@ class IdentityApiConnection(object):
         print r.text
         print r.status_code
         for users in r.text['users']:
-            print users
+            print users['name']
