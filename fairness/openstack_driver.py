@@ -49,5 +49,5 @@ class IdentityApiConnection(object):
         print r.text
         print r.status_code
         for key, nested in r.text.iteritems():
-            nested = ast.literal_eval(nested)
+            key = ast.literal_eval(key)
             print key, nested
