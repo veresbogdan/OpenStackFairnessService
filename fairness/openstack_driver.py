@@ -1,5 +1,6 @@
 import requests
 import json
+import ast
 
 # to use this, the fairness user with admin rights has to be created on openStack:
 #   $ openstack user create --domain default --password-prompt fairness // use "wasserfall" as the password
@@ -47,5 +48,6 @@ class IdentityApiConnection(object):
         r = requests.get(url, headers=headers)
         print r.text
         print r.status_code
-        for users in r.text.iteritems():
-            print users['name']
+        for key, nested in r.text.iteritems():
+            nested = ast.literal_eval(nested)
+            print key, nested
