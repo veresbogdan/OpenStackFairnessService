@@ -13,7 +13,7 @@
 
 from fairness.nri import NRI
 from fairness.rui import RUI
-from fairness.openstack_driver import OpenStackConnection
+from fairness.openstack_driver import IdentityApiConnection
 
 
 def main():
@@ -27,7 +27,7 @@ def main():
     rui._get_values()
 
     # connect to Openstack API
-    open_stack_connection = OpenStackConnection()
+    open_stack_connection = IdentityApiConnection()
     token = open_stack_connection.authenticate()
     print token
 

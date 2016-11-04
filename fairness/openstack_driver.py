@@ -6,7 +6,7 @@ import json
 #   $ openstack role add --project service --user fairness admin
 
 
-class OpenStackConnection(object):
+class IdentityApiConnection(object):
     """ This class is to make OpenStack API calls. """
 
     def __init__(self):
@@ -47,3 +47,5 @@ class OpenStackConnection(object):
         r = requests.get(url, headers=headers)
         print r.text
         print r.status_code
+        for users in r.text:
+            print users
