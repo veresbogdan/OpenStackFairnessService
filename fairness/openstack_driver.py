@@ -48,7 +48,6 @@ class IdentityApiConnection(object):
         r = requests.get(url, headers=headers)
         print r.text
         print r.status_code
-        # json_data = json.dumps(r.text)
-        # item_dict = json.loads(json_data)
-        print r.text["users"]
+        json_text = json.loads(r.text)
+        print json_text["users"]
 
