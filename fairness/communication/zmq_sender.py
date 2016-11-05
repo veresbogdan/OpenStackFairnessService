@@ -17,7 +17,13 @@ class Sender:
 
     def send_nri(self, nri):
         # if not nri.server_nris.has_key(NRI._get_public_ip_address()):
-        nri.server_nris['nri_' + NRI._get_public_ip_address()] = nri.__dict__
+        fnri = {'nri_' + NRI._get_public_ip_address(): nri.__dict__}
+
+        if not nri.server_nris.__contains__('nri'):
+            nris = [fnri]
+            nri.server_nris['nri'] = nris
+        else:
+            nri.server_nris['nri'].append(fnri)
 
         json_string = json.dumps(nri.server_nris)
         self.socket.send(json_string)
