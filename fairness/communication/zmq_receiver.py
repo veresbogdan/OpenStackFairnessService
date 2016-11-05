@@ -38,15 +38,16 @@ class Receiver:
                     print "got start"
                     if self.nri_sent < 2:
                         sender.send_nri(self.nri)
-                        Receiver.nri_sent += 1
+                        self.nri_sent += 1
                         # send also rui
 
                 if key.__contains__('nri'):
                     print "got Nri"
                     if self.nri_sent < 2:
-                        self.nri.server_nris[key] = json_msj[key]
+                        self.nri.server_nris = json_msj
                         sender.send_nri(self.nri)
-                        Receiver.nri_sent += 1
+                        self.nri_sent += 1
+                        break
 
                     print 'the list of nris: '
                     print self.nri.server_nris
