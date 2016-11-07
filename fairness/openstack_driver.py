@@ -1,6 +1,7 @@
 import requests
 import json
 import datetime
+import time
 
 # to use this, the fairness user with admin rights has to be created on openStack:
 #   $ openstack user create --domain default --password-prompt fairness // use "wasserfall" as the password
@@ -51,6 +52,7 @@ class IdentityApiConnection(object):
             self.token_issued = json_text['token']['issued_at']
 
     def list_users(self):
+        time.sleep(180)
         # print self.token
         if self.token is None:
             self.authenticate()
