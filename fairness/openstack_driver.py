@@ -57,14 +57,11 @@ class IdentityApiConnection(object):
 
         time_now = datetime.datetime.utcnow().isoformat()
         if self.token_exp < time_now:
-            print "smaller than"
-            print "Exp: ", self.token_exp
-            print "Now: ", time_now
+            print "Token Expired at (UTC+1, so substract 1 hour): ", self.token_exp
+            print "Time Now (UTC): ", time_now
+            print "Issueing a new token because the current one is expired"
             self.authenticate()
-        else:
-            print "ELSE (not <)"
-            print "Exp: ", self.token_exp
-            print "Now: ", time_now
+
         url = 'http://openstack-controller:35357/v3/users'
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
