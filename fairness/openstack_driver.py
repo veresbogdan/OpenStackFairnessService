@@ -45,9 +45,10 @@ class IdentityApiConnection(object):
             # POST with JSON
             r = requests.post(url, data=json.dumps(payload))
             self.token = r.headers['X-Subject-Token']
-            self.token_exp = r.text['token']['expires_at']
+            json_text = json.loads(r.text)
+            self.token_exp = json_text['token']['expires_at']
             print self.token_exp
-            self.token_issued = r.text['token']['issued_at']
+            self.token_issued = json_text['token']['issued_at']
         # return self.token
 
     def list_users(self):
