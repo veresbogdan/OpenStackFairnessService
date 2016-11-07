@@ -52,11 +52,11 @@ class IdentityApiConnection(object):
             self.token_issued = json_text['token']['issued_at']
 
     def list_users(self):
-        time.sleep(180)
         # print self.token
         if self.token is None:
             self.authenticate()
 
+        time.sleep(180)
         time_now = datetime.datetime.now().isoformat()
         if self.token_exp < time_now:
             print "smaller than"
