@@ -43,10 +43,13 @@ class IdentityApiConnection(object):
             # POST with JSON
             r = requests.post(url, data=json.dumps(payload))
             self.token = r.headers['X-Subject-Token']
+            print r.headers
         return self.token
 
     def list_users(self):
-        print self.token
+        # print self.token
+        if self.token is None:
+            self.authenticate()
         url = 'http://openstack-controller:35357/v3/users'
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
