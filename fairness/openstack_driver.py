@@ -5,6 +5,9 @@ import json
 #   $ openstack user create --domain default --password-prompt fairness // use "wasserfall" as the password
 #   $ openstack role add --project service --user fairness admin
 
+# TODO: import config file and extract username and password for the payload
+# TODO: Should the domain be looked up with a diffenrent API call? But which one? And how to get the initial token?
+
 
 class IdentityApiConnection(object):
     """ This class is to make Keystone API calls. """
@@ -27,7 +30,7 @@ class IdentityApiConnection(object):
                         ],
                         "password": {
                             "user": {
-                                "name": "admin",
+                                "name": "fairness",
                                 "domain": {
                                     "name": "default"
                                 },
