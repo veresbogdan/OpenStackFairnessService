@@ -33,24 +33,23 @@ class Receiver:
 
             json_msj = json.loads(message)
 
-            for key in json_msj.keys():
-                if key.__contains__('start'):
-                    print "got start"
-                    if self.nri_sent < 2:
-                        sender.send_nri(self.nri)
-                        Receiver.nri_sent += 1
-                        # send also rui
+            if 'start' in json_msj:
+                print "got start"
+                if self.nri_sent < 2:
+                    sender.send_nri(self.nri)
+                    self.nri_sent += 1
+                    # send also rui
 
-                if key.__contains__('nri'):
-                    print "got Nri"
-                    if self.nri_sent < 2:
-                        self.nri.server_nris[key] = json_msj[key]
-                        sender.send_nri(self.nri)
-                        Receiver.nri_sent += 1
+            if 'nri' in json_msj:
+                print "got Nri"
+                if self.nri_sent < 2:
+                    self.nri.server_nris['nri'] = json_msj['nri']
+                    sender.send_nri(self.nri)
+                    self.nri_sent += 1
 
-                    print 'the list of nris: '
-                    print self.nri.server_nris
-                    #do work here
+                print 'the list of nris: '
+                print self.nri.server_nris
+                #do work here
 
 
 # just for test purposes (remove this)
