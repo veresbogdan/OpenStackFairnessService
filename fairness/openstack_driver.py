@@ -45,10 +45,10 @@ class IdentityApiConnection(object):
             self.token = r.headers['X-Subject-Token']
         return self.token
 
-    @staticmethod
-    def list_users(token):
+    def list_users(self):
+        print self.token
         url = 'http://openstack-controller:35357/v3/users'
-        headers = {'X-Auth-Token': token}
+        headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
         json_text = json.loads(r.text)
         user_list = []
