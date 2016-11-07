@@ -10,35 +10,37 @@ class IdentityApiConnection(object):
     """ This class is to make Keystone API calls. """
 
     def __init__(self):
-        pass
+        self.token = None
 
-    @staticmethod
-    def authenticate():
+    def authenticate(self):
         """ The first step to call any other OpenStack API is to authenticate
         with the identity service (keystone). This call returns the X-Auth-Token
         for further calls to other APIs. """
-        url = 'http://openstack-controller:35357/v3/auth/tokens'
-        payload = {
-            "auth": {
-                "identity": {
-                    "methods": [
-                        "password"
-                    ],
-                    "password": {
-                        "user": {
-                            "name": "admin",
-                            "domain": {
-                                "name": "default"
-                            },
-                            "password": "wasserfall" # to take from config file: name, psw and domain.
+
+        if self.token is None:
+            url = 'http://openstack-controller:35357/v3/auth/tokens'
+            payload = {
+                "auth": {
+                    "identity": {
+                        "methods": [
+                            "password"
+                        ],
+                        "password": {
+                            "user": {
+                                "name": "admin",
+                                "domain": {
+                                    "name": "default"
+                                },
+                                "password": "wasserfall" # to take from config file: name, psw and domain.
+                            }
                         }
                     }
                 }
             }
-        }
-        # POST with JSON
-        r = requests.post(url, data=json.dumps(payload))
-        return r.headers['X-Subject-Token']
+            # POST with JSON
+            r = requests.post(url, data=json.dumps(payload))
+            self.token = r.headers['X-Subject-Token']
+        return self.token
 
     @staticmethod
     def list_users(token):

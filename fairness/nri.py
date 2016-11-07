@@ -23,7 +23,7 @@ class NRI(object):
         """
         self.cpu = NRI._get_cpu_count_weighted(self)
         self.memory = NRI._get_installed_memory()
-        self.disk_io = NRI._get_disk_speeds()
+        # self.disk_io = NRI._get_disk_speeds()
         self.network_io = NRI._get_network_throughput(self)
 
     def _get_cpu_count_weighted(self):
