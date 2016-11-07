@@ -14,6 +14,8 @@ class IdentityApiConnection(object):
 
     def __init__(self):
         self.token = None
+        self.token_exp = None
+        self.token_issued = None
 
     def authenticate(self):
         """ The first step to call any other OpenStack API is to authenticate
@@ -43,10 +45,10 @@ class IdentityApiConnection(object):
             # POST with JSON
             r = requests.post(url, data=json.dumps(payload))
             self.token = r.headers['X-Subject-Token']
-            print r.text
-            print " "
-            print r.headers
-        return self.token
+            self.token_exp = r.text['token']['expires_at']
+            print self.token_exp
+            self.token_issued = r.text['token']['issued_at']
+        # return self.token
 
     def list_users(self):
         # print self.token
