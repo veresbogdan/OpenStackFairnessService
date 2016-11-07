@@ -1,7 +1,6 @@
 import requests
 import json
 import datetime
-import time
 
 # to use this, the fairness user with admin rights has to be created on openStack:
 #   $ openstack user create --domain default --password-prompt fairness // use "wasserfall" as the password
@@ -56,7 +55,6 @@ class IdentityApiConnection(object):
         if self.token is None:
             self.authenticate()
 
-        time.sleep(180)
         time_now = datetime.datetime.now().isoformat()
         if self.token_exp > time_now:
             print "bigger than"
