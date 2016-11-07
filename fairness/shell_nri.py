@@ -51,3 +51,21 @@
 # if __name__ == '__main__':
 #     _get_disk_speeds()
 #     _get_installed_memory()
+
+
+import datetime
+
+time_test =datetime.datetime(2016, 11, 07, 19, 05, 31, 000001).isoformat()
+time_now = datetime.datetime.now().isoformat()
+
+print "time test: ", time_test
+print "time now:  ", time_now
+
+if time_test > time_now:
+    print "bigger than"
+    print "Exp: ", time_test
+    print "Now: ", time_now
+else:
+    print "ELSE (not >)"
+    print "Exp: ", time_test
+    print "Now: ", time_now

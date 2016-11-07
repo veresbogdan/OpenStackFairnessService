@@ -55,7 +55,7 @@ class IdentityApiConnection(object):
         if self.token is None:
             self.authenticate()
 
-        time_now = datetime.datetime.now().isoformat()
+        time_now = datetime.datetime.utcnow().isoformat()
         if self.token_exp > time_now:
             print "bigger than"
             print "Exp: ", self.token_exp
