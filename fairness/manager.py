@@ -30,6 +30,7 @@ def main():
     open_stack_connection = IdentityApiConnection()
     user_list = open_stack_connection.list_users()
     print user_list
+    open_stack_connection.list_projects()
 
 
 

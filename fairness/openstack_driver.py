@@ -50,11 +50,9 @@ class IdentityApiConnection(object):
             self.token_exp = json_text['token']['expires_at']
             self.token_issued = json_text['token']['issued_at']
 
-    def list_users(self):
-        # print self.token
+    def _check_token(self):
         if self.token is None:
             self.authenticate()
-
         time_now = datetime.datetime.utcnow().isoformat()
         if self.token_exp < time_now:
             print "Token Expired at (UTC+1, so substract 1 hour): ", self.token_exp
@@ -62,6 +60,8 @@ class IdentityApiConnection(object):
             print "Issueing a new token because the current one is expired"
             self.authenticate()
 
+    def list_users(self):
+        self._check_token()
         url = 'http://openstack-controller:35357/v3/users'
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
@@ -70,3 +70,11 @@ class IdentityApiConnection(object):
         for i in range(len(json_text["users"])):
             user_list.append(json_text['users'][i]['name'])
         return user_list
+
+    def list_projects(self):
+        self._check_token()
+        url = 'http://openstack-controller:35357/v3/projects'
+        headers = {'X-Auth-Token': self.token}
+        r = requests.get(url, headers=headers)
+        json_text = json.loads(r.text)
+        print r.text
