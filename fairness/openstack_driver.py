@@ -58,12 +58,12 @@ class IdentityApiConnection(object):
 
         time.sleep(180)
         time_now = datetime.datetime.now().isoformat()
-        if self.token_exp < time_now:
-            print "smaller than"
+        if self.token_exp > time_now:
+            print "bigger than"
             print "Exp: ", self.token_exp
             print "Now: ", time_now
         else:
-            print "ELSE (not <)"
+            print "ELSE (not >)"
             print "Exp: ", self.token_exp
             print "Now: ", time_now
         url = 'http://openstack-controller:35357/v3/users'
