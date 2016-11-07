@@ -33,7 +33,7 @@ class IdentityApiConnection(object):
                         ],
                         "password": {
                             "user": {
-                                "name": "keystone",
+                                "name": "fairness",
                                 "domain": {
                                     "name": "default"
                                 },
