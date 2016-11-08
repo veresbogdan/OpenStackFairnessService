@@ -44,7 +44,7 @@ class Receiver:
                     # send also rui
                 self.interval = json_msj['start']
 
-                # sender.send_greediness(self.rui)
+                sender.send_greediness(self.rui)
 
             if 'nri' in json_msj:
                 print "got Nri"
