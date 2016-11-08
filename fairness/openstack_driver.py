@@ -18,7 +18,7 @@ class IdentityApiConnection(object):
         self.token_exp = None
         self.token_issued = None
 
-    def authenticate(self):
+    def _authenticate(self):
         """ The first step to call any other OpenStack API is to authenticate
         with the identity service (keystone). This call returns the X-Auth-Token
         for further calls to other APIs. """
@@ -52,13 +52,14 @@ class IdentityApiConnection(object):
 
     def _check_token(self):
         if self.token is None:
-            self.authenticate()
+            self._authenticate()
+            self._authenticate()
         time_now = datetime.datetime.utcnow().isoformat()
         if self.token_exp < time_now:
             print "Token Expired at (UTC+1, so substract 1 hour): ", self.token_exp
             print "Time Now (UTC): ", time_now
             print "Issueing a new token because the current one is expired"
-            self.authenticate()
+            self._authenticate()
 
     def list_users(self):
         self._check_token()
