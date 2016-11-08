@@ -1,7 +1,11 @@
 from fairness.libvirt_driver import LibvirtConnection
+from fairness.nri import NRI
+
 
 class RUI(object):
     """ This class represents the RUI data model (resource utilizaton information) """
+
+    server_greediness = {}
 
     def __init__(self):
         self.cpu_time = None
@@ -27,3 +31,7 @@ class RUI(object):
                 conn.get_network_stats(domainID)
                 print " Disk stats:"
                 conn.get_disk_stats(domainID)
+
+    # TODO
+    def get_vm_greediness(self):
+        return 'TODO Greed ' + NRI._get_public_ip_address()

@@ -5,13 +5,16 @@ import json
 
 from fairness.communication.zmq_sender import Sender
 from fairness.nri import NRI
+from fairness.rui import RUI
 
 
 class Receiver:
     nri_sent = 0
+    interval = 0
 
-    def __init__(self, nri=None):
+    def __init__(self, nri=None, rui=None):
         self.nri = nri
+        self.rui = rui
 
         context = zmq.Context()
         socket = context.socket(zmq.REP)
@@ -39,6 +42,9 @@ class Receiver:
                     sender.send_nri(self.nri)
                     self.nri_sent += 1
                     # send also rui
+                self.interval = json_msj['start']
+
+                # sender.send_greediness(self.rui)
 
             if 'nri' in json_msj:
                 print "got Nri"
@@ -51,6 +57,11 @@ class Receiver:
                 print self.nri.server_nris
                 #do work here
 
+            if 'greed' in json_msj:
+                print "got Greed"
+                self.rui.server_greediness['greed'] = json_msj['greed']
+                # if self.interval == 0:
+                sender.send_greediness(self.rui)
 
 # just for test purposes (remove this)
-Receiver(NRI())
+Receiver(NRI(), RUI())

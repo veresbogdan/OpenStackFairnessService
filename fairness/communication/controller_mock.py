@@ -11,5 +11,5 @@ if __name__ == '__main__':
     socket = context.socket(zmq.REQ)
     socket.connect("tcp://" + NRI._get_public_ip_address() + ":5555")
 
-    json_string = "{\"start\":\"nri\"}"
+    json_string = "{\"start\":\"10\"}"
     socket.send(json_string)
