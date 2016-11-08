@@ -60,8 +60,8 @@ class Receiver:
             if 'greed' in json_msj:
                 print "got Greed"
                 self.rui.server_greediness['greed'] = json_msj['greed']
-                # if self.interval == 0:
-                sender.send_greediness(self.rui)
+                if self.interval == 0:
+                    sender.send_greediness(self.rui)
 
 # just for test purposes (remove this)
 Receiver(NRI(), RUI())
