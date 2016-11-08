@@ -1,8 +1,10 @@
 # coding=utf-8
-import zmq
-import api
-from fairness.nri import NRI
 import json
+
+import zmq
+from fairness.fairness_node.nri import NRI
+
+import api
 
 
 class Sender:

@@ -1,11 +1,12 @@
 # coding=utf-8
-import thread
-import zmq
 import json
+import thread
+
+import zmq
+from fairness.fairness_node.nri import NRI
+from fairness.fairness_node.rui import RUI
 
 from fairness.communication.zmq_sender import Sender
-from fairness.nri import NRI
-from fairness.rui import RUI
 
 
 class Receiver:
