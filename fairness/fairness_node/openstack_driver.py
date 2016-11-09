@@ -2,6 +2,8 @@ import requests
 import json
 import datetime
 
+from fairness.config_parser import MyConfigParser
+
 # to use this, the fairness user with admin rights has to be created on openStack:
 #   $ openstack user create --domain default --password-prompt fairness // use "wasserfall" as the password
 #   $ openstack role add --project service --user fairness admin
@@ -23,6 +25,11 @@ class IdentityApiConnection(object):
         with the identity service (keystone). This call returns the X-Auth-Token
         for further calls to other APIs. """
 
+        config = MyConfigParser()
+        username = config.config_section_map('keystone_authtoken')['username']
+        password = config.config_section_map('keystone_authtoken')['password']
+        domain = config.config_section_map('keystone_authtoken')['user_domain_name']
+
         if self.token is None:
             url = 'http://openstack-controller:35357/v3/auth/tokens'
             payload = {
@@ -33,11 +40,11 @@ class IdentityApiConnection(object):
                         ],
                         "password": {
                             "user": {
-                                "name": "fairness",
+                                "name": username,
                                 "domain": {
-                                    "name": "default"
+                                    "name": domain
                                 },
-                                "password": "wasserfall" # to take from config file: name, psw and domain.
+                                "password": password
                             }
                         }
                     }
@@ -78,4 +85,11 @@ class IdentityApiConnection(object):
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
         json_text = json.loads(r.text)
+        print r.text
+
+    def get_quotas(self):
+        self._check_token()
+        url = 'http://openstack-controller:8774/v2.1/%(tenant_id)s'
+        headers = {'X-Auth-Token': self.token}
+        r = requests.get(url, headers=headers)
         print r.text
