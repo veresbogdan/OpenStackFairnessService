@@ -3,11 +3,8 @@ import ConfigParser
 
 class MyConfigParser(object):
 
-    config = None
-
-    def __init__(self):
-        config = ConfigParser.ConfigParser()
-        config.read('/home/riccardo/sw-projects/PycharmProjects/fairness-service/fairness.ini')
+    config = ConfigParser.ConfigParser()
+    config.read('/home/riccardo/sw-projects/PycharmProjects/fairness-service/fairness.ini')
 
     def config_section_map(self, section):
         dict1 = {}
