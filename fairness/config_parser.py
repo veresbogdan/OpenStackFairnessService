@@ -8,8 +8,8 @@ class MyConfigParser(object):
     config.read('/usr/lib/python2.7/dist-packages/test_fairness_service/fairness-service/fairness.ini')
 
     def config_section_map(self, section):
+        dict1 = {}
         if self.config.has_section(self):
-            dict1 = {}
             options = self.config.options(section)
             for option in options:
                 try:
@@ -23,6 +23,6 @@ class MyConfigParser(object):
             "Section not found in Config file!"
         return dict1
 
-    # if Config.has_section('keystone_authtoken'):
-    #     username = config_section_map('keystone_authtoken')['username']
-    #     print username
+        # if Config.has_section('keystone_authtoken'):
+        #     username = config_section_map('keystone_authtoken')['username']
+        #     print username
