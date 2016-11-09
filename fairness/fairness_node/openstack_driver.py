@@ -2,7 +2,7 @@ import requests
 import json
 import datetime
 
-from fairness import config_parser as cp
+from fairness.config_parser import MyConfigParser
 
 # to use this, the fairness user with admin rights has to be created on openStack:
 #   $ openstack user create --domain default --password-prompt fairness // use "wasserfall" as the password
@@ -25,10 +25,11 @@ class IdentityApiConnection(object):
         with the identity service (keystone). This call returns the X-Auth-Token
         for further calls to other APIs. """
 
-        if cp.Config.has_section('keystone_authtoken'):
-            username = cp.config_section_map('keystone_authtoken')['username']
-            password = cp.config_section_map('keystone_authtoken')['password']
-            domain = cp.config_section_map('keystone_authtoken')['user_domain_name']
+        config = MyConfigParser()
+        if config.config.has_section('keystone_authtoken'):
+            username = config.config_section_map('keystone_authtoken')['username']
+            password = config.config_section_map('keystone_authtoken')['password']
+            domain = config.config_section_map('keystone_authtoken')['user_domain_name']
         else:
             print "Config file could not be read!"
             print cp.Config.has_section('keystone_authtoken')
