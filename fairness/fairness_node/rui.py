@@ -1,5 +1,5 @@
-from fairness.libvirt_driver import LibvirtConnection
-from fairness.nri import NRI
+from fairness.fairness_node.libvirt_driver import LibvirtConnection
+from fairness.fairness_node.nri import NRI
 
 
 class RUI(object):
