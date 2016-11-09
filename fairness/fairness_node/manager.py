@@ -11,6 +11,7 @@
 #     for every VM v hosted by ni :
 #         set priorities of v on according to hv(v) and hu(o(v))
 
+import sys
 from fairness.fairness_node.nri import NRI
 from fairness.fairness_node.openstack_driver import IdentityApiConnection
 from fairness.fairness_node.rui import RUI
@@ -62,4 +63,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    print "argv: ", sys.argv[1]
+    sys.exit(main())

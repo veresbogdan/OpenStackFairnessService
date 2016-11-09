@@ -1,11 +1,12 @@
 import ConfigParser
+import sys
 
 
 class MyConfigParser(object):
 
     config = ConfigParser.ConfigParser()
-    # config.read('/home/riccardo/sw-projects/PycharmProjects/fairness-service/fairness.ini')
-    config.read('/usr/lib/python2.7/dist-packages/test_fairness_service/fairness-service/fairness.ini')
+    config.read(sys.argv[1])
+    # config.read('/usr/lib/python2.7/dist-packages/test_fairness_service/fairness-service/fairness.ini')
 
     def config_section_map(self, section):
         dict1 = {}
