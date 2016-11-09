@@ -23,7 +23,6 @@ class IdentityApiConnection(object):
         with the identity service (keystone). This call returns the X-Auth-Token
         for further calls to other APIs. """
 
-
         if self.token is None:
             url = 'http://openstack-controller:35357/v3/auth/tokens'
             payload = {
