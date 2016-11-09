@@ -17,6 +17,6 @@ def config_section_map(section):
             dict1[option] = None
     return dict1
 
-if Config.has_section('keystone_authtoken'):
-    username = config_section_map('keystone_authtoken')['username']
-    print username
+# if Config.has_section('keystone_authtoken'):
+#     username = config_section_map('keystone_authtoken')['username']
+#     print username

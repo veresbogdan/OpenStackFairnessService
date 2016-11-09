@@ -31,6 +31,7 @@ class IdentityApiConnection(object):
             domain = cp.config_section_map('keystone_authtoken')['user_domain_name']
         else:
             print "Config file could not be read!"
+            print cp.Config.has_section('keystone_authtoken')
             username = 'fairness'
             password = None
             domain = 'default'
