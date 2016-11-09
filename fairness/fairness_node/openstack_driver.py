@@ -26,16 +26,9 @@ class IdentityApiConnection(object):
         for further calls to other APIs. """
 
         config = MyConfigParser()
-        if config.config.has_section('keystone_authtoken'):
-            username = config.config_section_map('keystone_authtoken')['username']
-            password = config.config_section_map('keystone_authtoken')['password']
-            domain = config.config_section_map('keystone_authtoken')['user_domain_name']
-        else:
-            print "Config file could not be read!"
-            print config.config.has_section('keystone_authtoken')
-            username = 'fairness'
-            password = None
-            domain = 'default'
+        username = config.config_section_map('keystone_authtoken')['username']
+        password = config.config_section_map('keystone_authtoken')['password']
+        domain = config.config_section_map('keystone_authtoken')['user_domain_name']
 
         if self.token is None:
             url = 'http://openstack-controller:35357/v3/auth/tokens'
