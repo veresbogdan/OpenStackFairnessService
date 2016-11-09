@@ -22,7 +22,3 @@ class MyConfigParser(object):
         else:
             "Section not found in Config file!"
         return dict1
-
-        # if Config.has_section('keystone_authtoken'):
-        #     username = config_section_map('keystone_authtoken')['username']
-        #     print username
