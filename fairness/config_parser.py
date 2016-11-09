@@ -9,7 +9,7 @@ class MyConfigParser(object):
 
     def config_section_map(self, section):
         dict1 = {}
-        if self.config.has_section(self):
+        if self.config.has_section(section):
             options = self.config.options(section)
             for option in options:
                 try:
