@@ -75,10 +75,11 @@ class IdentityApiConnection(object):
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
         json_text = json.loads(r.text)
-        user_list = []
+        user_dict = {}
         for i in range(len(json_text["users"])):
-            user_list.append(json_text['users'][i]['name'])
-        return user_list
+            user = json_text['users'][i]['name']
+            user_dict[user] = 0
+        return user_dict
 
     def list_projects(self):
         self._check_token()
