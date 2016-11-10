@@ -31,7 +31,8 @@ def main():
     open_stack_connection = IdentityApiConnection()
     user_dict = open_stack_connection.list_users()
     print user_dict
-    open_stack_connection.list_projects()
+    # open_stack_connection.list_projects()
+    open_stack_connection.get_quotas()
 
 
 
