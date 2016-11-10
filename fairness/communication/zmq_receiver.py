@@ -45,6 +45,8 @@ class Receiver:
                     # send also rui
                 self.interval = json_msj['start']
 
+                time.sleep(1)
+
                 sender.send_greediness(self.rui)
 
             if 'nri' in json_msj:
@@ -63,7 +65,7 @@ class Receiver:
                 self.rui.server_greediness['greed'] = json_msj['greed']
                 if self.interval == 0:
                     sender.send_greediness(self.rui)
-                print 'all greeds:' +  self.rui.server_greediness
+                print "all greeds:" +  self.rui.server_greediness.__dict__
 
 # just for test purposes (remove this)
 Receiver(NRI(), RUI())
