@@ -26,7 +26,7 @@ class Receiver:
             #  Wait for next request from clients
             message = socket.recv()
             print("Received request: " + message)
-            socket.send("Received")
+            socket.send("")
 
             # start new thread to manage each request
             thread.start_new_thread(self.manage_message, (message,))
@@ -42,29 +42,36 @@ class Receiver:
                 if self.nri_sent < 2:
                     sender.send_nri(self.nri)
                     self.nri_sent += 1
-                    # send also rui
-                self.interval = json_msj['start']
-
-                time.sleep(1)
-
-                sender.send_greediness(self.rui)
+                self.interval = int(json_msj['start'])
 
             if 'nri' in json_msj:
-                print "got Nri"
                 if self.nri_sent < 2:
                     self.nri.server_nris['nri'] = json_msj['nri']
                     sender.send_nri(self.nri)
                     self.nri_sent += 1
+                else:
+                    global start
+                    start = time.time()
+                    sender.send_greediness(self.rui)
 
                 print 'the list of nris: '
                 print self.nri.server_nris
                 #do work here
 
             if 'greed' in json_msj:
-                print "got Greed"
                 self.rui.server_greediness['greed'] = json_msj['greed']
+
                 if self.interval == 0:
                     sender.send_greediness(self.rui)
+                else:
+                    # measure time again, subtract
+                    end = time.time()
+                    sleep_time = self.interval - (end - start)
+                    time.sleep(sleep_time)
+                    start = time.time()
+
+                    sender.send_greediness(self.rui)
+
                 print 'the list of greeds: '
                 print self.rui.server_greediness
 
