@@ -77,7 +77,7 @@ class IdentityApiConnection(object):
         json_text = json.loads(r.text)
         user_dict = {}
         for i in range(len(json_text["users"])):
-            user = json_text['users'][i]['name']
+            user = str(json_text['users'][i]['name'])
             user_dict[user] = 0
         return user_dict
 
