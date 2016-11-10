@@ -5,8 +5,9 @@ import datetime
 from fairness.config_parser import MyConfigParser
 
 # to use this, the fairness user with admin rights has to be created on openStack:
-#   $ openstack user create --domain default --password-prompt fairness // use "wasserfall" as the password
+#   $ openstack user create --domain default --password-prompt fairness
 #   $ openstack role add --project service --user fairness admin
+# then add the credentials to the fairness.conf file.
 
 # TODO: import config file and extract username and password for the payload
 # TODO: Should the domain be looked up with a diffenrent API call? But which one? And how to get the initial token?
