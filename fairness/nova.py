@@ -48,7 +48,7 @@ class VM:
         """
         :param rui: the VM's RUI in the current measurement period
         """
-        assert len(rui) == len(VM.nri)
+        assert len(rui) == len(VM.global_normalization)
         self.rui = np.array(rui)
 
 

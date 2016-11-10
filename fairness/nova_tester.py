@@ -9,7 +9,7 @@ from nova import quota_to_scalar
 # define two owners, 0 is their heaviness and will be overwritten later
 owners = {"user_a": 0, "user_b": 0}
 
-# initalize a cloud with two resources, both have a normalization factor of one.
+# initalize a node with two resources, both have a normalization factor of one.
 # the nodes NRI is 10 of both resources
 init([1, 1], [10, 10], owners)
 
