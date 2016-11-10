@@ -29,8 +29,9 @@ class IdentityApiConnection(object):
         config = MyConfigParser()
         username = config.config_section_map('keystone_authtoken')['username']
         password = config.config_section_map('keystone_authtoken')['password']
-        domain = config.config_section_map('keystone_authtoken')['user_domain_name']
+        user_domain = config.config_section_map('keystone_authtoken')['user_domain_name']
         project = config.config_section_map('keystone_authtoken')['project_name']
+        project_domain = config.config_section_map('keystone_authtoken')['project_domain_name']
 
         if self.token is None:
             url = 'http://openstack-controller:35357/v3/auth/tokens'
@@ -44,7 +45,7 @@ class IdentityApiConnection(object):
                             "user": {
                                 "name": username,
                                 "domain": {
-                                    "name": domain
+                                    "name": user_domain
                                 },
                                 "password": password
                             }
@@ -52,7 +53,8 @@ class IdentityApiConnection(object):
                     },
                     "scope": {
                         "project": {
-                            "name": project
+                            "name": project,
+                            "domain": project_domain
                         }
                     }
                 }
