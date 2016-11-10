@@ -7,7 +7,7 @@ class MyConfigParser(object):
 
     config = ConfigParser.ConfigParser()
     config.read(sys.argv[1])
-    # config.read('/usr/lib/python2.7/dist-packages/test_fairness_service/fairness-service/fairness.conf')
+    # config.read('/usr/lib/python2.7/dist-packages/test_fairness_service/fairness-service/fairness.ini')
 
     # from https://wiki.python.org/moin/ConfigParserExamples
     def config_section_map(self, section):
