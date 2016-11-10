@@ -11,9 +11,9 @@
 #     for every VM v hosted by ni :
 #         set priorities of v on according to hv(v) and hu(o(v))
 
-from fairness.nri import NRI
-from fairness.rui import RUI
-from fairness.openstack_driver import IdentityApiConnection
+from fairness.fairness_node.nri import NRI
+from fairness.fairness_node.openstack_driver import IdentityApiConnection
+from fairness.fairness_node.rui import RUI
 
 
 def main():
