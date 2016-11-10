@@ -41,7 +41,9 @@ class Sender:
         else:
             # if not any(d.get(key, None) is not None for d in nri.server_nris['nri']):
             #     rui.server_greediness['greed'][key] = own_greed
-            rui.server_greediness['greed'] = [own_greed if key in x else x for x in rui.server_greediness['greed']]
+            lool = [own_greed if key in x else x for x in rui.server_greediness['greed']]
+            print lool
+            rui.server_greediness['greed'] = lool
 
         json_string = json.dumps(rui.server_greediness)
         self.socket.send(json_string)
