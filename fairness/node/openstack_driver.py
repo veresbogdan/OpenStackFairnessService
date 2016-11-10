@@ -41,12 +41,17 @@ class IdentityApiConnection(object):
                         ],
                         "password": {
                             "user": {
-                                "name": "admin",
+                                "name": username,
                                 "domain": {
-                                    "name": "Default"
+                                    "name": domain
                                 },
-                                "password": "wasserfall"
+                                "password": password
                             }
+                        }
+                    },
+                    "scope": {
+                        "project": {
+                            "id": ""
                         }
                     }
                 }
