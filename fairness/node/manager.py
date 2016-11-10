@@ -12,9 +12,9 @@
 #         set priorities of v on according to hv(v) and hu(o(v))
 
 import sys
-from fairness.fairness_node.nri import NRI
-from fairness.fairness_node.openstack_driver import IdentityApiConnection
-from fairness.fairness_node.rui import RUI
+from fairness.node.nri import NRI
+from fairness.node.openstack_driver import IdentityApiConnection
+from fairness.node.rui import RUI
 
 
 def main():
