@@ -43,7 +43,7 @@ class IdentityApiConnection(object):
                             "user": {
                                 "name": "admin",
                                 "domain": {
-                                    "name": 'Default'
+                                    "name": "Default"
                                 },
                                 "password": "wasserfall"
                             }
