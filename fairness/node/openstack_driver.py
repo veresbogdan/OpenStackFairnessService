@@ -51,7 +51,7 @@ class IdentityApiConnection(object):
                     },
                     "scope": {
                         "project": {
-                            "name": ""
+                            "name": "default"
                         }
                     }
                 }
