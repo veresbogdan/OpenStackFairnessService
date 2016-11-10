@@ -1,7 +1,7 @@
 # coding=utf-8
 import zmq
 
-from fairness.nri import NRI
+from fairness.node.nri import NRI
 
 if __name__ == '__main__':
     context = zmq.Context()
