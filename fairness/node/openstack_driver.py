@@ -29,9 +29,9 @@ class IdentityApiConnection(object):
         config = MyConfigParser()
         username = config.config_section_map('keystone_authtoken')['username']
         password = config.config_section_map('keystone_authtoken')['password']
-        user_domain = config.config_section_map('keystone_authtoken')['user_domain_name']
-        project = config.config_section_map('keystone_authtoken')['project_name']
-        project_domain = config.config_section_map('keystone_authtoken')['project_domain_name']
+        user_domain_name = config.config_section_map('keystone_authtoken')['user_domain_name']
+        project_name = config.config_section_map('keystone_authtoken')['project_name']
+        project_domain_name = config.config_section_map('keystone_authtoken')['project_domain_name']
 
         if self.token is None:
             url = 'http://openstack-controller:35357/v3/auth/tokens'
@@ -45,7 +45,7 @@ class IdentityApiConnection(object):
                             "user": {
                                 "name": username,
                                 "domain": {
-                                    "name": user_domain
+                                    "name": user_domain_name
                                 },
                                 "password": password
                             }
@@ -53,16 +53,14 @@ class IdentityApiConnection(object):
                     },
                     "scope": {
                         "project": {
-                            "name": project,
-                            "domain": {"id": project_domain}
+                            "name": project_name,
+                            "domain": {"id": project_domain_name}
                         }
                     }
                 }
             }
             # POST with JSON
             r = requests.post(url, data=json.dumps(payload))
-            print r.text
-            print r.status_code
             self.token = r.headers['X-Subject-Token']
             json_text = json.loads(r.text)
             self.token_exp = json_text['token']['expires_at']
