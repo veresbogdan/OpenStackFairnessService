@@ -5,8 +5,9 @@ import datetime
 from fairness.config_parser import MyConfigParser
 
 # to use this, the fairness user with admin rights has to be created on openStack:
-#   $ openstack user create --domain default --password-prompt fairness // use "wasserfall" as the password
+#   $ openstack user create --domain default --password-prompt fairness
 #   $ openstack role add --project service --user fairness admin
+# then add the credentials to the fairness.ini file.
 
 # TODO: import config file and extract username and password for the payload
 # TODO: Should the domain be looked up with a diffenrent API call? But which one? And how to get the initial token?
@@ -28,7 +29,9 @@ class IdentityApiConnection(object):
         config = MyConfigParser()
         username = config.config_section_map('keystone_authtoken')['username']
         password = config.config_section_map('keystone_authtoken')['password']
-        domain = config.config_section_map('keystone_authtoken')['user_domain_name']
+        user_domain_name = config.config_section_map('keystone_authtoken')['user_domain_name']
+        project_name = config.config_section_map('keystone_authtoken')['project_name']
+        project_domain_name = config.config_section_map('keystone_authtoken')['project_domain_name']
 
         if self.token is None:
             url = 'http://openstack-controller:35357/v3/auth/tokens'
@@ -42,10 +45,16 @@ class IdentityApiConnection(object):
                             "user": {
                                 "name": username,
                                 "domain": {
-                                    "name": domain
+                                    "name": user_domain_name
                                 },
                                 "password": password
                             }
+                        }
+                    },
+                    "scope": {
+                        "project": {
+                            "name": project_name,
+                            "domain": {"id": project_domain_name}
                         }
                     }
                 }
@@ -74,10 +83,11 @@ class IdentityApiConnection(object):
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
         json_text = json.loads(r.text)
-        user_list = []
+        user_dict = {}
         for i in range(len(json_text["users"])):
-            user_list.append(json_text['users'][i]['name'])
-        return user_list
+            user = str(json_text['users'][i]['name'])
+            user_dict[user] = 0
+        return user_dict
 
     def list_projects(self):
         self._check_token()
