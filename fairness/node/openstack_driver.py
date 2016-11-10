@@ -54,7 +54,7 @@ class IdentityApiConnection(object):
                     "scope": {
                         "project": {
                             "name": project,
-                            "domain": {project_domain}
+                            "domain": {"id": project_domain}
                         }
                     }
                 }
