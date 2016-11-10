@@ -2,7 +2,7 @@
 import json
 
 import zmq
-from fairness.fairness_node.nri import NRI
+from fairness.node.nri import NRI
 
 import api
 
