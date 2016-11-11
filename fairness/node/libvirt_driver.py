@@ -1,3 +1,4 @@
+from __future__ import print_function
 import libvirt
 from xml.etree import ElementTree
 
@@ -11,26 +12,22 @@ class LibvirtConnection(object):
             print('Failed to open connection to qemu:///system')
             exit(1)
 
-    def get_domain_IDs(self):
-        domainIDs = self.conn.listDomainsID()
-        if domainIDs == None:
+    def get_domain_ids(self):
+        domain_ids = self.conn.listDomainsID()
+        if domain_ids is None:
             print('Failed to get a list of domain IDs')
-        return domainIDs
+        return domain_ids
 
     # for VM infos
     def get_domain_info(self, domainID):
         dom = LibvirtConnection.domain_lookup(self, domainID)
         state, maxmem, mem, cpus, cput = dom.info()
-        print('The state is ' + str(state))
-        print('The max memory is ' + str(maxmem))
-        # print('The memory is ' + str(mem))
-        print('The number of vcpus is ' + str(cpus))
-        # print('The cpu time is ' + str(cput))
+        return state, maxmem, cpus
 
     def domain_lookup(self, domain_id):
         dom = self.conn.lookupByID(domain_id)
         if dom is None:
-            print('Failed to find the domain ' + domain_id)
+            print('Failed to find the domain ', domain_id)
             exit(1)
         return dom
 
@@ -43,7 +40,7 @@ class LibvirtConnection(object):
 
     def get_memory_stats(self, domain_id):
         dom = self.conn.lookupByID(domain_id)
-        print "Memory stats in Byte: ", dom.memoryStats()
+        print("Memory stats in Byte: ", dom.memoryStats())
         memory_stats = dom.memoryStats()
         swap_in = None
         if 'swap_in' in memory_stats:

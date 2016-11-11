@@ -11,34 +11,41 @@
 #     for every VM v hosted by ni :
 #         set priorities of v on according to hv(v) and hu(o(v))
 
+from __future__ import print_function
 import sys
 from fairness.node.nri import NRI
-from fairness.node.openstack_driver import IdentityApiConnection
 from fairness.node.rui import RUI
 
 
 def main():
     nri = NRI()
-    print "CPU weighted by BogoMIPS: ", nri.cpu
-    print "Host memory size in kilobytes: ", nri.memory
-    print "Disk read speed in bytes/s: ", nri.disk_io
-    print "Theoretical network throughput in bytes/s: ", nri.network_io
+    print("CPU weighted by BogoMIPS: ", nri.cpu)
+    print("Host memory size in kilobytes: ", nri.memory)
+    print("Disk read speed in bytes/s: ", nri.disk_io)
+    print("Theoretical network throughput in bytes/s: ", nri.network_io)
 
     rui = RUI()
-
-    print rui.cpu_time
-    print rui.memory_used
-    print rui.disk_bytes_read
-    print rui.disk_bytes_written
-    print rui.network_bytes_received
-    print rui.network_bytes_transmitted
+    vm_id_list = rui.get_domain_id_list()
+    for vm in vm_id_list:
+        print("")
+        print("Domain ID: ", vm)
+        rui.get_vm_info(vm)
+        rui.get_utilization(vm)
+        print("CPU time in sec: ", rui.cpu_time)
+        print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)
+        print("Disk stats (read in bytes):", rui.disk_bytes_read)
+        print("Disk stats (write in bytes):", rui.disk_bytes_written)
+        print("Network stats (read in bytes):", rui.network_bytes_received)
+        print("Network stats (write in bytes):", rui.network_bytes_transmitted)
 
     # connect to Openstack API
     open_stack_connection = IdentityApiConnection()
     user_dict = open_stack_connection.list_users()
-    print user_dict
+    print(user_dict)
     # open_stack_connection.list_projects()
     open_stack_connection.get_quotas()
+
+
 
 
 

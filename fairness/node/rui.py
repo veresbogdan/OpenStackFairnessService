@@ -1,9 +1,10 @@
+from __future__ import print_function
 from fairness.node.libvirt_driver import LibvirtConnection
 from fairness.node.nri import NRI
 
 
 class RUI(object):
-    """ This class represents the RUI data model (resource utilizaton information) """
+    """ This class represents the RUI data model (resource utilization information) """
 
     server_greediness = {}
 
@@ -14,28 +15,32 @@ class RUI(object):
         self.disk_bytes_written = None
         self.network_bytes_received = None
         self.network_bytes_transmitted = None
-        RUI._get_values(self)
 
-    def _get_values(self):
+    @staticmethod
+    def get_domain_id_list():
         conn = LibvirtConnection()
-        domainIDs = conn.get_domain_IDs()
-        if len(domainIDs) == 0:
+        domain_id_list = conn.get_domain_ids()
+        if len(domain_id_list) == 0:
             print(' No VM in running state')
         else:
-            for domainID in domainIDs:
-                print " "
-                print(' Domain ID: ' + str(domainID))
-                conn.get_domain_info(domainID)
-                self.cpu_time = conn.get_vcpu_stats(domainID)
-                self.memory_used = conn.get_memory_stats(domainID)
-                self.disk_bytes_read = conn.get_disk_stats(domainID)[0]
-                self.disk_bytes_written = conn.get_disk_stats(domainID)[1]
-                self.network_bytes_received = conn.get_network_stats(domainID)[0]
-                self.network_bytes_transmitted = conn.get_network_stats(domainID)[1]
-                # print "CPU time in sec: ", conn.get_vcpu_stats(domainID)
-                # print "Memory usage (rss) in Bytes (incl. swap_in if available): ", conn.get_memory_stats(domainID)
-                # print "Disk stats (read, write in bytes):", conn.get_disk_stats(domainID)
-                # print "Network stats (read, write in bytes):", conn.get_network_stats(domainID)
+            return domain_id_list
+
+    @staticmethod
+    def get_vm_info(domain_id):
+        conn = LibvirtConnection()
+        state, maxmem, cpus= conn.get_domain_info(domain_id)
+        print('The state:', state)
+        print('The max memory:', maxmem)
+        print('The number of vcpus:', cpus)
+
+    def get_utilization(self, domain_id):
+        conn = LibvirtConnection()
+        self.cpu_time = conn.get_vcpu_stats(domain_id)
+        self.memory_used = conn.get_memory_stats(domain_id)
+        self.disk_bytes_read = conn.get_disk_stats(domain_id)[0]
+        self.disk_bytes_written = conn.get_disk_stats(domain_id)[1]
+        self.network_bytes_received = conn.get_network_stats(domain_id)[0]
+        self.network_bytes_transmitted = conn.get_network_stats(domain_id)[1]
 
     # TODO
     def get_vm_greediness(self):
