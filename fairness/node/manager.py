@@ -15,6 +15,7 @@ from __future__ import print_function
 import sys
 from fairness.node.nri import NRI
 from fairness.node.rui import RUI
+from fairness.node.openstack_driver import IdentityApiConnection
 
 
 def main():
