@@ -25,7 +25,13 @@ def main():
     print "Theoretical network throughput in bytes/s: ", nri.network_io
 
     rui = RUI()
-    rui._get_values()
+
+    print rui.cpu_time
+    print rui.memory_used
+    print rui.disk_bytes_read
+    print rui.disk_bytes_written
+    print rui.network_bytes_received
+    print rui.network_bytes_transmitted
 
     # connect to Openstack API
     open_stack_connection = IdentityApiConnection()

@@ -1,10 +1,10 @@
 __author__ = 'Patrick'
 
-from nova import init
-from nova import VM
-from nova import update_endowments
-from nova import get_greediness_per_user
-from nova import quota_to_scalar
+from virtual_machines import init
+from virtual_machines import VM
+from virtual_machines import update_endowments
+from virtual_machines import get_greediness_per_user
+from virtual_machines import quota_to_scalar
 
 # define two owners, 0 is their heaviness and will be overwritten later
 owners = {"user_a": 0, "user_b": 0}

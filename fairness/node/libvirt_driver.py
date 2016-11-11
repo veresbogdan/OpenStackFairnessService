@@ -23,47 +23,47 @@ class LibvirtConnection(object):
         state, maxmem, mem, cpus, cput = dom.info()
         print('The state is ' + str(state))
         print('The max memory is ' + str(maxmem))
-        print('The memory is ' + str(mem))
+        # print('The memory is ' + str(mem))
         print('The number of vcpus is ' + str(cpus))
-        print('The cpu time is ' + str(cput))
+        # print('The cpu time is ' + str(cput))
 
-    def domain_lookup(self, domainID):
-        dom = self.conn.lookupByID(domainID)
-        if dom == None:
-            print('Failed to find the domain ' + domainID)
+    def domain_lookup(self, domain_id):
+        dom = self.conn.lookupByID(domain_id)
+        if dom is None:
+            print('Failed to find the domain ' + domain_id)
             exit(1)
         return dom
 
     # for RUI
-    def get_vcpu_stats(self, domainID):
-        dom = self.conn.lookupByID(domainID)
-        print "CPU stat in nanoseconds: ", dom.getCPUStats(True)
+    def get_vcpu_stats(self, domain_id):
+        dom = self.conn.lookupByID(domain_id)
+        # print "CPU stat in nanoseconds: ", dom.getCPUStats(True)
+        cpu_time_seconds = (dom.getCPUStats(True)[0]['cpu_time']) / 1000000000.0
+        return cpu_time_seconds
 
-    def get_memory_stats(self, domainID):
-        dom = self.conn.lookupByID(domainID)
-        print "Memory stats: ", dom.memoryStats()
+    def get_memory_stats(self, domain_id):
+        dom = self.conn.lookupByID(domain_id)
+        # print "Memory stats in Byte: ", dom.memoryStats()
+        memory_stats = dom.memoryStats()
+        swap_in = None
+        if 'swap_in' in memory_stats:
+            swap_in = memory_stats['swap_in']
+        rss = memory_stats['rss']
+        if swap_in is not None:
+            return swap_in + rss
+        else:
+            return rss
 
-    def get_network_stats(self, domainID):
-        dom = self.conn.lookupByID(domainID)
+    def get_network_stats(self, domain_id):
+        dom = self.conn.lookupByID(domain_id)
         tree = ElementTree.fromstring(dom.XMLDesc())
         iface = tree.find('devices/interface/target').get('dev')
         stats = dom.interfaceStats(iface)
-        print('read bytes: ' + str(stats[0]))
-        print('read packets: ' + str(stats[1]))
-        print('read errors: ' + str(stats[2]))
-        print('read drops: ' + str(stats[3]))
-        print('write bytes: ' + str(stats[4]))
-        print('write packets: ' + str(stats[5]))
-        print('write errors: ' + str(stats[6]))
-        print('write drops: ' + str(stats[7]))
+        return stats[0], stats[4]
 
-    def get_disk_stats(self, domainID):
-        dom = self.conn.lookupByID(domainID)
+    def get_disk_stats(self, domain_id):
+        dom = self.conn.lookupByID(domain_id)
         tree = ElementTree.fromstring(dom.XMLDesc())
         device = tree.find('devices/disk/target').get('dev')
         rd_req, rd_bytes, wr_req, wr_bytes, err = dom.blockStats(device)
-        print('Read requests issued: ' + str(rd_req))
-        print('Bytes read: ' + str(rd_bytes))
-        print('Write requests issued: ' + str(wr_req))
-        print('Bytes written: ' + str(wr_bytes))
-        print('Number of errors: ' + str(err))
+        return rd_bytes, wr_bytes
