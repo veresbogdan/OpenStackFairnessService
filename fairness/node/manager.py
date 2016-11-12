@@ -60,6 +60,7 @@ def main():
 
             vm = VM([10, 20], "demo")
             vm_list.append(vm)
+            Node.update_endowments()
 
     for vm in vm_list:
         print(vm.endowment)
@@ -71,7 +72,6 @@ def main():
         print(len(vm.vms))
 
 
-    # Node.update_endowments()
 
 
 
