@@ -38,33 +38,37 @@ def main():
     # initialize node with 4 normalization factors and 4 resources.
     # TODO: where to get the normalization factors?? For the moment initialized to 1.
     Node.init([1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_io, nri.network_io], user_dict)
-    # print("Node initialized.")
+    print("Node initialized.")
 
     hostname = socket.gethostname()
+    vm_list = []
 
     rui = RUI()
-    vm_id_list = rui.get_domain_id_list()
-    if vm_id_list is not None:
-        for vm in vm_id_list:
-            print("")
-            print("Domain ID:", vm, "on host", hostname)
-            rui.get_vm_info(vm)
-            rui.get_utilization(vm)
-            print("CPU time in sec: ", rui.cpu_time)
-            print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)
-            print("Disk stats (read in bytes):", rui.disk_bytes_read)
-            print("Disk stats (write in bytes):", rui.disk_bytes_written)
-            print("Network stats (read in bytes):", rui.network_bytes_received)
-            print("Network stats (write in bytes):", rui.network_bytes_transmitted)
+    domain_id_list = rui.get_domain_id_list()
+    if domain_id_list is not None:
+        for domain in domain_id_list:
+            # print("")
+            # print("Domain ID:", domain, "on host", hostname)
+            rui.get_vm_info(domain)
+            rui.get_utilization(domain)
+            # print("CPU time in sec: ", rui.cpu_time)
+            # print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)
+            # print("Disk stats (read in bytes):", rui.disk_bytes_read)
+            # print("Disk stats (write in bytes):", rui.disk_bytes_written)
+            # print("Network stats (read in bytes):", rui.network_bytes_received)
+            # print("Network stats (write in bytes):", rui.network_bytes_transmitted)
 
-    vm = VM([10, 20], "demo")
-    print(vm.endowment)
-    print(vm.global_normalization)
-    print(vm.nri)
-    print(vm.owner)
-    print(vm.owners)
-    print(vm.rui)
-    print(len(vm.vms))
+            vm = VM([10, 20], "demo")
+            vm_list.append(vm)
+
+    for vm in vm_list:
+        print(vm.endowment)
+        print(vm.global_normalization)
+        print(vm.nri)
+        print(vm.owner)
+        print(vm.owners)
+        print(vm.rui)
+        print(len(vm.vms))
 
 
     # Node.update_endowments()
