@@ -13,6 +13,7 @@
 
 from __future__ import print_function
 import sys
+import socket
 from fairness.virtual_machines import Node
 from fairness.node.nri import NRI
 from fairness.node.rui import RUI
@@ -28,22 +29,24 @@ def main():
     print("Theoretical network throughput in bytes/s: ", nri.network_io)
 
     # connect to Openstack API
-    open_stack_connection = IdentityApiConnection()
-    user_dict = open_stack_connection.list_users()
-    open_stack_connection.list_projects()
+    # open_stack_connection = IdentityApiConnection()
+    # user_dict = open_stack_connection.list_users()
+    # open_stack_connection.list_projects()
     # open_stack_connection.get_quotas()
 
     # initialize node with 4 normalization factors and 4 resources.
     # TODO: where to get the normalization factors?? For the moment initialized to 1.
-    Node.init([1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_io, nri.network_io], user_dict)
-    print("Node initialized.")
+    # Node.init([1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_io, nri.network_io], user_dict)
+    # print("Node initialized.")
+
+    hostname = socket.gethostname()
 
     rui = RUI()
     vm_id_list = rui.get_domain_id_list()
     if vm_id_list is not None:
         for vm in vm_id_list:
             print("")
-            print("Domain ID: ", vm)
+            print("Domain ID:", vm, "on host", hostname)
             rui.get_vm_info(vm)
             rui.get_utilization(vm)
             print("CPU time in sec: ", rui.cpu_time)
