@@ -22,7 +22,6 @@ from fairness.node.openstack_driver import IdentityApiConnection
 
 
 def main():
-
     nri = NRI()
     print("CPU weighted by BogoMIPS: ", nri.cpu)
     print("Host memory size in kilobytes: ", nri.memory)
@@ -55,14 +54,18 @@ def main():
             # print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)
             # print("Disk stats (read in bytes):", rui.disk_bytes_read)
             # print("Disk stats (write in bytes):", rui.disk_bytes_written)
-            # print("Network stats (read in bytes):", rui.network_bytes_received)
+            # print("Network stats (read in bytes):", rui.disk_bytes_written)
             # print("Network stats (write in bytes):", rui.network_bytes_transmitted)
 
             vm = VM([maxmem, cpus], "demo")
+            vm.update_rui(
+                [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.disk_bytes_written,
+                 rui.network_bytes_transmitted])
             vm_list.append(vm)
             # Node.update_endowments()
 
     for vm in vm_list:
+        print(vm)
         print(vm.endowment)
         print(vm.global_normalization)
         print(vm.owner)
@@ -74,31 +77,31 @@ def main():
 
 
 
-    # Routine 1:
-    # Collect NRI on the current node
-    # Send NRI to next node
-    # Receive NRI from the last nodes in the ring
-    # Do it on start up and check every X seconds if there was some change in the infrastructure
-    # (e.g. new nodes or died nodes). If changes happened, re-do collecting and advertising procedure.
+        # Routine 1:
+        # Collect NRI on the current node
+        # Send NRI to next node
+        # Receive NRI from the last nodes in the ring
+        # Do it on start up and check every X seconds if there was some change in the infrastructure
+        # (e.g. new nodes or died nodes). If changes happened, re-do collecting and advertising procedure.
 
-    # Routine 2:
-    # Collect information about the VMs on the node.
-    # Do it on start up and re-collect information every X seconds for the case that
-    # there was some changes in the VMs
+        # Routine 2:
+        # Collect information about the VMs on the node.
+        # Do it on start up and re-collect information every X seconds for the case that
+        # there was some changes in the VMs
 
-    # Routine 3:
-    # Collect RUI of living VMs
-    # Calculate node heavinesses
-    # Send heaviness to the next node
-    # Receive the heaviness vector of the last node in the ring
-    # update heaviness vector with own heaviness
+        # Routine 3:
+        # Collect RUI of living VMs
+        # Calculate node heavinesses
+        # Send heaviness to the next node
+        # Receive the heaviness vector of the last node in the ring
+        # update heaviness vector with own heaviness
 
-    # Routine 4:
-    # Calculate user heavinesses
-    # Map the heaviness to priorities
+        # Routine 4:
+        # Calculate user heavinesses
+        # Map the heaviness to priorities
 
-    # Routine 5:
-    # Reallocate resources via libvirt
+        # Routine 5:
+        # Reallocate resources via libvirt
 
 
 if __name__ == '__main__':
