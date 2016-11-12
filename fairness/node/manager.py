@@ -15,6 +15,7 @@ from __future__ import print_function
 import sys
 import socket
 from fairness.virtual_machines import Node
+from fairness.virtual_machines import VM
 from fairness.node.nri import NRI
 from fairness.node.rui import RUI
 from fairness.node.openstack_driver import IdentityApiConnection
@@ -29,14 +30,14 @@ def main():
     print("Theoretical network throughput in bytes/s: ", nri.network_io)
 
     # connect to Openstack API
-    # open_stack_connection = IdentityApiConnection()
-    # user_dict = open_stack_connection.list_users()
+    open_stack_connection = IdentityApiConnection()
+    user_dict = open_stack_connection.list_users()
     # open_stack_connection.list_projects()
     # open_stack_connection.get_quotas()
 
     # initialize node with 4 normalization factors and 4 resources.
     # TODO: where to get the normalization factors?? For the moment initialized to 1.
-    # Node.init([1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_io, nri.network_io], user_dict)
+    Node.init([1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_io, nri.network_io], user_dict)
     # print("Node initialized.")
 
     hostname = socket.gethostname()
@@ -55,6 +56,20 @@ def main():
             print("Disk stats (write in bytes):", rui.disk_bytes_written)
             print("Network stats (read in bytes):", rui.network_bytes_received)
             print("Network stats (write in bytes):", rui.network_bytes_transmitted)
+
+    vm = VM([10, 20], "demo")
+    print(vm.endowment)
+    print(vm.global_normalization)
+    print(vm.nri)
+    print(vm.owner)
+    print(vm.owners)
+    print(vm.rui)
+    print(len(vm.vms))
+
+
+    # Node.update_endowments()
+
+
 
 
 

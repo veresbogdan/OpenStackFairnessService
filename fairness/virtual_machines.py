@@ -25,6 +25,26 @@ class Node(object):
         VM.nri = np.array(nri)
         VM.owners = owner_dictionary
 
+    @staticmethod
+    def update_endowments():
+        """
+        only needs to be called, when set of VMs changes
+        :return:
+        """
+
+        vr_sum = np.zeros(len(VM.nri))
+
+        for vm in VM.vms:
+            vr_sum += vm.vrs
+
+        relative_endow = VM.nri / vr_sum
+        for i in range(len(relative_endow)):
+            if relative_endow[i] > 1:
+                relative_endow[i] = 1
+
+        for vm in VM.vms:
+            vm.endowment = vm.vrs * relative_endow
+
 
 class VM:
     global_normalization = None
@@ -35,10 +55,10 @@ class VM:
     def __init__(self, vrs, owner):
         """
         :param vrs: sequence (list, np.array, etc.) that specifies the VM's VRs
-        :param vrs: string that specifies the VM's owner (must be key in the owner dictionary)
+        :param owner: string that specifies the VM's owner (must be key in the owner dictionary)
         """
-        assert len(vrs) == len(VM.nri)
-        assert owner in VM.owners
+        # assert len(vrs) == len(VM.nri)
+        # assert owner in VM.owners
 
         self.vrs = np.array(vrs)
         self.owner = owner
@@ -54,24 +74,7 @@ class VM:
         self.rui = np.array(rui)
 
 
-def update_endowments():
-    """
-    only needs to be called, when set of VMs changes
-    :return:
-    """
 
-    vr_sum = np.zeros(len(VM.nri))
-
-    for vm in VM.vms:
-        vr_sum += vm.vrs
-
-    relative_endow = VM.nri/vr_sum
-    for i in range(len(relative_endow)):
-        if relative_endow[i] > 1:
-            relative_endow[i] = 1
-
-    for vm in VM.vms:
-        vm.endowment = vm.vrs * relative_endow
 
 
 def get_greediness_per_user():
