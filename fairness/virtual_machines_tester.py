@@ -1,6 +1,6 @@
 __author__ = 'Patrick'
 
-from virtual_machines import init
+from virtual_machines import Node
 from virtual_machines import VM
 from virtual_machines import update_endowments
 from virtual_machines import get_greediness_per_user
@@ -11,7 +11,7 @@ owners = {"user_a": 0, "user_b": 0}
 
 # initalize a node with two resources, both have a normalization factor of one.
 # the nodes NRI is 10 of both resources
-init([1, 1], [10, 10], owners)
+Node.init([1, 1], [10, 10], owners)
 
 # this VM has VRs (10, 20) and is owned by user_b
 vm = VM([10,20], "user_b")

@@ -13,40 +13,45 @@
 
 from __future__ import print_function
 import sys
+from fairness.virtual_machines import Node
 from fairness.node.nri import NRI
 from fairness.node.rui import RUI
 from fairness.node.openstack_driver import IdentityApiConnection
 
 
 def main():
+
     nri = NRI()
     print("CPU weighted by BogoMIPS: ", nri.cpu)
     print("Host memory size in kilobytes: ", nri.memory)
     print("Disk read speed in bytes/s: ", nri.disk_io)
     print("Theoretical network throughput in bytes/s: ", nri.network_io)
 
-    rui = RUI()
-    vm_id_list = rui.get_domain_id_list()
-    for vm in vm_id_list:
-        print("")
-        print("Domain ID: ", vm)
-        rui.get_vm_info(vm)
-        rui.get_utilization(vm)
-        print("CPU time in sec: ", rui.cpu_time)
-        print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)
-        print("Disk stats (read in bytes):", rui.disk_bytes_read)
-        print("Disk stats (write in bytes):", rui.disk_bytes_written)
-        print("Network stats (read in bytes):", rui.network_bytes_received)
-        print("Network stats (write in bytes):", rui.network_bytes_transmitted)
-
     # connect to Openstack API
     open_stack_connection = IdentityApiConnection()
     user_dict = open_stack_connection.list_users()
     print(user_dict)
     # open_stack_connection.list_projects()
-    open_stack_connection.get_quotas()
+    # open_stack_connection.get_quotas()
 
+    # initialize node with 4 normalization factors and 4 resources.
+    # TODO: where to get the normalization factors?? For the moment initialized to 1.
+    Node.init([1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_io, nri.network_io], user_dict)
 
+    rui = RUI()
+    vm_id_list = rui.get_domain_id_list()
+    if vm_id_list is not None:
+        for vm in vm_id_list:
+            print("")
+            print("Domain ID: ", vm)
+            rui.get_vm_info(vm)
+            rui.get_utilization(vm)
+            print("CPU time in sec: ", rui.cpu_time)
+            print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)
+            print("Disk stats (read in bytes):", rui.disk_bytes_read)
+            print("Disk stats (write in bytes):", rui.disk_bytes_written)
+            print("Network stats (read in bytes):", rui.network_bytes_received)
+            print("Network stats (write in bytes):", rui.network_bytes_transmitted)
 
 
 

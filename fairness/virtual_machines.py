@@ -10,18 +10,20 @@ import numpy as np
 from metrics import GreedinessParameters
 
 
-def init(global_normalization, nri, owner_dictionary):
-    """
-    :param global_normalization: sequence (list, np.array, etc.) that specifies the cloud's global normalization vector
-    :param nri: sequence (list, np.array, etc.) that describes the node's resources. must have same length as norm.
-    :param owner_dictionary: python dict with owners unicodes
-    :return:
-    """
-    assert isinstance(owner_dictionary, dict)
-    assert len(global_normalization) == len(nri)
-    VM.global_normalization = np.array(global_normalization)
-    VM.nri = np.array(nri)
-    VM.owners = owner_dictionary
+class Node(object):
+    @staticmethod
+    def init(global_normalization, nri, owner_dictionary):
+        """
+        :param global_normalization: sequence (list, np.array, etc.) that specifies the cloud's global normalization vector
+        :param nri: sequence (list, np.array, etc.) that describes the node's resources. must have same length as norm.
+        :param owner_dictionary: python dict with owners unicodes
+        :return:
+        """
+        assert isinstance(owner_dictionary, dict)
+        assert len(global_normalization) == len(nri)
+        VM.global_normalization = np.array(global_normalization)
+        VM.nri = np.array(nri)
+        VM.owners = owner_dictionary
 
 
 class VM:
