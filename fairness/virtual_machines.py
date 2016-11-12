@@ -32,7 +32,7 @@ class Node(object):
         :return:
         """
 
-        vr_sum = np.zeros(len(VM.nri))
+        vr_sum = np.zeros(len(VM.vrs))
 
         for vm in VM.vms:
             vr_sum += vm.vrs
