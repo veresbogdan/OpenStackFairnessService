@@ -49,7 +49,7 @@ def main():
         for domain in domain_id_list:
             # print("")
             # print("Domain ID:", domain, "on host", hostname)
-            rui.get_vm_info(domain)
+            maxmem, cpus = rui.get_vm_info(domain)
             rui.get_utilization(domain)
             # print("CPU time in sec: ", rui.cpu_time)
             # print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)
@@ -58,7 +58,7 @@ def main():
             # print("Network stats (read in bytes):", rui.network_bytes_received)
             # print("Network stats (write in bytes):", rui.network_bytes_transmitted)
 
-            vm = VM([10, 20], "demo")
+            vm = VM([maxmem, cpus], "demo")
             vm_list.append(vm)
             # Node.update_endowments()
 

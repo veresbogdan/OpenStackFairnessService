@@ -32,6 +32,7 @@ class RUI(object):
         print('The state:', state)
         print('The max memory:', maxmem)
         print('The number of vcpus:', cpus)
+        return maxmem, cpus
 
     def get_utilization(self, domain_id):
         conn = LibvirtConnection()
