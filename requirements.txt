@@ -3,3 +3,4 @@
 # process, which may cause wedges in the gate later.
 
 pyzmq>=16.0.0 # LGPL+BSD
+numpy>=1.11.1 # BSD
