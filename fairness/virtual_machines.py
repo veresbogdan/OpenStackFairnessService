@@ -11,6 +11,15 @@ from metrics import GreedinessParameters
 
 
 class Node(object):
+    nri = None
+    owners = None
+    vms = list()
+
+    def __init__(self):
+        self.nri = None
+        self.owners = None
+        self.vms = list()
+
     @staticmethod
     def init(global_normalization, nri, owner_dictionary):
         """
@@ -22,8 +31,8 @@ class Node(object):
         assert isinstance(owner_dictionary, dict)
         assert len(global_normalization) == len(nri)
         VM.global_normalization = np.array(global_normalization)
-        VM.nri = np.array(nri)
-        VM.owners = owner_dictionary
+        Node.nri = np.array(nri)
+        Node.owners = owner_dictionary
 
     @staticmethod
     def update_endowments():
@@ -34,23 +43,23 @@ class Node(object):
 
         vr_sum = np.zeros(2)
 
-        for vm in VM.vms:
+        for vm in Node.vms:
             vr_sum += vm.vrs
 
-        relative_endow = VM.nri / vr_sum
+        relative_endow = Node.nri / vr_sum
         for i in range(len(relative_endow)):
             if relative_endow[i] > 1:
                 relative_endow[i] = 1
 
-        for vm in VM.vms:
+        for vm in Node.vms:
             vm.endowment = vm.vrs * relative_endow
 
 
 class VM:
     global_normalization = None
-    nri = None
-    owners = None
-    vms = list()
+    # nri = None
+    # owners = None
+    # vms = list()
 
     def __init__(self, vrs, owner):
         """
@@ -64,7 +73,7 @@ class VM:
         self.owner = owner
         self.rui = None
         self.endowment = None
-        VM.vms.append(self)
+        Node.vms.append(self)
 
     def update_rui(self, rui):
         """
@@ -74,9 +83,6 @@ class VM:
         self.rui = np.array(rui)
 
 
-
-
-
 def get_greediness_per_user():
     """
     updates the VMs' greediness and, therefore must be called after all RUI has been updated
@@ -84,19 +90,19 @@ def get_greediness_per_user():
     :return:
     """
 
-    rui = np.empty([len(VM.vms), len(VM.nri)])
-    endowments = np.empty([len(VM.vms), len(VM.nri)])
+    rui = np.empty([len(Node.vms), len(Node.nri)])
+    endowments = np.empty([len(Node.vms), len(Node.nri)])
 
-    for i in range(len(VM.vms)):  # concatenate the endowments vector
-        rui[i, :] = VM.vms[i].rui
-        endowments[i, :] = VM.vms[i].endowment
+    for i in range(len(Node.vms)):  # concatenate the endowments vector
+        rui[i, :] = Node.vms[i].rui
+        endowments[i, :] = Node.vms[i].endowment
 
     greediness =\
         greediness_raw(endowments, rui, VM.global_normalization, GreedinessParameters())\
         + np.sum(VM.global_normalization * endowments, axis=1)
 
-    for i in range(len(VM.vms)):
-        VM.vms[i].heaviness = greediness[i]
+    for i in range(len(Node.vms)):
+        Node.vms[i].heaviness = greediness[i]
 
 
 def quota_to_scalar(quota):
