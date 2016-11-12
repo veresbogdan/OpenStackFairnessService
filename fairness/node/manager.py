@@ -65,11 +65,8 @@ def main():
     for vm in vm_list:
         print(vm.endowment)
         print(vm.global_normalization)
-        print(vm.nri)
         print(vm.owner)
-        print(vm.owners)
         print(vm.rui)
-        print(len(vm.vms))
 
 
 
