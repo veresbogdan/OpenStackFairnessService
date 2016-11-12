@@ -61,7 +61,7 @@ class VM:
     # owners = None
     # vms = list()
 
-    def __init__(self, vrs, owner):
+    def __init__(self, vm_id, vrs, owner):
         """
         :param vrs: sequence (list, np.array, etc.) that specifies the VM's VRs
         :param owner: string that specifies the VM's owner (must be key in the owner dictionary)
@@ -69,6 +69,7 @@ class VM:
         # assert len(vrs) == len(VM.nri)
         # assert owner in VM.owners
 
+        self.vm_id = vm_id
         self.vrs = np.array(vrs)
         self.owner = owner
         self.rui = None

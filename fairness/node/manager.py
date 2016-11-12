@@ -57,7 +57,9 @@ def main():
             # print("Network stats (read in bytes):", rui.disk_bytes_written)
             # print("Network stats (write in bytes):", rui.network_bytes_transmitted)
 
-            vm = VM([maxmem, cpus], "demo")
+            domain_id = hostname + domain
+            print("Domain ID: ", domain_id)
+            vm = VM(domain_id, [maxmem, cpus], "demo")
             vm.update_rui(
                 [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.disk_bytes_written,
                  rui.network_bytes_transmitted])
