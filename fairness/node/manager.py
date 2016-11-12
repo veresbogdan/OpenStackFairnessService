@@ -30,13 +30,13 @@ def main():
     # connect to Openstack API
     open_stack_connection = IdentityApiConnection()
     user_dict = open_stack_connection.list_users()
-    print(user_dict)
-    # open_stack_connection.list_projects()
+    open_stack_connection.list_projects()
     # open_stack_connection.get_quotas()
 
     # initialize node with 4 normalization factors and 4 resources.
     # TODO: where to get the normalization factors?? For the moment initialized to 1.
     Node.init([1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_io, nri.network_io], user_dict)
+    print("Node initialized.")
 
     rui = RUI()
     vm_id_list = rui.get_domain_id_list()
