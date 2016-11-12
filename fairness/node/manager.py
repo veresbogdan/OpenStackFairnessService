@@ -58,7 +58,6 @@ def main():
             # print("Network stats (write in bytes):", rui.network_bytes_transmitted)
 
             domain_id = hostname + "-" + str(domain)
-            print("Domain ID: ", domain_id)
             vm = VM(domain_id, [maxmem, cpus], "demo")
             vm.update_rui(
                 [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.disk_bytes_written,
@@ -67,7 +66,7 @@ def main():
             # Node.update_endowments()
 
     for vm in vm_list:
-        print(vm)
+        print(vm.vm_id)
         print(vm.endowment)
         print(vm.global_normalization)
         print(vm.owner)
