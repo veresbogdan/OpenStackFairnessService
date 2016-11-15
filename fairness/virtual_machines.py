@@ -63,7 +63,7 @@ class Node(object):
         :return:
         """
 
-        rui = np.empty([len(Node.vms), len(Node.nri)])
+        rui = np.empty([len(Node.vms), len(Node.vms[0].rui)])
         endowments = np.empty([len(Node.vms), len(Node.nri)])
 
         for i in range(len(Node.vms)):  # concatenate the endowments vector
