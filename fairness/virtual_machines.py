@@ -55,6 +55,28 @@ class Node(object):
         for vm in Node.vms:
             vm.endowment = vm.vrs * relative_endow
 
+    @staticmethod
+    def get_greediness_per_user():
+        """
+        updates the VMs' greediness and, therefore must be called after all RUI has been updated
+        the greediness will be contained in the .heaviness attribute of the VM objects
+        :return:
+        """
+
+        rui = np.empty([len(Node.vms), len(Node.nri)])
+        endowments = np.empty([len(Node.vms), len(Node.nri)])
+
+        for i in range(len(Node.vms)):  # concatenate the endowments vector
+            rui[i, :] = Node.vms[i].rui
+            endowments[i, :] = Node.vms[i].endowment
+
+        greediness = \
+            greediness_raw(endowments, rui, VM.global_normalization, GreedinessParameters()) \
+            + np.sum(VM.global_normalization * endowments, axis=1)
+
+        for i in range(len(Node.vms)):
+            Node.vms[i].heaviness = greediness[i]
+
 
 class VM:
     global_normalization = None
@@ -83,28 +105,6 @@ class VM:
         """
         # assert len(rui) == len(VM.global_normalization)
         self.rui = np.array(rui)
-
-
-def get_greediness_per_user():
-    """
-    updates the VMs' greediness and, therefore must be called after all RUI has been updated
-    the greediness will be contained in the .heaviness attribute of the VM objects
-    :return:
-    """
-
-    rui = np.empty([len(Node.vms), len(Node.nri)])
-    endowments = np.empty([len(Node.vms), len(Node.nri)])
-
-    for i in range(len(Node.vms)):  # concatenate the endowments vector
-        rui[i, :] = Node.vms[i].rui
-        endowments[i, :] = Node.vms[i].endowment
-
-    greediness =\
-        greediness_raw(endowments, rui, VM.global_normalization, GreedinessParameters())\
-        + np.sum(VM.global_normalization * endowments, axis=1)
-
-    for i in range(len(Node.vms)):
-        Node.vms[i].heaviness = greediness[i]
 
 
 def quota_to_scalar(quota):

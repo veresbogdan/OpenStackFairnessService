@@ -2,7 +2,6 @@ __author__ = 'Patrick'
 
 from virtual_machines import Node
 from virtual_machines import VM
-from virtual_machines import get_greediness_per_user
 from virtual_machines import quota_to_scalar
 
 # define two owners, 0 is their heaviness and will be overwritten later
@@ -37,7 +36,7 @@ Node.update_endowments()
 
 # calculate the greediness of VMs on the node
 # will be stored in the heaviness attribute
-get_greediness_per_user()
+Node.get_greediness_per_user()
 
 # print the VMs heaviness/greediness
 for vm in Node.vms:

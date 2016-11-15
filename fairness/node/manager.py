@@ -65,6 +65,8 @@ def main():
             vm_list.append(vm)
             Node.update_endowments()
 
+    Node.get_greediness_per_user()
+
     for vm in vm_list:
         print(vm.vm_id)
         print(vm.endowment)
