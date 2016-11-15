@@ -54,13 +54,13 @@ def main():
             # print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)
             # print("Disk stats (read in bytes):", rui.disk_bytes_read)
             # print("Disk stats (write in bytes):", rui.disk_bytes_written)
-            # print("Network stats (read in bytes):", rui.disk_bytes_written)
+            # print("Network stats (read in bytes):", rui.network_bytes_received)
             # print("Network stats (write in bytes):", rui.network_bytes_transmitted)
 
             domain_id = hostname + "-" + str(domain)
             vm = VM(domain_id, [maxmem, cpus], "demo")
             vm.update_rui(
-                [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.disk_bytes_written,
+                [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
                  rui.network_bytes_transmitted])
             vm_list.append(vm)
             Node.update_endowments()
