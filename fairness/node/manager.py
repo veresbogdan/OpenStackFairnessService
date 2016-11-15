@@ -63,7 +63,7 @@ def main():
                 [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.disk_bytes_written,
                  rui.network_bytes_transmitted])
             vm_list.append(vm)
-            # Node.update_endowments()
+            Node.update_endowments()
 
     for vm in vm_list:
         print(vm.vm_id)

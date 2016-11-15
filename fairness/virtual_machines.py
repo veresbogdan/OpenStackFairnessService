@@ -46,7 +46,8 @@ class Node(object):
         for vm in Node.vms:
             vr_sum += vm.vrs
 
-        relative_endow = Node.nri / vr_sum
+        trimmed_nri = Node.nri[:2]
+        relative_endow = trimmed_nri / vr_sum
         for i in range(len(relative_endow)):
             if relative_endow[i] > 1:
                 relative_endow[i] = 1

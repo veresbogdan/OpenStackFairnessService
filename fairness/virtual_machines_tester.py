@@ -10,7 +10,7 @@ owners = {"user_a": 0, "user_b": 0}
 
 # initalize a node with two resources, both have a normalization factor of one.
 # the nodes NRI is 10 of both resources
-Node.init([1, 1], [10, 10], owners)
+Node.init([1, 1], [10, 15], owners)
 
 # this VM has VRs (10, 20) and is owned by user_b
 vm = VM(1, [10, 20], "user_b")
@@ -24,7 +24,7 @@ vm.update_rui([10, 0])
 print vm.vm_id
 print vm.endowment
 print vm.global_normalization
-print Node.nri                    # this is a node parameter
+print Node.nri[:2]                 # this is a node parameter
 print vm.owner
 print Node.owners                 # this is a node parameter
 print vm.rui
