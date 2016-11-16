@@ -23,7 +23,7 @@ class NRI(object):
         """
         self.cpu = NRI._get_cpu_count_weighted(self)
         self.memory = NRI._get_installed_memory()
-        # self.disk_io = NRI._get_disk_speeds()
+        self.disk_io = NRI._get_disk_speeds()
         self.network_io = NRI._get_network_throughput(self)
 
     def _get_cpu_count_weighted(self):
@@ -83,8 +83,22 @@ class NRI(object):
         return None
 
     @staticmethod
+    def _get_disks():
+        disks = list()
+        try:
+            output = subprocess.check_output(['lsblk', '-io', 'KNAME,TYPE'])
+            if output is not None:
+                for line in output.splitlines():
+                    line_segments = line.split(' ')
+                    if line_segments[len(line_segments) - 1] == 'disk':
+                        disks.append(line_segments[0])
+        except subprocess.CalledProcessError:
+            print ("An error in _get_disks() has ocured: Command 'exit 1' returned non-zero exit status 1")
+        return disks
+
+    @staticmethod
     def _get_disk_speeds():
-        """ Returns the sum of all disk speeds in bytes/s. Every disk is
+        """ Returns the sum of all disk read speeds in bytes/s. Every disk is
         tested 3 times.
 
         :return: Combined disk speeds in bytes/s
@@ -92,14 +106,15 @@ class NRI(object):
         """
         iterations = 3
         speeds = 0
+        disks = NRI._get_disks()
         try:
-            disks = list()
-            output = subprocess.check_output(['lsblk', '-io', 'KNAME,TYPE'])
-            if output is not None:
-                for line in output.splitlines():
-                    line_segments = line.split(' ')
-                    if line_segments[len(line_segments) - 1] == 'disk':
-                        disks.append(line_segments[0])
+            # disks = list()
+            # output = subprocess.check_output(['lsblk', '-io', 'KNAME,TYPE'])
+            # if output is not None:
+            #     for line in output.splitlines():
+            #         line_segments = line.split(' ')
+            #         if line_segments[len(line_segments) - 1] == 'disk':
+            #             disks.append(line_segments[0])
             for disk in disks:
                 inner_sum_speed = 0
                 for i in range(iterations):
@@ -127,6 +142,12 @@ class NRI(object):
         except subprocess.CalledProcessError:
             print ("An error in _get_disk_speeds() has ocured: Command 'exit 1' returned non-zero exit status 1")
         return speeds
+
+    # @staticmethod
+    # def _get_disk_write_speed():
+    #     iterations = 3
+    #     speeds = 0
+    #     disks = NRI._get_disks()
 
     def _get_network_throughput(self):
         """ return theoretical network throughput in bytes/s """
