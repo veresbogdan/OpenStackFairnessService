@@ -27,7 +27,8 @@ def main():
     print("Host memory size in kilobytes: ", nri.memory)
     print("Disk read speed in bytes/s: ", nri.disk_read_bytes)
     print("Disk write speed in bytes/s: ", nri.disk_write_bytes)
-    print("Theoretical network throughput in bytes/s: ", nri.network_io)
+    print("Theoretical network receive throughput in bytes/s: ", nri.network_receive)
+    print("Theoretical network transmit throughput in bytes/s: ", nri.network_transmit)
 
     # connect to Openstack API
     open_stack_connection = IdentityApiConnection()
@@ -37,7 +38,7 @@ def main():
 
     # initialize node with 4 normalization factors and 4 resources.
     # TODO: where to get the normalization factors?? For the moment initialized to 1.
-    Node.init([1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.network_io], user_dict)
+    Node.init([1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.network_receive], user_dict)
     print("Node initialized.")
 
     hostname = socket.gethostname()

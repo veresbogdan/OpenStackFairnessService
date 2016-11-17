@@ -16,7 +16,8 @@ class NRI(object):
         self.memory = None  # total amount of installed memory in kilobytes
         self.disk_read_bytes = None  # combined disk read speeds of all disks in bytes/s
         self.disk_write_bytes = None  # combined disk write speeds of all disks in bytes/s
-        self.network_io = None  # network throughput in bytes/s
+        self.network_receive = None  # network receive throughput in bytes/s
+        self.network_transmit = None  # network transmit throughput in bytes/s
         NRI._get_values(self)
 
     def _get_values(self):
@@ -27,7 +28,8 @@ class NRI(object):
         self.memory = NRI._get_installed_memory()
         self.disk_read_bytes = NRI._get_disk_read_speeds()
         self.disk_write_bytes = NRI._get_disk_write_speeds()
-        self.network_io = NRI._get_network_throughput(self)
+        self.network_receive = NRI._get_network_receive_throughput(self)
+        self.network_transmit = NRI._get_network_transmit_throughput(self)
 
     def _get_cpu_count_weighted(self):
         return multiprocessing.cpu_count() * self._get_bogomips()
@@ -152,6 +154,10 @@ class NRI(object):
             print ("An error in _get_disk_write_speeds() has ocured: Command 'exit 1' returned non-zero exit status 1")
         return speeds
 
-    def _get_network_throughput(self):
+    def _get_network_receive_throughput(self):
+        """ return theoretical network throughput in bytes/s """
+        return self.MAX_NETWORK_THROUGHPUT * 125000
+
+    def _get_network_transmit_throughput(self):
         """ return theoretical network throughput in bytes/s """
         return self.MAX_NETWORK_THROUGHPUT * 125000
