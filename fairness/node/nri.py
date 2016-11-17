@@ -13,7 +13,8 @@ class NRI(object):
     def __init__(self):
         self.cpu = None  # amount of CPU cores on the compute node, normalized by the node's BogoMIPS
         self.memory = None  # total amount of installed memory in kilobytes
-        self.disk_io = None  # combined disk read speeds of all disks in bytes/s
+        self.disk_read_bytes = None  # combined disk read speeds of all disks in bytes/s
+        self.disk_write_bytes = None  # combined disk write speeds of all disks in bytes/s
         self.network_io = None  # network throughput in bytes/s
         NRI._get_values(self)
 
@@ -23,7 +24,8 @@ class NRI(object):
         """
         self.cpu = NRI._get_cpu_count_weighted(self)
         self.memory = NRI._get_installed_memory()
-        self.disk_io = NRI._get_disk_speeds()
+        self.disk_read_bytes = NRI._get_disk_read_speeds()
+        self.disk_write_bytes = NRI._get_disk_write_speeds()
         self.network_io = NRI._get_network_throughput(self)
 
     def _get_cpu_count_weighted(self):
@@ -97,7 +99,7 @@ class NRI(object):
         return disks
 
     @staticmethod
-    def _get_disk_speeds():
+    def _get_disk_read_speeds():
         """ Returns the sum of all disk read speeds in bytes/s. Every disk is
         tested 3 times.
 
@@ -108,15 +110,9 @@ class NRI(object):
         speeds = 0
         disks = NRI._get_disks()
         try:
-            # disks = list()
-            # output = subprocess.check_output(['lsblk', '-io', 'KNAME,TYPE'])
-            # if output is not None:
-            #     for line in output.splitlines():
-            #         line_segments = line.split(' ')
-            #         if line_segments[len(line_segments) - 1] == 'disk':
-            #             disks.append(line_segments[0])
             for disk in disks:
                 inner_sum_speed = 0
+                output = None
                 for i in range(iterations):
                     output = subprocess.check_output(['sudo', 'hdparm', '-t', '/dev/' + disk])
                     # From man hdparm:
@@ -135,19 +131,35 @@ class NRI(object):
                         speed_in_mbs = line_segments[len(line_segments) - 2]
                         speed_in_bytes = float(speed_in_mbs) * 1000000
                         inner_sum_speed += int(speed_in_bytes)
-
                 if output is not None:
                     speeds += inner_sum_speed / iterations
-
         except subprocess.CalledProcessError:
-            print ("An error in _get_disk_speeds() has ocured: Command 'exit 1' returned non-zero exit status 1")
+            print ("An error in _get_disk_read_speeds() has ocured: Command 'exit 1' returned non-zero exit status 1")
         return speeds
 
-    # @staticmethod
-    # def _get_disk_write_speed():
-    #     iterations = 3
-    #     speeds = 0
-    #     disks = NRI._get_disks()
+    @staticmethod
+    def _get_disk_write_speeds():
+        iterations = 3
+        speeds = 0
+        disks = NRI._get_disks()
+        try:
+            for disk in disks:
+                inner_sum_speed = 0
+                err = None
+                for i in range(iterations):
+                    output, err = subprocess.Popen(['sudo', 'dd', 'if=/dev/' + disk, 'of=/home/riccardo/disk_benchmark_file', 'bs=8k', 'count=200k'], stderr=subprocess.PIPE).communicate()
+                    subprocess.check_output(['sudo', 'rm', '/home/riccardo/disk_benchmark_file'])
+                    if err is not None:
+                        lines = err.splitlines()
+                        line_segments = lines[2].split(' ')
+                        speed_in_mbs = line_segments[len(line_segments) - 2]
+                        speed_in_bytes = float(speed_in_mbs) * 1000000
+                        inner_sum_speed += int(speed_in_bytes)
+                if err is not None:
+                    speeds += inner_sum_speed / iterations
+        except subprocess.CalledProcessError:
+            print ("An error in _get_disk_write_speeds() has ocured: Command 'exit 1' returned non-zero exit status 1")
+        return speeds
 
     def _get_network_throughput(self):
         """ return theoretical network throughput in bytes/s """
