@@ -2,6 +2,7 @@ import socket
 import subprocess
 import multiprocessing
 import re
+import os
 
 
 class NRI(object):
@@ -24,7 +25,7 @@ class NRI(object):
         """
         self.cpu = NRI._get_cpu_count_weighted(self)
         self.memory = NRI._get_installed_memory()
-        self.disk_read_bytes = NRI._get_disk_read_speeds()
+        # self.disk_read_bytes = NRI._get_disk_read_speeds()
         self.disk_write_bytes = NRI._get_disk_write_speeds()
         self.network_io = NRI._get_network_throughput(self)
 
@@ -115,16 +116,6 @@ class NRI(object):
                 output = None
                 for i in range(iterations):
                     output = subprocess.check_output(['sudo', 'hdparm', '-t', '/dev/' + disk])
-                    # From man hdparm:
-                    # -t	Perform  timings  of  device  reads  for benchmark and comparison purposes.
-                    # For meaningful results, this operation should be repeated 2-3 times on an
-                    # otherwise inactive system (no other active processes) with at least a couple
-                    # of megabytes of free memory.  This displays the speed of reading through the
-                    # buffer cache to the disk without any prior caching  of  data.
-                    # This measurement  is  an indication of how fast the drive can sustain sequential
-                    # data reads under Linux, without any filesystem overhead.
-                    # To ensure accurate measurements, the buffer cache is flushed during the
-                    # processing of -t using the BLKFLSBUF ioctl.
                     if output is not None:
                         lines = output.splitlines()
                         line_segments = lines[2].split(' ')
@@ -147,8 +138,8 @@ class NRI(object):
                 inner_sum_speed = 0
                 err = None
                 for i in range(iterations):
-                    output, err = subprocess.Popen(['sudo', 'dd', 'if=/dev/' + disk, 'of=/home/riccardo/disk_benchmark_file', 'bs=8k', 'count=200k'], stderr=subprocess.PIPE).communicate()
-                    subprocess.check_output(['sudo', 'rm', '/home/riccardo/disk_benchmark_file'])
+                    output, err = subprocess.Popen(['sudo', 'dd', 'if=/dev/' + disk, 'of=' + os.path.expanduser('~/disk_benchmark_file'), 'bs=8k', 'count=200k'], stderr=subprocess.PIPE).communicate()
+                    subprocess.check_output(['sudo', 'rm', os.path.expanduser('~/disk_benchmark_file')])
                     if err is not None:
                         lines = err.splitlines()
                         line_segments = lines[2].split(' ')

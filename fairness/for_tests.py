@@ -1,4 +1,5 @@
 import subprocess
+import os
 
 
 def _get_disks():
@@ -22,23 +23,22 @@ def _get_disk_write_speeds():
     try:
         for disk in disks:
             inner_sum_speed = 0
-            output = None
+            err = None
             for i in range(iterations):
-                output, err = subprocess.Popen(['sudo', 'dd', 'if=/dev/' + disk, 'of=/home/riccardo/disk_benchmark_file', 'bs=8k', 'count=200k'], stderr=subprocess.PIPE).communicate()
-                subprocess.call(['sudo', 'rm', '/home/riccardo/disk_benchmark_file'])
-                print "err: ", err
+                output, err = subprocess.Popen(['sudo', 'dd', 'if=/dev/' + disk, 'of=' + os.path.expanduser('~/disk_benchmark_file'), 'bs=8k', 'count=200k'], stderr=subprocess.PIPE).communicate()
+                subprocess.call(['sudo', 'rm', os.path.expanduser('~/disk_benchmark_file')])
+                print err
                 if err is not None:
                     lines = err.splitlines()
-                    print lines
                     line_segments = lines[2].split(' ')
                     speed_in_mbs = line_segments[len(line_segments) - 2]
                     speed_in_bytes = float(speed_in_mbs) * 1000000
                     inner_sum_speed += int(speed_in_bytes)
-            if output is not None:
+            if err is not None:
                 speeds += inner_sum_speed / iterations
     except subprocess.CalledProcessError:
         print ("An error in _get_disk_write_speeds() has ocured: Command 'exit 1' returned non-zero exit status 1")
-    return speeds
+    print speeds
 
 if __name__ == '__main__':
     _get_disk_write_speeds()
