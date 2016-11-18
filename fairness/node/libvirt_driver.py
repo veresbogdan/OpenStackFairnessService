@@ -63,4 +63,4 @@ class LibvirtConnection(object):
         tree = ElementTree.fromstring(dom.XMLDesc())
         device = tree.find('devices/disk/target').get('dev')
         rd_req, rd_bytes, wr_req, wr_bytes, err = dom.blockStats(device)
-        return rd_bytes, wr_bytes
+        return rd_bytes, wr_bytes, rd_req, wr_req

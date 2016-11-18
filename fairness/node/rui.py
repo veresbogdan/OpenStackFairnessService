@@ -38,8 +38,8 @@ class RUI(object):
         conn = LibvirtConnection()
         self.cpu_time = conn.get_vcpu_stats(domain_id)
         self.memory_used = conn.get_memory_stats(domain_id)
-        self.disk_bytes_read = conn.get_disk_stats(domain_id)[0]
-        self.disk_bytes_written = conn.get_disk_stats(domain_id)[1]
+        self.disk_bytes_read = conn.get_disk_stats(domain_id)[0]  # 2 for IOPS
+        self.disk_bytes_written = conn.get_disk_stats(domain_id)[1]  # 3 for IOPS
         self.network_bytes_received = conn.get_network_stats(domain_id)[0]
         self.network_bytes_transmitted = conn.get_network_stats(domain_id)[1]
 

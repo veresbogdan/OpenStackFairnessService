@@ -9,17 +9,17 @@ owners = {"user_a": 0, "user_b": 0}
 
 # initalize a node with two resources, both have a normalization factor of one.
 # the nodes NRI is 10 of both resources
-Node.init([1, 1], [10, 15], owners)
+Node.init([1, 1, 1, 1, 1, 1], [10, 15, 25, 25, 41, 45], owners)
 
 # this VM has VRs (10, 20) and is owned by user_b
 vm = VM(1, [10, 20], "user_b")
 # the VM consumes 10 units of the second resource
-vm.update_rui([0,10])
+vm.update_rui([0, 10, 21, 34, 4, 7])
 
 # this VM has VRs (20, 10) and is owned by user_a
 vm = VM(2, [20, 10], "user_a")
 # the VM consumes 10 units of the first resource
-vm.update_rui([10, 0])
+vm.update_rui([10, 0, 4, 8, 12, 23])
 print vm.vm_id
 print vm.endowment
 print vm.global_normalization

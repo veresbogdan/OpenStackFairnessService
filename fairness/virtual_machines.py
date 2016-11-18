@@ -63,16 +63,16 @@ class Node(object):
         :return:
         """
 
-        rui = np.empty([len(Node.vms), len(Node.vms[0].rui)])
+        rui = np.empty([len(Node.vms), len(Node.vms[0].rui[:2])])
         endowments = np.empty([len(Node.vms), len(Node.vms[0].endowment)])
 
         for i in range(len(Node.vms)):  # concatenate the endowments vector
-            rui[i, :] = Node.vms[i].rui
+            rui[i, :] = Node.vms[i].rui[:2]
             endowments[i, :] = Node.vms[i].endowment
 
         greediness = \
-            greediness_raw(endowments, rui, VM.global_normalization, GreedinessParameters()) \
-            + np.sum(VM.global_normalization * endowments, axis=1)
+            greediness_raw(endowments, rui, VM.global_normalization[:2], GreedinessParameters()) \
+            + np.sum(VM.global_normalization[:2] * endowments, axis=1)
 
         for i in range(len(Node.vms)):
             Node.vms[i].heaviness = greediness[i]
@@ -113,5 +113,5 @@ def quota_to_scalar(quota):
     :param quota: sequence (list, np.array, etc.) that specifies a user's quota. Must have same length as the global normalization vector
     :return: the number that needs to be deducted from a user's heaviness
     """
-    assert len(quota) == len(VM.global_normalization)
-    return sum(np.array(quota) * VM.global_normalization)
+    assert len(quota) == len(VM.global_normalization[:2])
+    return sum(np.array(quota) * VM.global_normalization[:2])

@@ -16,6 +16,7 @@ import sys
 import socket
 from fairness.virtual_machines import Node
 from fairness.virtual_machines import VM
+from fairness.virtual_machines import quota_to_scalar
 from fairness.node.nri import NRI
 from fairness.node.rui import RUI
 from fairness.node.openstack_driver import IdentityApiConnection
@@ -31,18 +32,18 @@ def main():
     print("Theoretical network transmit throughput in bytes/s: ", nri.network_transmit)
 
     # connect to Openstack API
-    open_stack_connection = IdentityApiConnection()
-    user_dict = open_stack_connection.list_users()
+    # open_stack_connection = IdentityApiConnection()
+    # user_dict = open_stack_connection.list_users()
+    user_dict = {"demo": 0, "admin": 0}
     # open_stack_connection.list_projects()
     # open_stack_connection.get_quotas()
 
     # initialize node with 4 normalization factors and 4 resources.
     # TODO: where to get the normalization factors?? For the moment initialized to 1.
-    Node.init([1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.network_receive], user_dict)
+    Node.init([1, 1, 1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_dict)
     print("Node initialized.")
 
     hostname = socket.gethostname()
-    vm_list = []
 
     rui = RUI()
     domain_id_list = rui.get_domain_id_list()
@@ -50,7 +51,7 @@ def main():
         for domain in domain_id_list:
             # print("")
             # print("Domain ID:", domain, "on host", hostname)
-            maxmem, cpus = rui.get_vm_info(domain)
+            max_mem, cpu_s = rui.get_vm_info(domain)
             rui.get_utilization(domain)
             # print("CPU time in sec: ", rui.cpu_time)
             # print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)
@@ -60,24 +61,23 @@ def main():
             # print("Network stats (write in bytes):", rui.network_bytes_transmitted)
 
             domain_id = hostname + "-" + str(domain)
-            vm = VM(domain_id, [maxmem, cpus], "demo")
+            vm = VM(domain_id, [max_mem, cpu_s], "demo")
             vm.update_rui(
                 [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
                  rui.network_bytes_transmitted])
-            vm_list.append(vm)
             Node.update_endowments()
 
     Node.get_greediness_per_user()
 
-    for vm in vm_list:
-        print(vm.vm_id)
+    for vm in Node.vms:
+        print(" VM ID: ", vm.vm_id)
         print(vm.endowment)
         print(vm.global_normalization)
         print(vm.owner)
         print(vm.rui)
+        print(vm.heaviness)
 
-
-
+    print(quota_to_scalar([2, 3]))
 
 
 
