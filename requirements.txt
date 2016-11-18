@@ -2,5 +2,6 @@
 # of appearance. Changing the order has an impact on the overall integration
 # process, which may cause wedges in the gate later.
 
-pyzmq>=16.0.0 # LGPL+BSD
-numpy>=1.11.1 # BSD
+pyzmq >=16.0.0 # LGPL+BSD
+numpy >=1.11.1 # BSD
+#matplotlib >=1.5.3 # PSF

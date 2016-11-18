@@ -43,4 +43,4 @@ for vm in Node.vms:
     print vm.heaviness
 
 # print the number that has to be deducted from the heaviness of a user, who has a quota of (2,3)
-print quota_to_scalar([2,3])
+print quota_to_scalar([2, 3])

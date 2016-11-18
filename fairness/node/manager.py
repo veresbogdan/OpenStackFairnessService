@@ -32,9 +32,9 @@ def main():
     print("Theoretical network transmit throughput in bytes/s: ", nri.network_transmit)
 
     # connect to Openstack API
-    # open_stack_connection = IdentityApiConnection()
-    # user_dict = open_stack_connection.list_users()
-    user_dict = {"demo": 0, "admin": 0}
+    open_stack_connection = IdentityApiConnection()
+    user_dict = open_stack_connection.list_users()
+    # user_dict = {"demo": 0, "admin": 0}
     # open_stack_connection.list_projects()
     # open_stack_connection.get_quotas()
 
@@ -80,33 +80,31 @@ def main():
     print(quota_to_scalar([2, 3]))
 
 
+# Routine 1:
+# Collect NRI on the current node
+# Send NRI to next node
+# Receive NRI from the last nodes in the ring
+# Do it on start up and check every X seconds if there was some change in the infrastructure
+# (e.g. new nodes or died nodes). If changes happened, re-do collecting and advertising procedure.
 
+# Routine 2:
+# Collect information about the VMs on the node.
+# Do it on start up and re-collect information every X seconds for the case that
+# there was some changes in the VMs
 
-        # Routine 1:
-        # Collect NRI on the current node
-        # Send NRI to next node
-        # Receive NRI from the last nodes in the ring
-        # Do it on start up and check every X seconds if there was some change in the infrastructure
-        # (e.g. new nodes or died nodes). If changes happened, re-do collecting and advertising procedure.
+# Routine 3:
+# Collect RUI of living VMs
+# Calculate node heavinesses
+# Send heaviness to the next node
+# Receive the heaviness vector of the last node in the ring
+# update heaviness vector with own heaviness
 
-        # Routine 2:
-        # Collect information about the VMs on the node.
-        # Do it on start up and re-collect information every X seconds for the case that
-        # there was some changes in the VMs
+# Routine 4:
+# Calculate user heavinesses
+# Map the heaviness to priorities
 
-        # Routine 3:
-        # Collect RUI of living VMs
-        # Calculate node heavinesses
-        # Send heaviness to the next node
-        # Receive the heaviness vector of the last node in the ring
-        # update heaviness vector with own heaviness
-
-        # Routine 4:
-        # Calculate user heavinesses
-        # Map the heaviness to priorities
-
-        # Routine 5:
-        # Reallocate resources via libvirt
+# Routine 5:
+# Reallocate resources via libvirt
 
 
 if __name__ == '__main__':
