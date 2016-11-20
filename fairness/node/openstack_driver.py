@@ -108,7 +108,7 @@ class IdentityApiConnection(object):
 
     def get_vms(self):
         self._check_token()
-        url = 'http://openstack-controller:8774/v2.1/servers/detail'
+        url = 'http://openstack-controller:8774/v2.1/servers'
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
         json_text = json.loads(r.text)
