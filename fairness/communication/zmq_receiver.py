@@ -15,6 +15,7 @@ class Receiver:
     def __init__(self, nri=None, rui=None):
         self.nri = nri
         self.rui = rui
+        self.sender = Sender()
 
         context = zmq.Context()
         socket = context.socket(zmq.REP)
@@ -32,26 +33,26 @@ class Receiver:
 
     def manage_message(self, message):
         if message is not None:
-            sender = Sender()
+            # sender = Sender()
 
             json_msj = json.loads(message)
 
             if 'start' in json_msj:
                 print "got start"
                 if self.nri_sent < 2:
-                    sender.send_nri(self.nri)
+                    self.sender.send_nri(self.nri)
                     self.nri_sent += 1
                 self.interval = int(json_msj['start'])
 
             if 'nri' in json_msj:
                 if self.nri_sent < 2:
                     self.nri.server_nris['nri'] = json_msj['nri']
-                    sender.send_nri(self.nri)
+                    self.sender.send_nri(self.nri)
                     self.nri_sent += 1
                 else:
                     global start
                     start = time.time()
-                    sender.send_greediness(self.rui)
+                    self.sender.send_greediness(self.rui)
 
                 print 'the list of nris: '
                 print self.nri.server_nris
@@ -61,7 +62,7 @@ class Receiver:
                 self.rui.server_greediness['greed'] = json_msj['greed']
 
                 if self.interval == 0:
-                    sender.send_greediness(self.rui)
+                    self.sender.send_greediness(self.rui)
                 else:
                     # measure time again, subtract
                     end = time.time()
@@ -69,7 +70,7 @@ class Receiver:
                     time.sleep(sleep_time)
                     start = time.time()
 
-                    sender.send_greediness(self.rui)
+                    self.sender.send_greediness(self.rui)
 
                 print 'the list of greeds: '
                 print self.rui.server_greediness
