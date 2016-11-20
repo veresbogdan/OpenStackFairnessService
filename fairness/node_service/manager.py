@@ -78,7 +78,7 @@ def main():
         print(node.global_normalization)
         print(vm.owner)
         print(vm.rui)
-        print(vm.heaviness)
+        print("VM Heaviness: ", vm.heaviness)
 
     print("Quota to sclar: ", quota_to_scalar([cores, ram], node))
 
