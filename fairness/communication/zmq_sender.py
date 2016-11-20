@@ -24,7 +24,7 @@ class Sender:
         self.socket.send(json_string)
 
         response = self.socket.recv()
-        self.socket.close()
+        self.socket = self.context.socket(zmq.REQ)
 
         json_res = json.loads(response)
         if 'neighbor' in json_res:
