@@ -12,14 +12,16 @@
 #         set priorities of v on according to hv(v) and hu(o(v))
 
 from __future__ import print_function
-import sys
+
 import socket
+import sys
+
+from fairness.node.nri import NRI
+from fairness.node.rui import RUI
+from fairness.openstack_driver import IdentityApiConnection
 from fairness.virtual_machines import Node
 from fairness.virtual_machines import VM
 from fairness.virtual_machines import quota_to_scalar
-from fairness.node.nri import NRI
-from fairness.node.rui import RUI
-from fairness.node.openstack_driver import IdentityApiConnection
 
 
 def main():
