@@ -4,7 +4,7 @@ import json
 import zmq
 
 from fairness.config_parser import MyConfigParser
-from fairness.node.nri import NRI
+from fairness.node_service.nri import NRI
 
 import api
 

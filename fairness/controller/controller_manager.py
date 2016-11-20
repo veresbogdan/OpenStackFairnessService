@@ -1,6 +1,6 @@
 import MySQLdb as mysql
 
-from fairness.node.openstack_driver import IdentityApiConnection
+from fairness.openstack_driver import IdentityApiConnection
 
 
 class ControllerManager:

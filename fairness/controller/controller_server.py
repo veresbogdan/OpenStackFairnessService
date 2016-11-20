@@ -4,7 +4,7 @@ import thread
 import zmq
 
 from fairness.controller.controller_manager import ControllerManager
-from fairness.node.nri import NRI
+from fairness.node_service.nri import NRI
 
 
 class Server:

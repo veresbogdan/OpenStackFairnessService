@@ -3,8 +3,8 @@ import json
 import thread
 import time
 import zmq
-from fairness.node.nri import NRI
-from fairness.node.rui import RUI
+from fairness.node_service.nri import NRI
+from fairness.node_service.rui import RUI
 from fairness.communication.zmq_sender import Sender
 
 
