@@ -61,6 +61,9 @@ class IdentityApiConnection(object):
             }
             # POST with JSON
             r = requests.post(url, data=json.dumps(payload))
+            print r.headers
+            print " "
+            print r.text
             self.token = r.headers['X-Subject-Token']
             json_text = json.loads(r.text)
             self.token_exp = json_text['token']['expires_at']
@@ -68,7 +71,6 @@ class IdentityApiConnection(object):
 
     def _check_token(self):
         if self.token is None:
-            self._authenticate()
             self._authenticate()
         time_now = datetime.datetime.utcnow().isoformat()
         if self.token_exp < time_now:
