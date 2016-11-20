@@ -20,7 +20,6 @@ class IdentityApiConnection(object):
         self.token = None
         self.token_exp = None
         self.token_issued = None
-        self.project_id = None
 
     def _authenticate(self):
         """ The first step to call any other OpenStack API is to authenticate
@@ -66,8 +65,6 @@ class IdentityApiConnection(object):
             json_text = json.loads(r.text)
             self.token_exp = json_text['token']['expires_at']
             self.token_issued = json_text['token']['issued_at']
-            print "Length: ", len(json_text['token']['catalog'])
-            self.project_id = json_text['token']['catalog']['']
 
     def _check_token(self):
         if self.token is None:
@@ -104,5 +101,8 @@ class IdentityApiConnection(object):
         url = 'http://openstack-controller:8774/v2.1/os-quota-sets/e655d37b5181407281277b8fb1eef3f4?user_id=demo'
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
-        # print r.text
-        # print r.status_code
+        json_text = json.loads(r.text)
+        cores = json_text['quota_set']['cores']
+        ram = json_text['quota_set']['ram']
+        print cores
+        print ram
