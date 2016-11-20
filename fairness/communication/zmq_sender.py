@@ -47,7 +47,7 @@ class Sender:
 
         json_string = json.dumps(nri.server_nris)
         self.socket.send(json_string)
-        Sender.socket.recv()
+        self.socket.recv()
 
     def send_greediness(self, rui):
         key = 'greed_' + NRI._get_public_ip_address()
@@ -65,4 +65,4 @@ class Sender:
 
         json_string = json.dumps(rui.server_greediness)
         self.socket.send(json_string)
-        Sender.socket.recv()
+        self.socket.recv()
