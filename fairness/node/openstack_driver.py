@@ -101,7 +101,7 @@ class IdentityApiConnection(object):
 
     def get_quotas(self):
         self._check_token()
-        url = 'http://openstack-controller:8774/v2.1/os-quota-sets/e655d37b5181407281277b8fb1eef3f4'
+        url = 'http://openstack-controller:8774/v2.1/os-quota-sets/e655d37b5181407281277b8fb1eef3f4?user_id=demo'
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
         print r.text
