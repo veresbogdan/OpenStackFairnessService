@@ -61,9 +61,9 @@ class IdentityApiConnection(object):
             }
             # POST with JSON
             r = requests.post(url, data=json.dumps(payload))
-            print r.headers
-            print " "
-            print r.text
+            # print r.headers
+            # print " "
+            # print r.text
             self.token = r.headers['X-Subject-Token']
             json_text = json.loads(r.text)
             self.token_exp = json_text['token']['expires_at']
