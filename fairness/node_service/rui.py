@@ -1,6 +1,6 @@
 from __future__ import print_function
-from fairness.node.libvirt_driver import LibvirtConnection
-from fairness.node.nri import NRI
+from fairness.node_service.libvirt_driver import LibvirtConnection
+from fairness.node_service.nri import NRI
 
 
 class RUI(object):

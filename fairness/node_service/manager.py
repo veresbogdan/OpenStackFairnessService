@@ -16,10 +16,10 @@ from __future__ import print_function
 import socket
 import sys
 
-from fairness.node.nri import NRI
-from fairness.node.rui import RUI
+from fairness.node_service.nri import NRI
+from fairness.node_service.rui import RUI
 from fairness.openstack_driver import IdentityApiConnection
-from fairness.virtual_machines import Node
+from fairness.node import Node
 from fairness.virtual_machines import VM
 from fairness.virtual_machines import quota_to_scalar
 
@@ -43,10 +43,10 @@ def main():
 
     # initialize node with 6 normalization factors and 6 resources.
     # TODO: where to get the normalization factors?? For the moment initialized to 1.
-    Node.init([1, 1, 1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_dict)
+    node = Node([1, 1, 1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_dict)
     print("Node initialized.")
 
-    hostname = socket.gethostname()
+    hostname = node.hostname
 
     rui = RUI()
     domain_id_list = rui.get_domain_id_list()
@@ -64,15 +64,15 @@ def main():
             # print("Network stats (write in bytes):", rui.network_bytes_transmitted)
 
             domain_id = hostname + "-" + str(domain)
-            vm = VM(domain_id, [max_mem, cpu_s], "demo")
+            vm = VM(domain_id, [max_mem, cpu_s], "demo", node)
             vm.update_rui(
                 [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
                  rui.network_bytes_transmitted])
-            Node.update_endowments()
+            node.update_endowments()
 
-    Node.get_greediness_per_user()
+    node.get_greediness_per_user()
 
-    for vm in Node.vms:
+    for vm in node.vms:
         print(" VM ID: ", vm.vm_id)
         print(vm.endowment)
         print(vm.global_normalization)
@@ -80,7 +80,7 @@ def main():
         print(vm.rui)
         print(vm.heaviness)
 
-    print("Quota to sclar: ", quota_to_scalar([cores, ram]))
+    print("Quota to sclar: ", quota_to_scalar([cores, ram], node))
 
 
 # Routine 1:
