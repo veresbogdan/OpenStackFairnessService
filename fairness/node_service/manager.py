@@ -75,7 +75,7 @@ def main():
     for vm in node.vms:
         print(" VM ID: ", vm.vm_id)
         print(vm.endowment)
-        print(vm.global_normalization)
+        print(node.global_normalization)
         print(vm.owner)
         print(vm.rui)
         print(vm.heaviness)
