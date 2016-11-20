@@ -36,7 +36,7 @@ def main():
     user_dict = open_stack_connection.list_users()
     # user_dict = {"demo": 0, "admin": 0}
     # open_stack_connection.list_projects()
-    # open_stack_connection.get_quotas()
+    open_stack_connection.get_quotas()
 
     # initialize node with 4 normalization factors and 4 resources.
     # TODO: where to get the normalization factors?? For the moment initialized to 1.
