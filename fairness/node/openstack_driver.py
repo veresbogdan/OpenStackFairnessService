@@ -27,7 +27,8 @@ class IdentityApiConnection(object):
         for further calls to other APIs. """
 
         config = MyConfigParser()
-        username = config.config_section_map('keystone_authtoken')['username']
+        # username = config.config_section_map('keystone_authtoken')['username']
+        username = 'demo'
         password = config.config_section_map('keystone_authtoken')['password']
         user_domain_name = config.config_section_map('keystone_authtoken')['user_domain_name']
         project_name = config.config_section_map('keystone_authtoken')['project_name']
