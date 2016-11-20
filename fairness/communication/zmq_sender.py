@@ -24,6 +24,7 @@ class Sender:
         self.socket.send(json_string)
 
         response = self.socket.recv()
+        self.socket.close()
 
         json_res = json.loads(response)
         if 'neighbor' in json_res:

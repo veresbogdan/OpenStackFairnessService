@@ -3,6 +3,7 @@ import json
 import thread
 import zmq
 
+from fairness.controller.controller_manager import ControllerManager
 from fairness.node.nri import NRI
 
 
@@ -34,7 +35,7 @@ class Server:
                 ips_list = self.manager.ips_list
                 if req_ip in ips_list:
                     index = ips_list.index(req_ip)
-                    if index == (ips_list.__len__ - 1):
+                    if index == len(ips_list) - 1:
                         return_message = {'neighbor': ips_list[0]}
                     else:
                         return_message = {'neighbor': ips_list[index + 1]}
@@ -43,7 +44,8 @@ class Server:
                     json_string = json.dumps(return_message)
                     socket.send(json_string)
 
-                    if self.host_no == ips_list.__len__:
+                    if self.host_no == len(ips_list):
+                        print 'start ring...'
                         self.send_start_message(ips_list[0])
 
     def send_start_message(self, ip):
@@ -57,3 +59,7 @@ class Server:
         json_string = "{\"start\":\"10\"}"
         socket.send(json_string)
         socket.recv()
+
+
+# TODO start the controller service nicely
+Server(ControllerManager())
