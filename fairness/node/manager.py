@@ -36,9 +36,9 @@ def main():
     user_dict = open_stack_connection.list_users()
     # user_dict = {"demo": 0, "admin": 0}
     # open_stack_connection.list_projects()
-    open_stack_connection.get_quotas()
+    cores, ram = open_stack_connection.get_quotas()
 
-    # initialize node with 4 normalization factors and 4 resources.
+    # initialize node with 6 normalization factors and 6 resources.
     # TODO: where to get the normalization factors?? For the moment initialized to 1.
     Node.init([1, 1, 1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_dict)
     print("Node initialized.")
@@ -77,7 +77,7 @@ def main():
         print(vm.rui)
         print(vm.heaviness)
 
-    print(quota_to_scalar([2, 3]))
+    print(quota_to_scalar([cores, ram]))
 
 
 # Routine 1:

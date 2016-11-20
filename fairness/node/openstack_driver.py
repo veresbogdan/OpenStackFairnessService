@@ -104,5 +104,4 @@ class IdentityApiConnection(object):
         json_text = json.loads(r.text)
         cores = json_text['quota_set']['cores']
         ram = json_text['quota_set']['ram']
-        print cores
-        print ram
+        return cores, ram
