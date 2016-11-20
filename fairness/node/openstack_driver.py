@@ -27,8 +27,7 @@ class IdentityApiConnection(object):
         for further calls to other APIs. """
 
         config = MyConfigParser()
-        # username = config.config_section_map('keystone_authtoken')['username']
-        username = 'demo'
+        username = config.config_section_map('keystone_authtoken')['username']
         password = config.config_section_map('keystone_authtoken')['password']
         user_domain_name = config.config_section_map('keystone_authtoken')['user_domain_name']
         project_name = config.config_section_map('keystone_authtoken')['project_name']
@@ -109,7 +108,7 @@ class IdentityApiConnection(object):
 
     def get_vms(self):
         self._check_token()
-        url = 'http://openstack-controller:8774/v2.1/servers'
+        url = 'http://openstack-controller:8774/v2.1/servers/detail?all_tenants=1'
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
         json_text = json.loads(r.text)
