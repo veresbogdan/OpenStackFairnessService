@@ -37,6 +37,7 @@ def main():
     # user_dict = {"demo": 0, "admin": 0}
     # open_stack_connection.list_projects()
     cores, ram = open_stack_connection.get_quotas()
+    open_stack_connection.get_vms()
 
     # initialize node with 6 normalization factors and 6 resources.
     # TODO: where to get the normalization factors?? For the moment initialized to 1.
@@ -77,7 +78,7 @@ def main():
         print(vm.rui)
         print(vm.heaviness)
 
-    print(quota_to_scalar([cores, ram]))
+    print("Quota to sclar: ", quota_to_scalar([cores, ram]))
 
 
 # Routine 1:

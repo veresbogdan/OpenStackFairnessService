@@ -103,5 +103,15 @@ class IdentityApiConnection(object):
         r = requests.get(url, headers=headers)
         json_text = json.loads(r.text)
         cores = json_text['quota_set']['cores']
-        ram = json_text['quota_set']['ram']
+        ram = json_text['quota_set']['ram']  # in MB
         return cores, ram
+
+    def get_vms(self):
+        self._check_token()
+        url = 'http://openstack-controller:8774/v2.1/servers/detail'
+        headers = {'X-Auth-Token': self.token}
+        r = requests.get(url, headers=headers)
+        json_text = json.loads(r.text)
+        print r.headers
+        print r.text
+        print r.status_code
