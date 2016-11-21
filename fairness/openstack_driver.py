@@ -126,5 +126,6 @@ class IdentityApiConnection(object):
                 user_id = json_text['servers'][i]['user_id']
                 user_name = user_dict[user_id]
                 instance_name = json_text['servers'][i]['OS-EXT-SRV-ATTR:instance_name']
-                vm_dict[str(instance_name)] = str(user_name)
+                host = json_text['servers'][i]['OS-EXT-SRV-ATTR:host']
+                vm_dict[str(instance_name)] = (str(user_name), str(host))
         return vm_dict

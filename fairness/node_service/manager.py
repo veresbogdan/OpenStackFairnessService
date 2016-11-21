@@ -45,8 +45,8 @@ def main():
     # initialize user greediness with 0's.
     user_initial_greediness = {}
     for key, value in user_dict.items():
-        user_initial_greediness[value] = 0
-    # print("new dict: ", user_initial_greediness)
+        user_initial_greediness[value[0]] = 0
+    print("new dict: ", user_initial_greediness)
     # print("user_dict: ", user_dict)
 
     # initialize node with 6 normalization factors and 6 resources.
@@ -67,7 +67,7 @@ def main():
         for domain in domain_id_list_new:
             # print("")
             # print("Domain ID:", domain, "on host", hostname)
-            max_mem, cpu_s = rui.get_vm_info(domain)
+            max_mem, cpu_s = rui.get_vm_info(domain) # TODO: domains vms to get only those on local node.
             rui.get_utilization(domain)
             # print("CPU time in sec: ", rui.cpu_time)
             # print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)

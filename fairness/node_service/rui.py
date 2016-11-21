@@ -28,13 +28,13 @@ class RUI(object):
     @staticmethod
     def get_vm_info(domain_id):
         conn = LibvirtConnection()
-        state, maxmem, cpus= conn.get_domain_info(domain_id)
+        state, maxmem, cpus = conn.get_domain_info(domain_id)
         print('The state:', state)
         print('The max memory:', maxmem)
         print('The number of vcpus:', cpus)
         return maxmem, cpus
 
-    def get_utilization(self, domain_id):
+    def get_utilization(self, domain_id, host):
         conn = LibvirtConnection()
         self.cpu_time = conn.get_vcpu_stats(domain_id)
         self.memory_used = conn.get_memory_stats(domain_id)
