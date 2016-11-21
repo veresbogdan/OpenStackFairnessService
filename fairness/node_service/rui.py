@@ -34,7 +34,7 @@ class RUI(object):
         print('The number of vcpus:', cpus)
         return maxmem, cpus
 
-    def get_utilization(self, domain_id, host):
+    def get_utilization(self, domain_id):
         conn = LibvirtConnection()
         self.cpu_time = conn.get_vcpu_stats(domain_id)
         self.memory_used = conn.get_memory_stats(domain_id)
