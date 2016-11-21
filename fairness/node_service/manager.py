@@ -43,7 +43,7 @@ def main():
 
     user_initial_greediness = {}
     for key in user_dict:
-        user_initial_greediness[key] = user_dict[key]
+        user_initial_greediness[key] = 0
     print("new dict: ", user_initial_greediness)
     print("user_dict: ", user_dict)
     # initialize node with 6 normalization factors and 6 resources.
