@@ -122,10 +122,9 @@ class IdentityApiConnection(object):
         vm_dict = {}
         for i in range(len(json_text['servers'])):
             instance_status = json_text['servers'][i]['status']
-            if instance_status is "ACTIVE":
+            if instance_status == "ACTIVE":
                 user_id = json_text['servers'][i]['user_id']
                 user_name = user_dict[user_id]
-                if user_name is "demo":
-                    instance_name = json_text['servers'][i]['OS-EXT-SRV-ATTR:instance_name']
-                    vm_dict[instance_name] = user_name
+                instance_name = json_text['servers'][i]['OS-EXT-SRV-ATTR:instance_name']
+                vm_dict[str(instance_name)] = str(user_name)
         return vm_dict
