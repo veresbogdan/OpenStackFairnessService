@@ -16,14 +16,14 @@ class RUI(object):
         self.network_bytes_received = None
         self.network_bytes_transmitted = None
 
-    @staticmethod
-    def get_domain_id_list():
-        conn = LibvirtConnection()
-        domain_id_list = conn.get_domain_ids()
-        if len(domain_id_list) == 0:
-            print(' No VM in running state')
-        else:
-            return domain_id_list
+    # @staticmethod
+    # def get_domain_id_list():
+    #     conn = LibvirtConnection()
+    #     domain_id_list = conn.get_domain_ids()
+    #     if len(domain_id_list) == 0:
+    #         print(' No VM in running state')
+    #     else:
+    #         return domain_id_list
 
     @staticmethod
     def get_vm_info(domain_id):

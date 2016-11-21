@@ -58,7 +58,7 @@ def main():
 
     domain_id_list_new = []
     for key in vm_dict:
-        domain_id_list_new.extend(vm_dict[key])
+        domain_id_list_new.append(key)
     print("domain_id_list_new: ", domain_id_list_new)
 
     rui = RUI()
