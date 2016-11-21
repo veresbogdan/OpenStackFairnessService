@@ -56,10 +56,15 @@ def main():
 
     hostname = node.hostname
 
+    domain_id_list_new = []
+    for key in vm_dict:
+        domain_id_list_new.extend(vm_dict[key])
+    print("domain_id_list_new: ", domain_id_list_new)
+
     rui = RUI()
-    domain_id_list = rui.get_domain_id_list()
-    if domain_id_list is not None:
-        for domain in domain_id_list:
+    # domain_id_list = rui.get_domain_id_list()
+    if domain_id_list_new is not None:
+        for domain in domain_id_list_new:
             # print("")
             # print("Domain ID:", domain, "on host", hostname)
             max_mem, cpu_s = rui.get_vm_info(domain)

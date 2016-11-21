@@ -25,7 +25,7 @@ class LibvirtConnection(object):
         return state, maxmem, cpus
 
     def domain_lookup(self, domain_id):
-        dom = self.conn.lookupByID(domain_id)
+        dom = self.conn.lookupByName(domain_id)
         if dom is None:
             print('Failed to find the domain ', domain_id)
             exit(1)
