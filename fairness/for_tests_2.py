@@ -3,7 +3,7 @@ from random import randrange
 
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
-socket.bind("tcp://*:5556")
+socket.bind("tcp://*:5557")
 
 while True:
     zipcode = randrange(1, 100000)
