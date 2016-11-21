@@ -3,7 +3,7 @@ import zmq
 
 context = zmq.Context()
 socket = context.socket(zmq.REP)
-socket.bind("tcp://192.168.100.101:5555")
+socket.bind("tcp://n01:5555")
 
 while True:
     #  Wait for next request from client
