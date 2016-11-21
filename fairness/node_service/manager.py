@@ -41,7 +41,7 @@ def main():
     cores, ram = open_stack_connection.get_quotas()
     # open_stack_connection.get_vms()
 
-    user_initial_greediness = None
+    user_initial_greediness = {}
     for key in user_dict:
         user_initial_greediness[key] = user_dict[key]
     print("new dict: ", user_initial_greediness)
