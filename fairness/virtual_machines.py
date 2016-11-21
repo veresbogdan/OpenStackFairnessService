@@ -28,6 +28,7 @@ class VM:
         self.rui = np.array(rui)
 
 
+# pro user ausrechnen auf jedem node
 def quota_to_scalar(quota, node):
     """
     The quota given as input will be multiplied with the global normalization vector given to init() and the sum returned.

@@ -1,27 +1,17 @@
-import sys
 import zmq
 
-#  Socket to talk to server
 context = zmq.Context()
-socket = context.socket(zmq.SUB)
 
-print("Collecting updates...")
-socket.connect("tcp://localhost:5556")
+#  Socket to talk to server
+print("Connecting to hello world server...")
+socket = context.socket(zmq.REQ)
+socket.connect("tcp://localhost:5555")
 
-# Subscribe to zipcode, default is NYC, 10001
-zip_filter = sys.argv[1] if len(sys.argv) > 1 else "10001"
+#  Do 10 requests, waiting each time for a response
+for request in range(3):
+    print("Sending request %s ..." % request)
+    socket.send("Hello")
 
-# Python 2 - ascii bytes to unicode str
-if isinstance(zip_filter, bytes):
-    zip_filter = zip_filter.decode('ascii')
-socket.setsockopt_string(zmq.SUBSCRIBE, zip_filter)
-
-# Process 5 updates
-total_temp = 0
-for update_nbr in range(5):
-    string = socket.recv_string()
-    zipcode, temperature, relhumidity = string.split()
-    total_temp += int(temperature)
-
-print("Average temperature for zipcode '%s' was %dF" % (
-      zip_filter, total_temp / (update_nbr+1)))
+    #  Get the reply.
+    message = socket.recv()
+    print("Received reply %s [ %s ]" % (request, message))

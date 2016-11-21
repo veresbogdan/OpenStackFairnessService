@@ -42,8 +42,8 @@ def main():
     open_stack_connection.get_vms()
 
     # initialize node with 6 normalization factors and 6 resources.
-    # TODO: where to get the normalization factors?? For the moment initialized to 1.
-    node = Node([1, 1, 1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_dict)
+    # TODO: where to get the normalization factors?? For the moment initialized to 1. From CRS (1 / anzahl ressource)
+    node = Node([1, 1/nri.memory, 1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_dict)
     print("Node initialized.")
 
     hostname = node.hostname
