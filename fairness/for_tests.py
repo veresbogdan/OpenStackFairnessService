@@ -6,7 +6,7 @@ context = zmq.Context()
 socket = context.socket(zmq.SUB)
 
 print("Collecting updates...")
-socket.connect("tcp://192.168.100.102:5556")
+socket.connect("tcp://localhost:5556")
 
 # Subscribe to zipcode, default is NYC, 10001
 zip_filter = sys.argv[1] if len(sys.argv) > 1 else "10001"
