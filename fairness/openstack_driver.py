@@ -116,7 +116,16 @@ class IdentityApiConnection(object):
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
         json_text = json.loads(r.text)
-        # TODO: get users ID from list_users() call and store it in a map
         # print r.headers
         # print r.text
         # print r.status_code
+        vm_dict = {}
+        for i in range(len(json_text['servers'])):
+            instance_status = json_text['servers'][i]['status']
+            if instance_status is "ACTIVE":
+                user_id = json_text['servers'][i]['user_id']
+                user_name = user_dict[user_id]
+                if user_name is "demo":
+                    instance_name = json_text['servers'][i]['OS-EXT-SRV-ATTR:instance_name']
+                    vm_dict[instance_name] = user_name
+        return vm_dict
