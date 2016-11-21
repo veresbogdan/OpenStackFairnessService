@@ -43,7 +43,7 @@ def main():
 
     # initialize user greediness with 0's.
     user_initial_greediness = {}
-    for key, value in user_dict:
+    for key, value in user_dict.items():
         user_initial_greediness[value] = 0
     print("new dict: ", user_initial_greediness)
     print("user_dict: ", user_dict)
