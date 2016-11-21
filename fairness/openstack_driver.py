@@ -89,7 +89,7 @@ class IdentityApiConnection(object):
         for i in range(len(json_text["users"])):
             user = str(json_text['users'][i]['name'])
             user_id = str(json_text['users'][i]['id'])
-            user_dict[user] = user_id
+            user_dict[user_id] = user
         return user_dict
 
     def list_projects(self):
@@ -110,7 +110,7 @@ class IdentityApiConnection(object):
         ram = json_text['quota_set']['ram']  # in MB
         return cores, ram
 
-    def get_vms(self):
+    def get_vms(self, user_dict):
         self._check_token()
         url = 'http://openstack-controller:8774/v2.1/servers/detail?all_tenants=1'
         headers = {'X-Auth-Token': self.token}
