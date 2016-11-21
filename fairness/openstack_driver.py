@@ -88,7 +88,8 @@ class IdentityApiConnection(object):
         user_dict = {}
         for i in range(len(json_text["users"])):
             user = str(json_text['users'][i]['name'])
-            user_dict[user] = 0
+            user_id = str(json_text['users'][i]['id'])
+            user_dict[user] = user_id
         return user_dict
 
     def list_projects(self):

@@ -39,11 +39,16 @@ def main():
     # user_dict = {"demo": 0, "admin": 0}
     # open_stack_connection.list_projects()
     cores, ram = open_stack_connection.get_quotas()
-    open_stack_connection.get_vms()
+    # open_stack_connection.get_vms()
 
+    user_initial_greediness = None
+    for key in user_dict:
+        user_initial_greediness[key] = user_dict[key]
+    print("new dict: ", user_initial_greediness)
+    print("user_dict: ", user_dict)
     # initialize node with 6 normalization factors and 6 resources.
     # TODO: where to get the normalization factors?? For the moment initialized to 1. From CRS (1 / anzahl ressource)
-    node = Node([1, 1/nri.memory, 1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_dict)
+    node = Node([1, 1/nri.memory, 1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_initial_greediness)
     print("Node initialized.")
 
     hostname = node.hostname
