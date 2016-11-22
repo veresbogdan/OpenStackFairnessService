@@ -58,8 +58,9 @@ def main():
     hostname = node.hostname
 
     domain_id_list_new = []
-    for key in vm_dict:
-        domain_id_list_new.append(key)
+    for inst in vm_dict:
+        if inst.values()[0][1] == hostname:
+            domain_id_list_new.append(inst.keys()[0])
     print("domain_id_list_new: ", domain_id_list_new)
 
     rui = RUI()  # TODO: create new RUI for every VM.
