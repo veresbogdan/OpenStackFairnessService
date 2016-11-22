@@ -5,8 +5,6 @@ from fairness.openstack_driver import IdentityApiConnection
 
 class ControllerManager:
     def __init__(self):
-        open_stack_conn = IdentityApiConnection()
-        # ips_list = [get_compute_node_ips()]
         # self.ips_list = ['192.168.1.123', '192.168.1.124', '192.168.1.125']
 
         self.ips_list = []
