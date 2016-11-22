@@ -44,5 +44,6 @@ class RUI(object):
         self.network_bytes_transmitted = conn.get_network_stats(domain_id)[1]
 
     # TODO
-    def get_vm_greediness(self):
+    def get_user_greediness(self):
+
         return 'TODO Greed ' + NRI._get_public_ip_address()

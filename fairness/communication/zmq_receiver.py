@@ -76,4 +76,4 @@ class Receiver:
                 print self.rui.server_greediness
 
 # just for test purposes (remove this)
-Receiver(NRI(), RUI())
+# Receiver(NRI(), RUI())

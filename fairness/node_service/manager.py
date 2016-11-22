@@ -16,6 +16,7 @@ from __future__ import print_function
 import socket
 import sys
 
+from fairness.communication.zmq_receiver import Receiver
 from fairness.node_service.nri import NRI
 from fairness.node_service.rui import RUI
 from fairness.openstack_driver import IdentityApiConnection
@@ -61,7 +62,7 @@ def main():
         domain_id_list_new.append(key)
     print("domain_id_list_new: ", domain_id_list_new)
 
-    rui = RUI()
+    rui = RUI()  # TODO: create new RUI for every VM.
     # domain_id_list = rui.get_domain_id_list()
     if domain_id_list_new is not None:
         for domain in domain_id_list_new:
@@ -94,6 +95,8 @@ def main():
         print("VM Heaviness: ", vm.heaviness)
 
     print("Quota to sclar: ", quota_to_scalar([cores, ram], node))
+
+    Receiver(nri, rui)
 
 
 # Routine 1:

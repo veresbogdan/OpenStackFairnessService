@@ -51,7 +51,7 @@ class Sender:
 
     def send_greediness(self, rui):
         key = 'greed_' + NRI._get_public_ip_address()
-        own_greed = {key: rui.get_vm_greediness()}
+        own_greed = {key: rui.get_user_greediness()}
 
         if not rui.server_greediness.__contains__('greed'):
             greeds = [own_greed]
