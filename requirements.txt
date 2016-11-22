@@ -4,6 +4,6 @@
 
 pyzmq >=16.0.0 # LGPL+BSD
 numpy >=1.11.1 # BSD
-zmq >=15.4.0 # GNU v3
+pyzmq >=15.4.0 # GNU v3
 
 #matplotlib >=1.5.3 # PSF
