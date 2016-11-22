@@ -17,7 +17,7 @@ class Sender:
     def __init__(self):
         print("Connecting to get the neighbor…")
         config = MyConfigParser()
-        controller_ip = config.config_section_map('keystone_authtoken')['ip']
+        controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
         address = "tcp://" + controller_ip + ":5555"
         self.socket.connect(address)
         json_string = json.dumps({'neighbor':NRI._get_public_ip_address()})
