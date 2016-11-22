@@ -120,6 +120,7 @@ class IdentityApiConnection(object):
         # print r.text
         # print r.status_code
         vm_dict = {}
+        new_list = []
         for i in range(len(json_text['servers'])):
             instance_status = json_text['servers'][i]['status']
             if instance_status == "ACTIVE":
@@ -128,4 +129,5 @@ class IdentityApiConnection(object):
                 instance_name = json_text['servers'][i]['OS-EXT-SRV-ATTR:instance_name']
                 host = json_text['servers'][i]['OS-EXT-SRV-ATTR:host']
                 vm_dict[str(instance_name)] = (str(user_name), str(host))
-        return vm_dict
+                new_list.append(vm_dict)
+        return new_list
