@@ -119,9 +119,9 @@ class IdentityApiConnection(object):
         # print r.headers
         # print r.text
         # print r.status_code
-        vm_dict = {}
         new_list = []
         for i in range(len(json_text['servers'])):
+            vm_dict = {}
             instance_status = json_text['servers'][i]['status']
             if instance_status == "ACTIVE":
                 user_id = json_text['servers'][i]['user_id']
