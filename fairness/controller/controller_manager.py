@@ -19,6 +19,9 @@ class ControllerManager:
             db.query(query)
             r = db.use_result()
             results = r.fetch_row(maxrows=0)
+
+            print results
+
             return results
         except Exception as exp:
             print "Error in accessing the Nova database"
