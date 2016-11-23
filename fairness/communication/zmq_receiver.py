@@ -9,7 +9,7 @@ from fairness.communication.zmq_sender import Sender
 
 
 class Receiver:
-    nri_sent = 0
+    crs_sent = 0
     interval = 0
 
     def __init__(self, nri=None, rui=None):
@@ -39,23 +39,23 @@ class Receiver:
 
             if 'start' in json_msj:
                 print "got start"
-                if self.nri_sent < 2:
-                    self.sender.send_nri(self.nri)
-                    self.nri_sent += 1
+                if self.crs_sent < 2:
+                    self.sender.send_crs(self.nri, self.crs_sent)
+                    self.crs_sent += 1
                 self.interval = int(json_msj['start'])
 
-            if 'nri' in json_msj:
-                if self.nri_sent < 2:
-                    self.nri.server_nris['nri'] = json_msj['nri']
-                    self.sender.send_nri(self.nri)
-                    self.nri_sent += 1
+            if 'crs' in json_msj:
+                if self.crs_sent < 2:
+                    self.nri.server_crs['crs'] = json_msj['crs']
+                    self.sender.send_crs(self.nri, self.crs_sent)
+                    self.crs_sent += 1
                 else:
                     global start
                     start = time.time()
                     self.sender.send_greediness(self.rui)
 
-                print 'the list of nris: '
-                print self.nri.server_nris
+                print 'the crs: '
+                print self.nri.server_crs
                 #do work here
 
             if 'greed' in json_msj:

@@ -9,7 +9,7 @@ class NRI(object):
     """ This class represents the NRI data model (node resource information) """
 
     MAX_NETWORK_THROUGHPUT = 1000
-    server_nris = {}
+    server_crs = {}
 
     def __init__(self):
         self.cpu = None  # amount of CPU cores on the compute node, normalized by the node's BogoMIPS
