@@ -6,8 +6,6 @@ from fairness.node_service.nri import NRI
 class RUI(object):
     """ This class represents the RUI data model (resource utilization information) """
 
-    server_greediness = {}
-
     def __init__(self):
         self.cpu_time = None
         self.memory_used = None
@@ -42,7 +40,3 @@ class RUI(object):
         self.disk_bytes_written = conn.get_disk_stats(domain_id)[1]  # 3 for IOPS
         self.network_bytes_received = conn.get_network_stats(domain_id)[0]
         self.network_bytes_transmitted = conn.get_network_stats(domain_id)[1]
-
-    # TODO
-    def get_vm_greediness(self):
-        return 'TODO Greed ' + NRI._get_public_ip_address()

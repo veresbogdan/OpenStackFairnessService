@@ -4,7 +4,6 @@ import thread
 import time
 import zmq
 from fairness.node_service.nri import NRI
-from fairness.node_service.rui import RUI
 from fairness.communication.zmq_sender import Sender
 
 
@@ -12,9 +11,8 @@ class Receiver:
     crs_sent = 0
     interval = 0
 
-    def __init__(self, nri=None, rui=None):
+    def __init__(self, nri=None):
         self.nri = nri
-        self.rui = rui
         self.sender = Sender()
 
         context = zmq.Context()
@@ -52,17 +50,20 @@ class Receiver:
                 else:
                     global start
                     start = time.time()
-                    self.sender.send_greediness(self.rui)
+                    self.sender.send_greediness(self.nri)
 
                 print 'the crs: '
                 print self.nri.server_crs
-                #do work here
+
+                # do work here
+                # if self.crs_sent == 1:
+                #     do work here
 
             if 'greed' in json_msj:
-                self.rui.server_greediness['greed'] = json_msj['greed']
+                self.nri.server_greediness['greed'] = json_msj['greed']
 
                 if self.interval == 0:
-                    self.sender.send_greediness(self.rui)
+                    self.sender.send_greediness(self.nri)
                 else:
                     # measure time again, subtract
                     end = time.time()
@@ -70,10 +71,11 @@ class Receiver:
                     time.sleep(sleep_time)
                     start = time.time()
 
-                    self.sender.send_greediness(self.rui)
+                    self.sender.send_greediness(self.nri)
 
-                print 'the list of greeds: '
-                print self.rui.server_greediness
+                print 'the list of user greeds: '
+                print self.nri.server_greediness
+
 
 # just for test purposes (remove this)
-Receiver(NRI(), RUI())
+Receiver(NRI())

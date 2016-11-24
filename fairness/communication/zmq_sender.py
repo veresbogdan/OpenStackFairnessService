@@ -46,6 +46,17 @@ class Sender:
                         ret[k] += 0
         return dict(ret)
 
+    def dminus(*dicts):
+        ret = defaultdict(int)
+        for d in dicts:
+            if type(d) is dict:
+                for k, v in d.items():
+                    if v is not None:
+                        ret[k] -= v
+                    else:
+                        ret[k] -= 0
+        return dict(ret)
+
     def send_crs(self, nri, crs_sent):
         own_nri = nri.__dict__
 
@@ -59,20 +70,30 @@ class Sender:
         self.socket.send(json_string)
         self.socket.recv()
 
-    def send_greediness(self, rui):
-        key = 'greed_' + NRI._get_public_ip_address()
-        own_greed = {key: rui.get_vm_greediness()}
+    def send_greediness(self, nri):
+        own_greed = self.get_vm_greediness()
 
-        if not rui.server_greediness.__contains__('greed'):
-            greeds = [own_greed]
-            rui.server_greediness['greed'] = greeds
-        else:
-            if not any(d.get(key, None) is not None for d in rui.server_greediness['greed']):
-                rui.server_greediness['greed'].append(own_greed)
-            else:
-                lool = [own_greed if key in x else x for x in rui.server_greediness['greed']]
-                rui.server_greediness['greed'] = lool
+        if 'greed' not in nri.server_greediness:
+            nri.server_greediness['greed'] = {}
 
-        json_string = json.dumps(rui.server_greediness)
+        nri.server_greediness['greed'] = self.dsum(nri.server_greediness['greed'], own_greed)
+        nri.server_greediness['greed'] = self.dminus(nri.server_greediness['greed'], nri.old_own_greed)
+        nri.old_own_greed = own_greed
+
+        # if not nri.server_greediness.__contains__('greed'):
+        #     greeds = [own_greed]
+        #     nri.server_greediness['greed'] = greeds
+        # else:
+        #     if not any(d.get(key, None) is not None for d in nri.server_greediness['greed']):
+        #         nri.server_greediness['greed'].append(own_greed)
+        #     else:
+        #         lool = [own_greed if key in x else x for x in nri.server_greediness['greed']]
+        #         nri.server_greediness['greed'] = lool
+
+        json_string = json.dumps(nri.server_greediness)
         self.socket.send(json_string)
         self.socket.recv()
+
+    # TODO + move
+    def get_vm_greediness(self):
+        return {'Demo':5, 'Other':3, 'Last':2}
