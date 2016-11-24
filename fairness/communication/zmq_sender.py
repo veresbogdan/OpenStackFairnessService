@@ -51,10 +51,7 @@ class Sender:
         for d in dicts:
             if type(d) is dict:
                 for k, v in d.items():
-                    if v is not None:
-                        ret[k] -= v
-                    else:
-                        ret[k] -= 0
+                    ret[k] -= v
         return dict(ret)
 
     def send_crs(self, nri, crs_sent):
@@ -77,8 +74,8 @@ class Sender:
             nri.server_greediness['greed'] = {}
 
         nri.server_greediness['greed'] = self.dsum(nri.server_greediness['greed'], own_greed)
-        nri.server_greediness['greed'] = self.dminus(nri.server_greediness['greed'], nri.old_own_greed)
-        nri.old_own_greed = own_greed
+        nri.server_greediness['greed'] = self.dsum(nri.server_greediness['greed'], nri.old_own_greed)
+        nri.old_own_greed = self.dminus(own_greed)
 
         # if not nri.server_greediness.__contains__('greed'):
         #     greeds = [own_greed]
@@ -96,4 +93,4 @@ class Sender:
 
     # TODO + move
     def get_vm_greediness(self):
-        return {'Demo':5, 'Other':3, 'Last':2}
+        return {'Demo': 5, 'Other': 3, 'Last': 2}
