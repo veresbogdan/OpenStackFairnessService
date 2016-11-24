@@ -50,7 +50,7 @@ class Sender:
         own_nri = nri.__dict__
 
         if crs_sent < 1:
-            if nri.server_crs['crs'] is None:
+            if 'crs' not in nri.server_crs:
                 nri.server_crs['crs'] = {}
 
             nri.server_crs['crs'] = self.dsum(nri.server_crs['crs'], own_nri)
