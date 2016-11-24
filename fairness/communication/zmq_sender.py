@@ -1,5 +1,6 @@
 # coding=utf-8
 import json
+from collections import defaultdict
 
 import zmq
 
@@ -20,7 +21,7 @@ class Sender:
         controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
         address = "tcp://" + controller_ip + ":5555"
         self.socket.connect(address)
-        json_string = json.dumps({'neighbor':NRI._get_public_ip_address()})
+        json_string = json.dumps({'neighbor': NRI._get_public_ip_address()})
         self.socket.send(json_string)
 
         response = self.socket.recv()
@@ -34,13 +35,23 @@ class Sender:
 
             self.socket.connect(address)
 
+    def dsum(*dicts):
+        ret = defaultdict(int)
+        for d in dicts:
+            if type(d) is dict:
+                for k, v in d.items():
+                    if v is not None:
+                        ret[k] += v
+                    else:
+                        ret[k] += 0
+        return dict(ret)
+
     def send_crs(self, nri, crs_sent):
-        # key = 'nri_' + NRI._get_public_ip_address()
         own_nri = nri.__dict__
 
         if crs_sent < 1:
             nri.server_crs['crs'] = {}
-            nri.server_crs['crs'] += own_nri
+            nri.server_crs['crs'] = self.dsum(nri.server_crs['crs'], own_nri)
 
         # if not nri.server_nris.__contains__('nri'):
         #     nris = [own_nri]
