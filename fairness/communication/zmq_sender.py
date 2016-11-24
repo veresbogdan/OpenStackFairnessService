@@ -74,18 +74,8 @@ class Sender:
             nri.server_greediness['greed'] = {}
 
         nri.server_greediness['greed'] = self.dsum(nri.server_greediness['greed'], own_greed)
-        nri.server_greediness['greed'] = self.dsum(nri.server_greediness['greed'], nri.old_own_greed)
-        nri.old_own_greed = self.dminus(own_greed)
-
-        # if not nri.server_greediness.__contains__('greed'):
-        #     greeds = [own_greed]
-        #     nri.server_greediness['greed'] = greeds
-        # else:
-        #     if not any(d.get(key, None) is not None for d in nri.server_greediness['greed']):
-        #         nri.server_greediness['greed'].append(own_greed)
-        #     else:
-        #         lool = [own_greed if key in x else x for x in nri.server_greediness['greed']]
-        #         nri.server_greediness['greed'] = lool
+        nri.server_greediness['greed'] = self.dsum(nri.server_greediness['greed'], nri.old_inverted_greed)
+        nri.old_inverted_greed = self.dminus(own_greed)
 
         json_string = json.dumps(nri.server_greediness)
         self.socket.send(json_string)

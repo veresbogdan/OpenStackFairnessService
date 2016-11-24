@@ -11,7 +11,7 @@ class NRI(object):
     MAX_NETWORK_THROUGHPUT = 1000
     server_crs = {}
     server_greediness = {}
-    old_own_greed = {}
+    old_inverted_greed = {}
 
     def __init__(self):
         self.cpu = None  # amount of CPU cores on the compute node, normalized by the node's BogoMIPS
