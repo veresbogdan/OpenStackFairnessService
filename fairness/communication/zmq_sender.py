@@ -50,15 +50,10 @@ class Sender:
         own_nri = nri.__dict__
 
         if crs_sent < 1:
-            nri.server_crs['crs'] = {}
-            nri.server_crs['crs'] = self.dsum(nri.server_crs['crs'], own_nri)
+            if nri.server_crs['crs'] is None:
+                nri.server_crs['crs'] = {}
 
-        # if not nri.server_nris.__contains__('nri'):
-        #     nris = [own_nri]
-        #     nri.server_nris['nri'] = nris
-        # else:
-        #     if not any(d.get(key, None) is not None for d in nri.server_nris['nri']):
-        #         nri.server_nris['nri'].append(own_nri)
+            nri.server_crs['crs'] = self.dsum(nri.server_crs['crs'], own_nri)
 
         json_string = json.dumps(nri.server_crs)
         self.socket.send(json_string)
