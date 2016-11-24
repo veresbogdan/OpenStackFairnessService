@@ -39,6 +39,7 @@ class Sender:
         own_nri = nri.__dict__
 
         if crs_sent < 1:
+            nri.server_crs['crs'] = {}
             nri.server_crs['crs'] += own_nri
 
         # if not nri.server_nris.__contains__('nri'):
