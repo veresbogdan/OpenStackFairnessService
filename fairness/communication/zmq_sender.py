@@ -11,29 +11,11 @@ import api
 
 
 class Sender:
-    context = zmq.Context()
-    socket = context.socket(zmq.REQ)
 
     #  Socket to talk to server
     def __init__(self):
-        print("Connecting to get the neighbor…")
-        config = MyConfigParser()
-        controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
-        address = "tcp://" + controller_ip + ":5555"
-        self.socket.connect(address)
-        json_string = json.dumps({'neighbor': NRI._get_public_ip_address()})
-        self.socket.send(json_string)
-
-        response = self.socket.recv()
+        self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REQ)
-
-        json_res = json.loads(response)
-        if 'neighbor' in json_res:
-            address = "tcp://" + json_res['neighbor'] + ":5555"
-
-            print 'The address is: ' + address
-
-            self.socket.connect(address)
 
     def dsum(*dicts):
         ret = defaultdict(int)
@@ -84,3 +66,25 @@ class Sender:
     # TODO + move
     def get_vm_greediness(self):
         return {'Demo': 5, 'Other': 3, 'Last': 2}
+
+    def get_ip_from_controller(self, nri):
+        print("Connecting to get the neighbor…")
+        config = MyConfigParser()
+        controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
+        address = "tcp://" + controller_ip + ":5555"
+        self.socket.connect(address)
+        json_string = json.dumps({'neighbor': NRI._get_public_ip_address(), 'nri':nri})
+        self.socket.send(json_string)
+
+        response = self.socket.recv()
+        self.socket = self.context.socket(zmq.REQ)
+
+        json_res = json.loads(response)
+        if 'neighbor' in json_res:
+            address = "tcp://" + json_res['neighbor'] + ":5555"
+
+            print 'The address is: ' + address
+
+            self.socket.connect(address)
+
+            return json_res['neighbor']
