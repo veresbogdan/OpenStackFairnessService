@@ -50,6 +50,8 @@ def main():
     print("new dict: ", user_initial_greediness)
     # print("user_dict: ", user_dict)
 
+    # TODO: here I need complete CRS
+
     # initialize node with 6 normalization factors and 6 resources.
     # TODO: where to get the normalization factors?? For the moment initialized to 1. From CRS (1 / anzahl ressource)
     node = Node([1, 1/nri.memory, 1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_initial_greediness)
@@ -97,7 +99,7 @@ def main():
 
     print("Quota to sclar: ", quota_to_scalar([cores, ram], node))
 
-    Receiver(nri, rui)
+    # Receiver(nri, rui)  # CRS and user greediness
 
 
 # Routine 1:

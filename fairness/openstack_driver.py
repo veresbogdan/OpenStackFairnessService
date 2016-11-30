@@ -1,6 +1,6 @@
 import requests
 import json
-import datetime
+from datetime import datetime
 
 from fairness.config_parser import MyConfigParser
 
@@ -69,7 +69,7 @@ class IdentityApiConnection(object):
     def _check_token(self):
         if self.token is None:
             self._authenticate()
-        time_now = datetime.datetime.utcnow().isoformat()
+        time_now = datetime.utcnow().isoformat()
         if self.token_exp < time_now:
             print "Token Expired at (UTC+1, so substract 1 hour): ", self.token_exp
             print "Time Now (UTC): ", time_now
