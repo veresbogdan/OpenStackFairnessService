@@ -43,7 +43,7 @@ def crs_cycle():
     socket.bind("tcp://*:5555")
 
     compute_node_ips = get_compute_node_ips()
-    print("compute_node_ips", compute_node_ips)
+    # print("compute_node_ips", compute_node_ips)
 
     while True:
         #  Wait for next request from client
@@ -58,7 +58,8 @@ def crs_cycle():
         crs.update_crs(json_res['nri'])
 
         #  Send reply back to client
-        socket.send("successor IP address")
+        successor_ip = compute_node_ips.pop(0)
+        socket.send(successor_ip)
 
 
 def ug_cycle():

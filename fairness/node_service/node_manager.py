@@ -1,14 +1,27 @@
 from __future__ import print_function
 
+import json
 import sys
+import zmq
 
-from fairness.communication.zmq_sender import Sender
+from fairness.config_parser import MyConfigParser
 from fairness.node_service.nri import NRI
 from fairness.node_service.rui import RUI
 from fairness.openstack_driver import IdentityApiConnection
 from fairness.node import Node
 from fairness.virtual_machines import VM
 from fairness.virtual_machines import quota_to_scalar
+
+
+def get_ip_from_controller(socket, nri):
+    print("sending...")
+    json_message = json.dumps({'neighbor': Node.get_public_ip_address(), 'nri': nri})
+    socket.send(json_message)
+
+    print("waiting for response...")
+    response = socket.recv()
+    print("zmq_sender response", response)
+    return response
 
 
 def main():
@@ -20,9 +33,18 @@ def main():
     print("Theoretical network receive throughput in bytes/s: ", nri.network_receive)
     print("Theoretical network transmit throughput in bytes/s: ", nri.network_transmit)
 
+    context = zmq.Context()
+    #  Socket to talk to server
+    socket = context.socket(zmq.REQ)
+    config = MyConfigParser()
+    controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
+    print("Connecting to Controller...")
+    address = "tcp://" + controller_ip + ":5555"
+    socket.connect(address)
+
     # example of usage
-    sender = Sender()
-    neighbor_ip = sender.get_ip_from_controller(nri.__dict__)
+    # sender = Sender()
+    neighbor_ip = get_ip_from_controller(socket, nri.__dict__)
     print("neighbor_ip: ", neighbor_ip)
 
     # connect to OpenStack API
