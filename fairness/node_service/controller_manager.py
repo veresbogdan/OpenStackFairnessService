@@ -8,6 +8,7 @@ import time
 from fairness.openstack_driver import IdentityApiConnection
 from fairness.node_service.crs import CRS
 from fairness.controller.utils_controller import get_compute_node_ips
+from fairness.node import Node
 
 
 def main():
@@ -26,8 +27,7 @@ def main():
     # thread_ug.start()
 
     while 1:
-        print("main thread is still running...")
-        time.sleep(5)
+        pass
 
 
 def crs_cycle():
@@ -44,8 +44,12 @@ def crs_cycle():
 
     compute_node_ips = get_compute_node_ips()
     # print("compute_node_ips", compute_node_ips)
+    own_ip = Node.get_public_ip_address()
+    ip_list = [own_ip]
+    ip_list.extend(compute_node_ips)
+    print("ip_ist: ", ip_list)
 
-    while True:
+    while 1:
         #  Wait for next request from client
         print("waiting for next CRS request from a Node...")
         message = socket.recv()
@@ -57,8 +61,12 @@ def crs_cycle():
         crs = CRS()
         crs.update_crs(json_res['nri'])
 
+        # TODO: pick an IP different than in the recv message.
+        ip_list.remove(json_res['neighbor'])
+        successor_ip = ip_list.pop(0)
+        ip_list.extend(json_res['neighbor'])
+
         #  Send reply back to client
-        successor_ip = compute_node_ips.pop(0)
         socket.send(successor_ip)
 
 
