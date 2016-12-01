@@ -29,7 +29,7 @@ class Server:
             # take NRI and add to CRS
             self.crs.update_crs(json_res['nri'])
 
-            # socket.send("")
+            socket.send(CRS)
 
 
             # start new thread to manage each request
