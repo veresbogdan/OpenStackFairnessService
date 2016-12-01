@@ -13,12 +13,12 @@ class NRI(object):
     old_inverted_greed = {}
 
     def __init__(self):
-        self.cpu = None  # amount of CPU cores on the compute node, normalized by the node's BogoMIPS
-        self.memory = None  # total amount of installed memory in kilobytes
-        self.disk_read_bytes = None  # combined disk read speeds of all disks in bytes/s
-        self.disk_write_bytes = None  # combined disk write speeds of all disks in bytes/s
-        self.network_receive = None  # network receive throughput in bytes/s
-        self.network_transmit = None  # network transmit throughput in bytes/s
+        self.cpu = 0  # amount of CPU cores on the compute node, normalized by the node's BogoMIPS
+        self.memory = 0  # total amount of installed memory in kilobytes
+        self.disk_read_bytes = 0  # combined disk read speeds of all disks in bytes/s
+        self.disk_write_bytes = 0  # combined disk write speeds of all disks in bytes/s
+        self.network_receive = 0  # network receive throughput in bytes/s
+        self.network_transmit = 0  # network transmit throughput in bytes/s
         NRI._get_values(self)
 
     def _get_values(self):
