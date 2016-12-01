@@ -60,6 +60,7 @@ def crs_cycle():
         print("nri: ", json_res['nri'])
         crs = CRS()
         crs.update_crs(json_res['nri'])
+        print("crs: ", crs)
 
         # TODO: pick an IP different than in the recv message.
         ip_list.remove(json_res['neighbor'])
