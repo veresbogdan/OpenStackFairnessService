@@ -23,7 +23,7 @@ def main():
     # TODO: connect to Controller and send NRI
     # example of usage
     sender = Sender()
-    print (sender.get_ip_from_controller(nri))
+    print (sender.get_ip_from_controller(nri.__dict__))
 
     # connect to OpenStack API
     open_stack_connection = IdentityApiConnection()
