@@ -8,7 +8,13 @@ class ControllerManager:
         # self.ips_list = ['192.168.1.123', '192.168.1.124', '192.168.1.125']
 
         self.ips_list = []
-        self.ips_list.append(ControllerManager.get_compute_node_ips())
+        tuple_ips = self.get_compute_node_ips()
+
+        for tuple in tuple_ips:
+            for res in tuple:
+                self.ips_list.append(res)
+
+        print self.ips_list
 
     @staticmethod
     def get_compute_node_ips():

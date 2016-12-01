@@ -16,7 +16,7 @@ from __future__ import print_function
 import socket
 import sys
 
-from fairness.communication.zmq_receiver import Receiver
+from fairness.communication.zmq_sender import Sender
 from fairness.node_service.nri import NRI
 from fairness.node_service.rui import RUI
 from fairness.openstack_driver import IdentityApiConnection
@@ -35,6 +35,10 @@ def main():
     print("Theoretical network transmit throughput in bytes/s: ", nri.network_transmit)
 
     # TODO: connect to Controller and send NRI
+    # example of usage
+    sender = Sender()
+    print (sender.get_ip_from_controller(nri))
+
 
     # connect to Openstack API
     open_stack_connection = IdentityApiConnection()
