@@ -16,17 +16,14 @@ def main():
     # print("user_dict: ", user_dict)
 
     # spawn a new thread to listen for new incoming nodes
-    # thread.start_new_thread(crs_cycle(), args=[])
     thread_crs = threading.Thread(target=crs_cycle)
     thread_crs.daemon = True
     thread_crs.start()
 
-    print("crs_cycle has started!")
-
     # spawn a new thread to listen for incoming user greediness messages
-    # thread.start_new_thread(ug_cycle(), args=[])
-    threading.Thread(target=ug_cycle).start()
-    print("ug_cycle has started!")
+    thread_ug = threading.Thread(target=ug_cycle)
+    thread_ug.daemon = True
+    thread_ug.start()
 
     while 1:
         print("main thread ir still running...")
