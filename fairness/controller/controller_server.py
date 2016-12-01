@@ -23,10 +23,11 @@ class Server:
             #  Wait for next request from clients
             message = socket.recv()
             print("Received request: ", message)
-            print("nri: ", message['nri'])
+            json_res = json.loads(message)
+            print("nri: ", json_res['nri'])
 
             # take NRI and add to CRS
-            self.crs.update_crs(message['nri'])
+            self.crs.update_crs(json_res['nri'])
 
             # socket.send("")
 
