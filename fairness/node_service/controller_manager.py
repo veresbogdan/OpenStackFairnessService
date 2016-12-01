@@ -70,6 +70,10 @@ def crs_cycle():
         #  Send reply back to client
         socket.send(successor_ip)
 
+        if len(ip_list) <= 1:
+            own_neighbor = ip_list.pop(0)
+            print("own_neighbor: ", own_neighbor)
+
 
 def ug_cycle():
     """
