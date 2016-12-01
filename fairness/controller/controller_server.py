@@ -22,7 +22,6 @@ class Server:
             print("Received request: " + message)
             # socket.send("")
 
-
             # start new thread to manage each request
             self.manage_message(message, socket)
 
