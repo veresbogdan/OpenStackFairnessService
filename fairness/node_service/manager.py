@@ -1,19 +1,5 @@
-#    while NRI of some host in Nf is missing:
-#       send own NRI to nodes of which NRI is missing
-#    use NRIs to calculate CRS and normalization vector
-#    every mu seconds:
-#     collect RUI of all VMs hosted by ni
-#     apply hv to collected RUI in order to calculate
-#         heaviness of all VMs hosted by ni
-#     send this heaviness set to all n element of Nf - {ni}
-#     wait to receive heaviness set from all n element of Nf - {ni}
-#     apply hu to calculate the heaviness of all u element of U
-#     for every VM v hosted by ni :
-#         set priorities of v on according to hv(v) and hu(o(v))
-
 from __future__ import print_function
 
-import socket
 import sys
 
 from fairness.communication.zmq_sender import Sender
@@ -39,8 +25,7 @@ def main():
     sender = Sender()
     print (sender.get_ip_from_controller(nri))
 
-
-    # connect to Openstack API
+    # connect to OpenStack API
     open_stack_connection = IdentityApiConnection()
     user_dict = open_stack_connection.list_users()
     # user_dict = {"demo": 0, "admin": 0}
