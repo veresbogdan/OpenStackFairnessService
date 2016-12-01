@@ -2,6 +2,7 @@
 from __future__ import print_function
 import json
 import zmq
+import sys
 
 from fairness.controller.utils_controller import UtilsController
 from fairness.node import Node
@@ -28,6 +29,8 @@ class Server:
 
             # take NRI and add to CRS
             self.crs.update_crs(json_res['nri'])
+
+            # answer back to node with it's successor node.
 
             socket.send(CRS)
 
@@ -71,4 +74,7 @@ class Server:
 
 
 # TODO start the controller service nicely
-Server(UtilsController())
+# Server(UtilsController())
+
+if __name__ == 'main':
+    sys.exit(Server(UtilsController()))

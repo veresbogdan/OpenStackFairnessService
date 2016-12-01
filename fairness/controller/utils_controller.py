@@ -22,9 +22,10 @@ class UtilsController:
             query = """select host_ip from compute_nodes where deleted=0"""
             db.query(query)
             r = db.use_result()
+            print("r from query: ", r)
             results = r.fetch_row(maxrows=0)
 
-            print results
+            # print results
 
             return results
         except Exception as exp:
