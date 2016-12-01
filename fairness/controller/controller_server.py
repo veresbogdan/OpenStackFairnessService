@@ -2,7 +2,6 @@
 from __future__ import print_function
 import json
 import zmq
-import sys
 
 from fairness.controller.utils_controller import UtilsController
 from fairness.node import Node
@@ -74,7 +73,4 @@ class Server:
 
 
 # TODO start the controller service nicely
-# Server(UtilsController())
-
-if __name__ == 'main':
-    sys.exit(Server(UtilsController()))
+Server(UtilsController())
