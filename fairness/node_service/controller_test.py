@@ -17,9 +17,11 @@ def main():
 
     # spawn a new thread to listen for new incomming nodes
     thread.start_new_thread(crs_cycle(), args=[])
+    print("crs_cycle has started!")
 
     # spawn a new thread to listen for incoming user greediness messages
     thread.start_new_thread(ug_cycle(), args=[])
+    print("ug_cycle has started!")
 
     while 1:
         print("main thread ir still running...")
@@ -40,6 +42,7 @@ def crs_cycle():
 
     while True:
         #  Wait for next request from client
+        print("waiting for next CRS request from a Node...")
         message = socket.recv()
         print("Received request: %s" % message)
 
