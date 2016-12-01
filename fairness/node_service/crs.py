@@ -1,12 +1,12 @@
 class CRS(object):
 
     def __init__(self):
-        self._cpu = None
-        self._memory = None
-        self._disk_read = None
-        self._disk_write = None
-        self._network_rx = None
-        self._network_tx = None
+        self._cpu = 0
+        self._memory = 0
+        self._disk_read = 0
+        self._disk_write = 0
+        self._network_rx = 0
+        self._network_tx = 0
 
     # @property
     # def cpu(self):
