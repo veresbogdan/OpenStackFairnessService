@@ -14,6 +14,10 @@ class Sender:
     def __init__(self):
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REQ)
+        config = MyConfigParser()
+        controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
+        address = "tcp://" + controller_ip + ":5555"
+        self.socket.connect(address)
 
     # def dsum(*dicts):
     #     ret = defaultdict(int)
@@ -67,10 +71,7 @@ class Sender:
 
     def get_ip_from_controller(self, nri):
         print("Connecting to get the neighbor…")
-        config = MyConfigParser()
-        controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
-        address = "tcp://" + controller_ip + ":5555"
-        self.socket.connect(address)
+
         json_string = json.dumps({'neighbor': Node.get_public_ip_address(), 'nri': nri})
         self.socket.send(json_string)
 
