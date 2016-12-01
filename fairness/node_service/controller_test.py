@@ -1,6 +1,6 @@
 from __future__ import print_function
 import sys
-import thread
+import threading
 import json
 import zmq
 import time
@@ -15,12 +15,14 @@ def main():
     # user_dict = open_stack_connection.list_users()
     # print("user_dict: ", user_dict)
 
-    # spawn a new thread to listen for new incomming nodes
-    thread.start_new_thread(crs_cycle(), args=[])
+    # spawn a new thread to listen for new incoming nodes
+    # thread.start_new_thread(crs_cycle(), args=[])
+    threading.Thread(target=crs_cycle).start()
     print("crs_cycle has started!")
 
     # spawn a new thread to listen for incoming user greediness messages
-    thread.start_new_thread(ug_cycle(), args=[])
+    # thread.start_new_thread(ug_cycle(), args=[])
+    threading.Thread(target=ug_cycle).start()
     print("ug_cycle has started!")
 
     while 1:
