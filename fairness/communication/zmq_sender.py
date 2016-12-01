@@ -72,7 +72,7 @@ class Sender:
     def get_ip_from_controller(self, nri):
         print("Connecting to get the neighbor…")
 
-        json_string = json.dumps({'neighbor': Node.get_public_ip_address(), 'nri': nri})
+        json_string = json.dumps({'advertiser': Node.get_public_ip_address(), 'nri': nri})
         self.socket.send(json_string)
 
         response = self.socket.recv()
