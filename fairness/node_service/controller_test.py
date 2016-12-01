@@ -17,7 +17,10 @@ def main():
 
     # spawn a new thread to listen for new incoming nodes
     # thread.start_new_thread(crs_cycle(), args=[])
-    threading.Thread(target=crs_cycle).start()
+    thread_crs = threading.Thread(target=crs_cycle)
+    thread_crs.daemon = True
+    thread_crs.start()
+
     print("crs_cycle has started!")
 
     # spawn a new thread to listen for incoming user greediness messages
