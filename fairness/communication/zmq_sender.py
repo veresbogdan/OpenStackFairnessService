@@ -6,6 +6,7 @@ import zmq
 
 from fairness.config_parser import MyConfigParser
 from fairness.node_service.nri import NRI
+from fairness.node import Node
 
 import api
 
@@ -73,7 +74,7 @@ class Sender:
         controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
         address = "tcp://" + controller_ip + ":5555"
         self.socket.connect(address)
-        json_string = json.dumps({'neighbor': NRI._get_public_ip_address(), 'nri':nri})
+        json_string = json.dumps({'neighbor': Node.get_public_ip_address(), 'nri':nri})
         self.socket.send(json_string)
 
         response = self.socket.recv()

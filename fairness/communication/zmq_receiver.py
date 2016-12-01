@@ -5,6 +5,7 @@ import time
 import zmq
 from fairness.node_service.nri import NRI
 from fairness.communication.zmq_sender import Sender
+from fairness.node import Node
 
 
 class Receiver:
@@ -18,7 +19,7 @@ class Receiver:
         context = zmq.Context()
         socket = context.socket(zmq.REP)
         # get own ip here from the manager
-        socket.bind("tcp://" + NRI._get_public_ip_address() + ":5555")
+        socket.bind("tcp://" + Node.get_public_ip_address() + ":5555")
 
         while True:
             #  Wait for next request from clients

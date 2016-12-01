@@ -22,6 +22,7 @@ class Node(object):
         self.vms = list()
         self.global_normalization = np.array(global_normalization)
         self.hostname = socket.gethostname()
+        self.public_ip = Node.get_public_ip_address()
 
     def update_endowments(self):
         """
@@ -63,3 +64,11 @@ class Node(object):
 
         for i in range(len(self.vms)):
             self.vms[i].heaviness = greediness[i]
+
+    @staticmethod
+    def get_public_ip_address():
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = (s.getsockname()[0])
+        s.close()
+        return ip

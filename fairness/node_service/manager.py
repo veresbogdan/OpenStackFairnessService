@@ -20,16 +20,15 @@ def main():
     print("Theoretical network receive throughput in bytes/s: ", nri.network_receive)
     print("Theoretical network transmit throughput in bytes/s: ", nri.network_transmit)
 
-    # TODO: connect to Controller and send NRI
     # example of usage
     sender = Sender()
-    print (sender.get_ip_from_controller(nri.__dict__))
+    neighbor_ip = sender.get_ip_from_controller(nri.__dict__)
+    print("neighbor_ip: ", neighbor_ip)
 
     # connect to OpenStack API
     open_stack_connection = IdentityApiConnection()
     user_dict = open_stack_connection.list_users()
     # user_dict = {"demo": 0, "admin": 0}
-    # open_stack_connection.list_projects()
     cores, ram = open_stack_connection.get_quotas()
     vm_dict = open_stack_connection.get_vms(user_dict)
     print("vm_dict: ", vm_dict)
