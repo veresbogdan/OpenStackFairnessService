@@ -42,7 +42,7 @@ class NRI(object):
         s.connect(("8.8.8.8", 80))
         ip = (s.getsockname()[0])
         s.close()
-
+        print "nri _get_public_ip_address: ", ip
         return ip
 
     @staticmethod
