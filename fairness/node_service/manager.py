@@ -34,6 +34,8 @@ def main():
     print("Theoretical network receive throughput in bytes/s: ", nri.network_receive)
     print("Theoretical network transmit throughput in bytes/s: ", nri.network_transmit)
 
+    # TODO: connect to Controller and send NRI
+
     # connect to Openstack API
     open_stack_connection = IdentityApiConnection()
     user_dict = open_stack_connection.list_users()
@@ -47,14 +49,15 @@ def main():
     user_initial_greediness = {}
     for key, value in user_dict.items():
         user_initial_greediness[value] = 0
-    print("new dict: ", user_initial_greediness)
+    print("user_initial_greediness: ", user_initial_greediness)
     # print("user_dict: ", user_dict)
 
-    # TODO: here I need complete CRS
+    # TODO: from here on I need the complete CRS fom the controller
+    crs = [11998, 4040944, 4040944000, 4040944000, 125000000, 125000000]
 
     # initialize node with 6 normalization factors and 6 resources.
     # TODO: where to get the normalization factors?? For the moment initialized to 1. From CRS (1 / anzahl ressource)
-    node = Node([1, 1/nri.memory, 1, 1, 1, 1], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_initial_greediness)
+    node = Node([1/crs[0], 1/crs[1], 1/crs[2], 1/crs[3], 1/crs[4], 1/crs[5]], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_initial_greediness)
     print("Node initialized.")
 
     hostname = node.hostname

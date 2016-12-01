@@ -1,12 +1,15 @@
+from __future__ import print_function
 import sys
 import thread
 
 from fairness.controller.controller_manager import ControllerManager
+from fairness.openstack_driver import IdentityApiConnection
 
 
 def main():
-    controller_managr = ControllerManager
-    host_ip_list = controller_managr.ips_list
+    open_stack_connection = IdentityApiConnection()
+    user_dict = open_stack_connection.list_users()
+    print("user_dict: ", user_dict)
 
     # spawn a new thread to listen for new incomming nodes
     thread.start_new_thread(crs_cycle(), args=[])
