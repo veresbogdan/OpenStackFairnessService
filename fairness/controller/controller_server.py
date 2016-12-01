@@ -1,10 +1,8 @@
 # coding=utf-8
 import json
-import thread
 import zmq
 
-from fairness.controller.controller_manager import ControllerManager
-from fairness.node_service.nri import NRI
+from fairness.controller.utils_controller import UtilsController
 from fairness.node import Node
 
 
@@ -63,4 +61,4 @@ class Server:
 
 
 # TODO start the controller service nicely
-Server(ControllerManager())
+Server(UtilsController())

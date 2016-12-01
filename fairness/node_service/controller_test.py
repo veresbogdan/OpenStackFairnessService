@@ -2,7 +2,7 @@ from __future__ import print_function
 import sys
 import thread
 
-from fairness.controller.controller_manager import ControllerManager
+from fairness.controller.utils_controller import UtilsController
 from fairness.openstack_driver import IdentityApiConnection
 
 

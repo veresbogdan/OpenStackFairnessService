@@ -1,9 +1,7 @@
 import MySQLdb as mysql
 
-from fairness.openstack_driver import IdentityApiConnection
 
-
-class ControllerManager:
+class UtilsController:
     def __init__(self):
         # self.ips_list = ['192.168.1.123', '192.168.1.124', '192.168.1.125']
 

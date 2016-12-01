@@ -1,4 +1,3 @@
-import socket
 import subprocess
 import multiprocessing
 import re
@@ -36,16 +35,7 @@ class NRI(object):
     def _get_cpu_count_weighted(self):
         return multiprocessing.cpu_count() * self._get_bogomips()
 
-
     # _get_public_ip_address was moved to node.py
-
-    # @staticmethod
-    # def _get_public_ip_address():
-    #     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    #     s.connect(("8.8.8.8", 80))
-    #     ip = (s.getsockname()[0])
-    #     s.close()
-    #     return ip
 
     @staticmethod
     def _get_bogomips():
