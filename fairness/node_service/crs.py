@@ -8,14 +8,14 @@ class CRS(object):
         self._network_rx = 0
         self._network_tx = 0
 
-    # @property
-    # def cpu(self):
-    #     return self._cpu
-    #
-    # @cpu.setter
-    # def cpu(self, value):
-    #     self._cpu = value
-    #
+    @property
+    def cpu(self):
+        return self._cpu
+
+    @cpu.setter
+    def cpu(self, value):
+        self._cpu = value
+
     # @property
     # def memory(self):
     #     return self._memory
