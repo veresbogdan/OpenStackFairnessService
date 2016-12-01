@@ -64,8 +64,8 @@ def crs_cycle():
         # TODO: pick an IP different than in the recv message.
         ip_list.remove(json_res['neighbor'])
         successor_ip = ip_list.pop(0)
-        ip_list.extend(json_res['neighbor'])
-        print("ip_list after extend: ", ip_list)
+        ip_list.append(json_res['neighbor'])
+        print("ip_list after append: ", ip_list)
 
         #  Send reply back to client
         socket.send(successor_ip)
