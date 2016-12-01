@@ -50,19 +50,19 @@ def crs_cycle():
     print("ip_ist: ", ip_list)
 
     while 1:
-        #  Wait for next request from client
+        # Wait for next request from client
         print("waiting for next CRS request from a Node...")
         message = socket.recv()
         print("Received request: %s" % message)
 
-        #  update CRS
+        # update CRS
         json_res = json.loads(message)
         print("nri: ", json_res['nri'])
         crs = CRS()
         crs.update_crs(json_res['nri'])
+        # TODO: fix sum CRS
         print("crs: ", crs.cpu)
 
-        # TODO: pick an IP different than in the recv message.
         ip_list.remove(json_res['neighbor'])
         successor_ip = ip_list.pop(0)
         ip_list.append(str(json_res['neighbor']))
