@@ -1,33 +1,43 @@
-import MySQLdb as mysql
+from __future__ import print_function
+import MySQLdb as MySQL
 
 
-class UtilsController:
-    def __init__(self):
-        # self.ips_list = ['192.168.1.123', '192.168.1.124', '192.168.1.125']
+# class UtilsController:
+#     def __init__(self):
+#         # self.ips_list = ['192.168.1.123', '192.168.1.124', '192.168.1.125']
+#
+#         self.ips_list = []
+#         tuple_ips = self.get_compute_node_ips()
+#
+#         for valor in tuple_ips:
+#             for res in valor:
+#                 self.ips_list.append(res)
+#
+#         print(self.ips_list)
 
-        self.ips_list = []
-        tuple_ips = self.get_compute_node_ips()
+# @staticmethod
+def get_compute_node_ips():
+    try:
+        password = 'wasserfall'
+        db = MySQL.connect(user="root", passwd=password, db="nova")
+        query = """select host_ip from compute_nodes where deleted=0"""
+        db.query(query)
+        r = db.use_result()
+        print("r from query: ", r)
+        results = r.fetch_row(maxrows=0)
 
-        for tuple in tuple_ips:
-            for res in tuple:
-                self.ips_list.append(res)
+        # print results
 
-        print self.ips_list
+        # return results
 
-    @staticmethod
-    def get_compute_node_ips():
-        try:
-            password = 'wasserfall'
-            db = mysql.connect(user="root", passwd=password, db="nova")
-            query = """select host_ip from compute_nodes where deleted=0"""
-            db.query(query)
-            r = db.use_result()
-            print("r from query: ", r)
-            results = r.fetch_row(maxrows=0)
+        ips_list = []
 
-            # print results
+        for valor in results:
+            for res in valor:
+                ips_list.append(res)
 
-            return results
-        except Exception as exp:
-            print "Error in accessing the Nova database"
-            print exp
+        return ips_list
+
+    except Exception as exp:
+        print("Error in accessing the Nova database")
+        print(exp)

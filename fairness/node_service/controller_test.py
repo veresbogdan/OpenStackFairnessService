@@ -5,9 +5,9 @@ import json
 import zmq
 import time
 
-from fairness.controller.utils_controller import UtilsController
 from fairness.openstack_driver import IdentityApiConnection
 from fairness.node_service.crs import CRS
+from fairness.controller.utils_controller import get_compute_node_ips
 
 
 def main():
@@ -21,12 +21,12 @@ def main():
     thread_crs.start()
 
     # spawn a new thread to listen for incoming user greediness messages
-    thread_ug = threading.Thread(target=ug_cycle)
-    thread_ug.daemon = True
-    thread_ug.start()
+    # thread_ug = threading.Thread(target=ug_cycle)
+    # thread_ug.daemon = True
+    # thread_ug.start()
 
     while 1:
-        print("main thread ir still running...")
+        print("main thread is still running...")
         time.sleep(5)
 
 
@@ -41,6 +41,9 @@ def crs_cycle():
     context = zmq.Context()
     socket = context.socket(zmq.REP)
     socket.bind("tcp://*:5555")
+
+    compute_node_ips = get_compute_node_ips()
+    print("compute_node_ips", compute_node_ips)
 
     while True:
         #  Wait for next request from client
