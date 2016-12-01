@@ -84,7 +84,7 @@ class Sender:
         if 'neighbor' in json_res:
             address = "tcp://" + json_res['neighbor'] + ":5555"
 
-            print 'The address is: ' + address
+            print('The address is: ' + address)
 
             self.socket.connect(address)
 
