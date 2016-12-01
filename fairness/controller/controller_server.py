@@ -1,15 +1,18 @@
 # coding=utf-8
+from __future__ import print_function
 import json
 import zmq
 
 from fairness.controller.utils_controller import UtilsController
 from fairness.node import Node
+from fairness.node_service.crs import CRS
 
 
 class Server:
     def __init__(self, manager=None):
         self.manager = manager
         self.host_no = 0
+        self.crs = CRS()
 
         context = zmq.Context()
         socket = context.socket(zmq.REP)
@@ -19,12 +22,17 @@ class Server:
         while True:
             #  Wait for next request from clients
             message = socket.recv()
-            print("Received request: " + message)
+            print("Received request: ", message)
+            print("nri: ", message['nri'])
+
+            # take NRI and add to CRS
+            self.crs.update_crs(message['nri'])
+
             # socket.send("")
 
 
             # start new thread to manage each request
-            self.manage_message(message, socket)
+            # self.manage_message(message, socket)
 
     def manage_message(self, message, socket):
         if message is not None:
@@ -45,7 +53,7 @@ class Server:
                     socket.send(json_string)
 
                     if self.host_no == len(ips_list):
-                        print 'start ring...'
+                        print('start ring...')
                         self.send_start_message(ips_list[0])
 
     def send_start_message(self, ip):

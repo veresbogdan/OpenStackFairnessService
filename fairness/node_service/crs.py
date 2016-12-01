@@ -55,3 +55,11 @@ class CRS(object):
     @network_tx.setter
     def network_tx(self, value):
         self._network_tx = value
+
+    def update_crs(self, new_nri):
+        self._cpu = None
+        self._memory = None
+        self._disk_read = None
+        self._disk_write = None
+        self._network_rx = None
+        self._network_tx = None

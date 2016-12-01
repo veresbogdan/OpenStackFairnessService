@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import print_function
 import json
 from collections import defaultdict
 
@@ -72,11 +73,12 @@ class Sender:
     def get_ip_from_controller(self, nri):
         print("Connecting to get the neighbor…")
 
-        json_string = json.dumps({'advertiser': Node.get_public_ip_address(), 'nri': nri})
+        json_string = json.dumps({'neighbor': Node.get_public_ip_address(), 'nri': nri})
         self.socket.send(json_string)
 
         response = self.socket.recv()
-        self.socket = self.context.socket(zmq.REQ)
+        print("zmq_sender response", response)
+        # self.socket = self.context.socket(zmq.REQ)
 
         json_res = json.loads(response)
         if 'neighbor' in json_res:
