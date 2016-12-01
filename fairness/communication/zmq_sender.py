@@ -17,6 +17,8 @@ class Sender:
         self.socket = self.context.socket(zmq.REQ)
         config = MyConfigParser()
         controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
+
+        print("Connecting to Controller...")
         address = "tcp://" + controller_ip + ":5555"
         self.socket.connect(address)
 
@@ -71,21 +73,21 @@ class Sender:
     #     return {'Demo': 5, 'Other': 3, 'Last': 2}
 
     def get_ip_from_controller(self, nri):
-        print("Connecting to get the neighbor…")
+        print("sending...")
+        json_message = json.dumps({'neighbor': Node.get_public_ip_address(), 'nri': nri})
+        self.socket.send(json_message)
 
-        json_string = json.dumps({'neighbor': Node.get_public_ip_address(), 'nri': nri})
-        self.socket.send(json_string)
-
+        print("waiting for response...")
         response = self.socket.recv()
         print("zmq_sender response", response)
         # self.socket = self.context.socket(zmq.REQ)
 
-        json_res = json.loads(response)
-        if 'neighbor' in json_res:
-            address = "tcp://" + json_res['neighbor'] + ":5555"
-
-            print('The address is: ' + address)
-
-            self.socket.connect(address)
-
-            return json_res['neighbor']
+        # json_res = json.loads(response)
+        # if 'neighbor' in json_res:
+        #     address = "tcp://" + json_res['neighbor'] + ":5555"
+        #
+        #     print('The address is: ' + address)
+        #
+        #     self.socket.connect(address)
+        #
+        #     return json_res['neighbor']
