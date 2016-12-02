@@ -54,6 +54,8 @@ def main():
         print("waiting for ug_vector...")
         ug_message = server_socket.recv()
         print("Received request: %s" % ug_message)
+        #  Send reply back to client
+        server_socket.send("OK")
 
     # connect to OpenStack API
     open_stack_connection = IdentityApiConnection()

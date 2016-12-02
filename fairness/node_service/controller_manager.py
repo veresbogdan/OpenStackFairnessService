@@ -105,6 +105,9 @@ def ug_cycle():
     while 1:
         print("sending...")
         client_socket.send("hello!")
+        print("waiting for response...")
+        ug_response = client_socket.recv()
+        print("zmq_sender response", ug_response)
         time.sleep(2)
 
 
