@@ -99,6 +99,7 @@ def ug_cycle():
     ug_context = zmq.Context()
     client_socket = ug_context.socket(zmq.REQ)
     address = "tcp://" + str(own_successor) + ":5556"
+    print(address)
     client_socket.connect(address)
     while 1:
         start_ug_event.wait()
