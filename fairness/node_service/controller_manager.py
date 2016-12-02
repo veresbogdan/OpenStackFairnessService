@@ -96,16 +96,15 @@ def ug_cycle():
     global start_ug_event
     global crs
     global own_successor
+    ug_context = zmq.Context()
+    client_socket = ug_context.socket(zmq.REQ)
+    address = "tcp://" + own_successor + ":5556"
+    client_socket.connect(address)
     while 1:
         start_ug_event.wait()
-        print("ug_cycle...")
-        time.sleep(2)
-        ug_context = zmq.Context()
-        client_socket = ug_context.socket(zmq.REQ)
-        address = "tcp://" + own_successor + ":5556"
-        client_socket.connect(address)
         print("sending...")
         client_socket.send("hello!")
+        time.sleep(2)
 
 
 if __name__ == '__main__':
