@@ -47,15 +47,32 @@ def main():
     neighbor_ip = get_ip_from_controller(client_socket, nri.__dict__)
     print("neighbor_ip: ", neighbor_ip)
 
-    server_socket = context.socket(zmq.REP)
-    server_socket.bind("tcp://*:5556")
 
+    # Prepare broker sockets
+    frontend = context.socket(zmq.ROUTER)
+    backend = context.socket(zmq.DEALER)
+    frontend.bind("tcp://*:5556")
+    backend.bind("tcp://*:5557")
+
+    # Initialize broker poll set
+    poller = zmq.Poller()
+    poller.register(frontend, zmq.POLLIN)
+    poller.register(backend, zmq.POLLIN)
+
+    # Switch messages between sockets
     while 1:
-        print("waiting for ug_vector...")
-        ug_message = server_socket.recv()
-        print("Received request: %s" % ug_message)
-        #  Send reply back to client
-        server_socket.send("OK")
+        socks = dict(poller.poll())
+
+        if socks.get(frontend) == zmq.POLLIN:
+            message = frontend.recv_multipart()
+            backend.send_multipart(message)
+
+        if socks.get(backend) == zmq.POLLIN:
+            message = backend.recv_multipart()
+            frontend.send_multipart(message)
+
+
+
 
     # connect to OpenStack API
     open_stack_connection = IdentityApiConnection()

@@ -10,12 +10,22 @@ from fairness.node_service.crs import CRS
 from fairness.controller.utils_controller import get_compute_node_ips
 from fairness.node import Node
 
-crs = CRS()
 start_ug_event = threading.Event()
+own_successor_event = threading.Event()
+crs = CRS()
 own_successor = 0
 
 
 def main():
+    global start_ug_event
+    global crs
+    global own_successor
+    main_context = zmq.Context()
+
+    # stop ug-ring
+    start_ug_event.clear()
+    # prevent to connect ug client to (own_successor = 0)
+    own_successor_event.clear()
 
     # spawn a new thread to listen for new incoming nodes
     thread_crs = threading.Thread(target=node_registering)
@@ -28,10 +38,25 @@ def main():
     # print("user_dict: ", user_dict)
     # cores, ram = open_stack_connection.get_quotas()
 
-    # spawn a new thread to listen for incoming user greediness messages
-    thread_ug = threading.Thread(target=ug_cycle)
-    thread_ug.daemon = True
-    thread_ug.start()
+    # spawn a new (server) thread to listen for new incoming ug
+    thread_crs = threading.Thread(target=ug_server)
+    thread_crs.daemon = True
+    thread_crs.start()
+
+    # start the gu-ring client for sending gu + CRS
+    client_socket = main_context.socket(zmq.REQ)
+    own_successor_event.wait()
+    address = "tcp://" + str(own_successor) + ":5556"
+    print(address)
+    client_socket.connect(address)
+    while 1:
+        start_ug_event.wait()
+        print("sending...")
+        client_socket.send("hello!")
+        print("waiting for response...")
+        ug_response = client_socket.recv()
+        print("zmq_sender response", ug_response)
+        time.sleep(2)
 
     while 1:
         pass
@@ -43,15 +68,16 @@ def node_registering():
        receives the NRI
        updates the global CRS
        sends neighbor IP
-       set semaphore for ug_cycle
+       set semaphore for ug_server
     :return:
     """
     global start_ug_event
+    global own_successor_event
     global crs
     global own_successor
     nr_context = zmq.Context()
-    server_socket = nr_context.socket(zmq.REP)
-    server_socket.bind("tcp://*:5555")
+    nr_socket = nr_context.socket(zmq.REP)
+    nr_socket.bind("tcp://*:5555")
 
     compute_node_ips = get_compute_node_ips()
     # print("compute_node_ips", compute_node_ips)
@@ -63,7 +89,7 @@ def node_registering():
     while 1:
         # Wait for next request from client
         print("waiting for next CRS request from a Node...")
-        message = server_socket.recv()
+        message = nr_socket.recv()
 
         start_ug_event.clear()
         print("Received request: %s" % message)
@@ -77,38 +103,29 @@ def node_registering():
         ip_list.append(str(json_res['advertiser']))
         print("ip_list after append: ", ip_list)
         #  Send reply back to client
-        server_socket.send(successor_ip)
+        nr_socket.send(successor_ip)
         if len(ip_list) <= 1:
             own_successor = ip_list.pop(0)
             print("own_successor: ", own_successor)
             start_ug_event.set()
+            own_successor_event.set()
 
 
-def ug_cycle():
+def ug_server():
     """
-    the new thread:
-        send UG+CRS
-        receives UG
-        measures time elapsed for current cycle
-        starts new UG cycle after defined time.
+    the ug message will end up here after one complete cycle.
     :return:
     """
     global start_ug_event
     global crs
     global own_successor
-    ug_context = zmq.Context()
-    client_socket = ug_context.socket(zmq.REQ)
-    start_ug_event.wait()
-    address = "tcp://" + str(own_successor) + ":5556"
-    print(address)
-    client_socket.connect(address)
+    ug_server_context = zmq.Context()
+    server_socket = ug_server_context.socket(zmq.REP)
+    server_socket.bind("tcp://*:5556")
     while 1:
-        print("sending...")
-        client_socket.send("hello!")
-        print("waiting for response...")
-        ug_response = client_socket.recv()
-        print("zmq_sender response", ug_response)
-        time.sleep(2)
+        updated_ug_message = server_socket.recv()
+        print("updated_ug_message: ", updated_ug_message)
+        server_socket.send("ug received.")
 
 
 if __name__ == '__main__':
