@@ -15,7 +15,7 @@ from fairness.virtual_machines import quota_to_scalar
 
 def get_ip_from_controller(socket, nri):
     print("sending...")
-    json_message = json.dumps({'neighbor': Node.get_public_ip_address(), 'nri': nri})
+    json_message = json.dumps({'advertiser': Node.get_public_ip_address(), 'nri': nri})
     socket.send(json_message)
 
     print("waiting for response...")
