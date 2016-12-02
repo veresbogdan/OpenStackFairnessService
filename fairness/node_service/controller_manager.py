@@ -11,6 +11,7 @@ from fairness.controller.utils_controller import get_compute_node_ips
 from fairness.node import Node
 
 start_ug = False
+crs = CRS()
 
 
 def main():
@@ -45,6 +46,7 @@ def crs_cycle():
     :return:
     """
     global start_ug
+    global crs
     context = zmq.Context()
     socket = context.socket(zmq.REP)
     socket.bind("tcp://*:5555")
@@ -66,9 +68,7 @@ def crs_cycle():
         # update CRS
         json_res = json.loads(message)
         print("nri: ", json_res['nri'])
-        crs = CRS()
         crs.update_crs(json_res['nri'])
-        # TODO: fix sum CRS
         print("crs: ", crs.cpu)
 
         ip_list.remove(json_res['neighbor'])
@@ -95,6 +95,7 @@ def ug_cycle():
     :return:
     """
     global start_ug
+    # TODO: start_ug doesn't work :-(
     while start_ug:
         print("ug_cycle...")
         time.sleep(2)
