@@ -10,16 +10,22 @@ from fairness.node_service.crs import CRS
 from fairness.controller.utils_controller import get_compute_node_ips
 from fairness.node import Node
 
+start_ug = False
+
 
 def main():
-    # open_stack_connection = IdentityApiConnection()
-    # user_dict = open_stack_connection.list_users()
-    # print("user_dict: ", user_dict)
+    global start_ug
 
     # spawn a new thread to listen for new incoming nodes
     thread_crs = threading.Thread(target=crs_cycle)
     thread_crs.daemon = True
     thread_crs.start()
+
+    # TODO: get users and their's quota
+    # open_stack_connection = IdentityApiConnection()
+    # user_dict = open_stack_connection.list_users()
+    # print("user_dict: ", user_dict)
+    # cores, ram = open_stack_connection.get_quotas()
 
     # spawn a new thread to listen for incoming user greediness messages
     # thread_ug = threading.Thread(target=ug_cycle)
@@ -38,6 +44,7 @@ def crs_cycle():
        sends neighbor IP
     :return:
     """
+    global start_ug
     context = zmq.Context()
     socket = context.socket(zmq.REP)
     socket.bind("tcp://*:5555")
@@ -53,6 +60,7 @@ def crs_cycle():
         # Wait for next request from client
         print("waiting for next CRS request from a Node...")
         message = socket.recv()
+        start_ug = False
         print("Received request: %s" % message)
 
         # update CRS
@@ -74,17 +82,20 @@ def crs_cycle():
         if len(ip_list) <= 1:
             own_neighbor = ip_list.pop(0)
             print("own_neighbor: ", own_neighbor)
+            start_ug = True
 
 
 def ug_cycle():
     """
     the new thread:
-       receives UG
-       measures time elapsed for current cycle
-       starts new UG cycle after defined time.
+        send UG+CRS
+        receives UG
+        measures time elapsed for current cycle
+        starts new UG cycle after defined time.
     :return:
     """
-    while 1:
+    global start_ug
+    while start_ug:
         print("ug_cycle...")
         time.sleep(2)
 
