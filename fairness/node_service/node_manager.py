@@ -66,7 +66,6 @@ def main():
     crs = [11998, 4040944, 4040944000, 4040944000, 125000000, 125000000]
 
     # initialize node with 6 normalization factors and 6 resources.
-    # TODO: where to get the normalization factors?? For the moment initialized to 1. From CRS (1 / anzahl ressource)
     node = Node([1/crs[0], 1/crs[1], 1/crs[2], 1/crs[3], 1/crs[4], 1/crs[5]], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_initial_greediness)
     print("Node initialized.")
 

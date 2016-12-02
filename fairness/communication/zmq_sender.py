@@ -74,7 +74,7 @@ class Sender:
 
     def get_ip_from_controller(self, nri):
         print("sending...")
-        json_message = json.dumps({'neighbor': Node.get_public_ip_address(), 'nri': nri})
+        json_message = json.dumps({'advertiser': Node.get_public_ip_address(), 'nri': nri})
         self.socket.send(json_message)
 
         print("waiting for response...")

@@ -71,9 +71,9 @@ def crs_cycle():
         crs.update_crs(json_res['nri'])
         print("crs: ", crs.cpu)
 
-        ip_list.remove(json_res['neighbor'])
+        ip_list.remove(json_res['advertiser'])
         successor_ip = ip_list.pop(0)
-        ip_list.append(str(json_res['neighbor']))
+        ip_list.append(str(json_res['advertiser']))
         print("ip_list after append: ", ip_list)
 
         #  Send reply back to client
@@ -95,7 +95,6 @@ def ug_cycle():
     :return:
     """
     global start_ug_event
-    # TODO: start_ug doesn't work :-(
     while 1:
         start_ug_event.wait()
         print("ug_cycle...")
