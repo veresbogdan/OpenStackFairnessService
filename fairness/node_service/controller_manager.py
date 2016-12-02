@@ -28,9 +28,9 @@ def main():
     # cores, ram = open_stack_connection.get_quotas()
 
     # spawn a new thread to listen for incoming user greediness messages
-    # thread_ug = threading.Thread(target=ug_cycle)
-    # thread_ug.daemon = True
-    # thread_ug.start()
+    thread_ug = threading.Thread(target=ug_cycle)
+    thread_ug.daemon = True
+    thread_ug.start()
 
     while 1:
         pass
