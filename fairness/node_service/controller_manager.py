@@ -10,12 +10,11 @@ from fairness.node_service.crs import CRS
 from fairness.controller.utils_controller import get_compute_node_ips
 from fairness.node import Node
 
-start_ug = False
 crs = CRS()
+start_ug_event = threading.Event()
 
 
 def main():
-    global start_ug
 
     # spawn a new thread to listen for new incoming nodes
     thread_crs = threading.Thread(target=crs_cycle)
@@ -43,9 +42,10 @@ def crs_cycle():
        receives the NRI
        updates the global CRS
        sends neighbor IP
+       set semaphore for ug_cycle
     :return:
     """
-    global start_ug
+    global start_ug_event
     global crs
     context = zmq.Context()
     socket = context.socket(zmq.REP)
@@ -62,7 +62,7 @@ def crs_cycle():
         # Wait for next request from client
         print("waiting for next CRS request from a Node...")
         message = socket.recv()
-        start_ug = False
+        start_ug_event.clear()
         print("Received request: %s" % message)
 
         # update CRS
@@ -82,7 +82,7 @@ def crs_cycle():
         if len(ip_list) <= 1:
             own_neighbor = ip_list.pop(0)
             print("own_neighbor: ", own_neighbor)
-            start_ug = True
+            start_ug_event.set()
 
 
 def ug_cycle():
@@ -94,9 +94,10 @@ def ug_cycle():
         starts new UG cycle after defined time.
     :return:
     """
-    global start_ug
+    global start_ug_event
     # TODO: start_ug doesn't work :-(
-    while start_ug:
+    while 1:
+        start_ug_event.wait()
         print("ug_cycle...")
         time.sleep(2)
 
