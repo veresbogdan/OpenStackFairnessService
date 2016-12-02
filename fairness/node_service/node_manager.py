@@ -65,6 +65,7 @@ def main():
 
         if socks.get(frontend) == zmq.POLLIN:
             message = frontend.recv_multipart()
+            print("message: ", message)
             backend.send_multipart(message)
 
         if socks.get(backend) == zmq.POLLIN:
