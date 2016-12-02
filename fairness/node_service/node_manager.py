@@ -35,17 +35,25 @@ def main():
 
     context = zmq.Context()
     #  Socket to talk to server
-    socket = context.socket(zmq.REQ)
+    client_socket = context.socket(zmq.REQ)
     config = MyConfigParser()
     controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
     print("Connecting to Controller...")
     address = "tcp://" + controller_ip + ":5555"
-    socket.connect(address)
+    client_socket.connect(address)
 
     # example of usage
     # sender = Sender()
-    neighbor_ip = get_ip_from_controller(socket, nri.__dict__)
+    neighbor_ip = get_ip_from_controller(client_socket, nri.__dict__)
     print("neighbor_ip: ", neighbor_ip)
+
+    server_socket = context.socket(zmq.REP)
+    server_socket.bind("tcp://*:5556")
+
+    while 1:
+        print("waiting for ug_vector...")
+        ug_message = server_socket.recv()
+        print("Received request: %s" % ug_message)
 
     # connect to OpenStack API
     open_stack_connection = IdentityApiConnection()

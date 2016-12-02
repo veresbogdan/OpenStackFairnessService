@@ -12,12 +12,13 @@ from fairness.node import Node
 
 crs = CRS()
 start_ug_event = threading.Event()
+own_successor = 0
 
 
 def main():
 
     # spawn a new thread to listen for new incoming nodes
-    thread_crs = threading.Thread(target=crs_cycle)
+    thread_crs = threading.Thread(target=node_registering)
     thread_crs.daemon = True
     thread_crs.start()
 
@@ -36,7 +37,7 @@ def main():
         pass
 
 
-def crs_cycle():
+def node_registering():
     """
     the new thread:
        receives the NRI
@@ -47,9 +48,10 @@ def crs_cycle():
     """
     global start_ug_event
     global crs
-    context = zmq.Context()
-    socket = context.socket(zmq.REP)
-    socket.bind("tcp://*:5555")
+    global own_successor
+    nr_context = zmq.Context()
+    server_socket = nr_context.socket(zmq.REP)
+    server_socket.bind("tcp://*:5555")
 
     compute_node_ips = get_compute_node_ips()
     # print("compute_node_ips", compute_node_ips)
@@ -61,27 +63,24 @@ def crs_cycle():
     while 1:
         # Wait for next request from client
         print("waiting for next CRS request from a Node...")
-        message = socket.recv()
+        message = server_socket.recv()
+
         start_ug_event.clear()
         print("Received request: %s" % message)
-
         # update CRS
         json_res = json.loads(message)
         print("nri: ", json_res['nri'])
         crs.update_crs(json_res['nri'])
         print("crs: ", crs.cpu)
-
         ip_list.remove(json_res['advertiser'])
         successor_ip = ip_list.pop(0)
         ip_list.append(str(json_res['advertiser']))
         print("ip_list after append: ", ip_list)
-
         #  Send reply back to client
-        socket.send(successor_ip)
-
+        server_socket.send(successor_ip)
         if len(ip_list) <= 1:
-            own_neighbor = ip_list.pop(0)
-            print("own_neighbor: ", own_neighbor)
+            own_successor = ip_list.pop(0)
+            print("own_successor: ", own_successor)
             start_ug_event.set()
 
 
@@ -95,10 +94,18 @@ def ug_cycle():
     :return:
     """
     global start_ug_event
+    global crs
+    global own_successor
     while 1:
         start_ug_event.wait()
         print("ug_cycle...")
         time.sleep(2)
+        ug_context = zmq.Context()
+        client_socket = ug_context.socket(zmq.REQ)
+        address = "tcp://" + own_successor + ":5556"
+        client_socket.connect(address)
+        print("sending...")
+        client_socket.send("hello!")
 
 
 if __name__ == '__main__':
