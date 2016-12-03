@@ -53,7 +53,8 @@ def main():
     while 1:
         start_ug_event.wait()
         print("sending message...")
-        json_message = json.dumps(user_dict)
+        message = {"nri": {"cpu": 123, "memory": 456}, "ug": {"user_1": 60, "user_2": 50}}
+        json_message = json.dumps(message)
         client_socket.send(json_message)
         ug_response = client_socket.recv()
         print("response: ", ug_response)
@@ -95,6 +96,7 @@ def node_registering():
 
         start_ug_event.clear()
         print("Received request: %s" % message)
+
         # update CRS
         json_res = json.loads(message)
         print("nri: ", json_res['nri'])
@@ -104,6 +106,7 @@ def node_registering():
         successor_ip = ip_list.pop(0)
         ip_list.append(str(json_res['advertiser']))
         print("ip_list after append: ", ip_list)
+
         #  Send reply back to client
         requester_port = successor_port - 1
         message_1 = {"successor_ip": str(successor_ip), "successor_port": str(successor_port), "requester_port": str(requester_port)}

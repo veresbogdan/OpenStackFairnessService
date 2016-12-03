@@ -30,8 +30,7 @@ def get_successor_from_controller(socket, nri):
 def main():
     config = MyConfigParser()
     controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
-    # frontend_port = config.config_section_map('communication')['frontend']
-    # backend_port = config.config_section_map('communication')['backend']
+
     nri = NRI()
     print("CPU weighted by BogoMIPS: ", nri.cpu)
     print("Host memory size in kilobytes: ", nri.memory)
