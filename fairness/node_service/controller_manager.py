@@ -14,7 +14,7 @@ start_ug_event = threading.Event()
 own_successor_event = threading.Event()
 crs = CRS()
 own_successor = 0
-successor_port = 49152
+successor_port = 65535
 
 
 def main():
@@ -105,9 +105,10 @@ def node_registering():
         ip_list.append(str(json_res['advertiser']))
         print("ip_list after append: ", ip_list)
         #  Send reply back to client
-        message_1 = {"successor_ip": "' + str(successor_ip) + '", "successor_port": ' + str(successor_port) + '}
+        requester_port = successor_port - 1
+        message_1 = {"successor_ip": str(successor_ip), "successor_port": str(successor_port), "requester_port": str(requester_port)}
+        successor_port -= 1
         json_message = json.dumps(message_1)
-        successor_port += 1
         nr_socket.send(json_message)
         if len(ip_list) <= 1:
             own_successor = ip_list.pop(0)
@@ -126,7 +127,7 @@ def ug_server():
     global own_successor
     ug_server_context = zmq.Context()
     server_socket = ug_server_context.socket(zmq.REP)
-    server_socket.bind("tcp://*:5560")
+    server_socket.bind("tcp://*:65535")
     while 1:
         updated_ug_message = server_socket.recv()
         # print("updated_ug_message: ", updated_ug_message)

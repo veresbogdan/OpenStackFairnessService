@@ -13,7 +13,7 @@ from fairness.virtual_machines import VM
 from fairness.virtual_machines import quota_to_scalar
 
 
-def get_ip_from_controller(socket, nri):
+def get_successor_from_controller(socket, nri):
     print("sending...")
     json_message = json.dumps({'advertiser': Node.get_public_ip_address(), 'nri': nri})
     socket.send(json_message)
@@ -21,17 +21,17 @@ def get_ip_from_controller(socket, nri):
     print("waiting for response...")
     json_response = socket.recv()
     response = json.loads(json_response)
-    print("response: ", response)
-    print("json_response: ", json_response)
-    print("zmq_sender response", response['successor_ip'])
-#    return response['successor_ip']
+    ip = response['successor_ip']
+    port = response['successor_port']
+    own_port = response['requester_port']
+    return ip, port, own_port
 
 
 def main():
     config = MyConfigParser()
     controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
-    frontend_port = config.config_section_map('communication')['frontend']
-    backend_port = config.config_section_map('communication')['backend']
+    # frontend_port = config.config_section_map('communication')['frontend']
+    # backend_port = config.config_section_map('communication')['backend']
     nri = NRI()
     print("CPU weighted by BogoMIPS: ", nri.cpu)
     print("Host memory size in kilobytes: ", nri.memory)
@@ -49,16 +49,16 @@ def main():
 
     # example of usage
     # sender = Sender()
-    neighbor_ip = get_ip_from_controller(client_socket, nri.__dict__)
-    print("neighbor_ip: ", neighbor_ip)
+    successor_ip, successor_port, own_port = get_successor_from_controller(client_socket, nri.__dict__)
+    print("successor_ip: ", successor_ip)
 
 
     # Prepare broker sockets
     frontend = context.socket(zmq.ROUTER)
     backend = context.socket(zmq.DEALER)
-    frontend.bind("tcp://*:" + str(frontend_port))
-    print("frontend_port: ", frontend_port)
-    backend_address = "tcp://" + neighbor_ip + ":" + str(backend_port)
+    frontend.bind("tcp://*:" + own_port)
+    print("frontend_port: ", own_port)
+    backend_address = "tcp://" + successor_ip + ":" + successor_port
     print("backend_address: ", backend_address)
     backend.connect(backend_address)
 
