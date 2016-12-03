@@ -52,7 +52,8 @@ def main():
     while 1:
         start_ug_event.wait()
         print("sending message...")
-        client_socket.send(user_dict)
+        json_message = json.dumps(user_dict)
+        client_socket.send(json_message)
         ug_response = client_socket.recv()
         print("response: ", ug_response)
         time.sleep(5)
