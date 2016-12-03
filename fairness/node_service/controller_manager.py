@@ -33,8 +33,8 @@ def main():
     thread_crs.start()
 
     # TODO: get users and their's quota
-    # open_stack_connection = IdentityApiConnection()
-    # user_dict = open_stack_connection.list_users()
+    open_stack_connection = IdentityApiConnection()
+    user_dict = open_stack_connection.list_users()
     # print("user_dict: ", user_dict)
     # cores, ram = open_stack_connection.get_quotas()
 
@@ -51,11 +51,10 @@ def main():
     client_socket.connect(address)
     while 1:
         start_ug_event.wait()
-        print("sending...")
-        client_socket.send("hello!")
-        print("waiting for response...")
+        print("sending message...")
+        client_socket.send(user_dict)
         ug_response = client_socket.recv()
-        print("zmq_sender response", ug_response)
+        print("response: ", ug_response)
         time.sleep(5)
 
     while 1:
@@ -124,7 +123,7 @@ def ug_server():
     server_socket.bind("tcp://*:5558")
     while 1:
         updated_ug_message = server_socket.recv()
-        print("updated_ug_message: ", updated_ug_message)
+        # print("updated_ug_message: ", updated_ug_message)
         server_socket.send("ug received.")
 
 
