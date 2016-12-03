@@ -53,7 +53,9 @@ def main():
     while 1:
         start_ug_event.wait()
         print("sending message...")
-        message = {"nri": {"cpu": 123, "memory": 456}, "ug": {"user_1": 60, "user_2": 50}}
+        crs_message = '"crs": {"cpu": ' + crs.cpu + ', "memory": ' + crs.memory + ', "disk_read_bytes": ' + crs.disk_read + ', "disk_write_bytes": ' + crs.disk_write + ', "network_receive": ' + crs.network_rx + ', "network_transmit": ' + crs.network_tx + '}'
+        ug_message = '"ug": {"user_1": 60, "user_2": 50}'
+        message = {crs_message, ug_message}
         json_message = json.dumps(message)
         client_socket.send(json_message)
         ug_response = client_socket.recv()
