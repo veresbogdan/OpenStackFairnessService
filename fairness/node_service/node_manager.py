@@ -25,6 +25,10 @@ def get_ip_from_controller(socket, nri):
 
 
 def main():
+    config = MyConfigParser()
+    controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
+    frontend_port = config.config_section_map('communication')['frontend']
+    backend_port = config.config_section_map('communication')['backend']
     nri = NRI()
     print("CPU weighted by BogoMIPS: ", nri.cpu)
     print("Host memory size in kilobytes: ", nri.memory)
@@ -36,8 +40,6 @@ def main():
     context = zmq.Context()
     #  Socket to talk to server
     client_socket = context.socket(zmq.REQ)
-    config = MyConfigParser()
-    controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
     print("Connecting to Controller...")
     address = "tcp://" + controller_ip + ":5555"
     client_socket.connect(address)
@@ -51,8 +53,8 @@ def main():
     # Prepare broker sockets
     frontend = context.socket(zmq.ROUTER)
     backend = context.socket(zmq.DEALER)
-    frontend.bind("tcp://*:5556")
-    backend.bind("tcp://*:5557")
+    frontend.bind("tcp://*:" + str(frontend_port))
+    backend.bind("tcp://*:" + str(backend_port))
 
     # Initialize broker poll set
     poller = zmq.Poller()
