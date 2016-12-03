@@ -47,7 +47,7 @@ def main():
     # start the gu-ring client for sending gu + CRS
     client_socket = main_context.socket(zmq.REQ)
     own_successor_event.wait()
-    address = "tcp://" + str(own_successor) + ":" + successor_port
+    address = "tcp://" + str(own_successor) + ":" + str(successor_port)
     print(address)
     client_socket.connect(address)
     while 1:
@@ -105,7 +105,8 @@ def node_registering():
         ip_list.append(str(json_res['advertiser']))
         print("ip_list after append: ", ip_list)
         #  Send reply back to client
-        json_message = json.dumps("{'successor_ip': " + successor_ip + ", 'successor_port': " + successor_port + "}")
+        message_1 = {"successor_ip": "' + str(successor_ip) + '", "successor_port": ' + str(successor_port) + '}
+        json_message = json.dumps(message_1)
         successor_port += 1
         nr_socket.send(json_message)
         if len(ip_list) <= 1:
