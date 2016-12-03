@@ -21,7 +21,7 @@ def get_ip_from_controller(socket, nri):
     print("waiting for response...")
     response = socket.recv()
     print("zmq_sender response", response)
-    return response
+    return response['successor_ip']
 
 
 def main():

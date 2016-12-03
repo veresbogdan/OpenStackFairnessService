@@ -14,6 +14,7 @@ start_ug_event = threading.Event()
 own_successor_event = threading.Event()
 crs = CRS()
 own_successor = 0
+successor_port = 49152
 
 
 def main():
@@ -46,7 +47,7 @@ def main():
     # start the gu-ring client for sending gu + CRS
     client_socket = main_context.socket(zmq.REQ)
     own_successor_event.wait()
-    address = "tcp://" + str(own_successor) + ":5556"
+    address = "tcp://" + str(own_successor) + ":" + successor_port
     print(address)
     client_socket.connect(address)
     while 1:
@@ -75,6 +76,7 @@ def node_registering():
     global own_successor_event
     global crs
     global own_successor
+    global successor_port
     nr_context = zmq.Context()
     nr_socket = nr_context.socket(zmq.REP)
     nr_socket.bind("tcp://*:5555")
@@ -97,13 +99,15 @@ def node_registering():
         json_res = json.loads(message)
         print("nri: ", json_res['nri'])
         crs.update_crs(json_res['nri'])
-        print("crs: ", crs.cpu)
+        print("crs.cpu: ", crs.cpu)
         ip_list.remove(json_res['advertiser'])
         successor_ip = ip_list.pop(0)
         ip_list.append(str(json_res['advertiser']))
         print("ip_list after append: ", ip_list)
         #  Send reply back to client
-        nr_socket.send(successor_ip)
+        json_message = json.dumps("{'successor_ip': " + successor_ip + ", 'successor_port': " + successor_port + "}")
+        successor_port += 1
+        nr_socket.send(json_message)
         if len(ip_list) <= 1:
             own_successor = ip_list.pop(0)
             print("own_successor: ", own_successor)
@@ -121,7 +125,7 @@ def ug_server():
     global own_successor
     ug_server_context = zmq.Context()
     server_socket = ug_server_context.socket(zmq.REP)
-    server_socket.bind("tcp://*:5558")
+    server_socket.bind("tcp://*:5560")
     while 1:
         updated_ug_message = server_socket.recv()
         # print("updated_ug_message: ", updated_ug_message)
