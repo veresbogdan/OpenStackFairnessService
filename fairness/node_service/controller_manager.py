@@ -56,7 +56,7 @@ def main():
         print("waiting for response...")
         ug_response = client_socket.recv()
         print("zmq_sender response", ug_response)
-        time.sleep(2)
+        time.sleep(5)
 
     while 1:
         pass
@@ -121,7 +121,7 @@ def ug_server():
     global own_successor
     ug_server_context = zmq.Context()
     server_socket = ug_server_context.socket(zmq.REP)
-    server_socket.bind("tcp://*:5556")
+    server_socket.bind("tcp://*:5558")
     while 1:
         updated_ug_message = server_socket.recv()
         print("updated_ug_message: ", updated_ug_message)

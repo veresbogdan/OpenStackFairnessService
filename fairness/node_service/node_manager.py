@@ -54,7 +54,10 @@ def main():
     frontend = context.socket(zmq.ROUTER)
     backend = context.socket(zmq.DEALER)
     frontend.bind("tcp://*:" + str(frontend_port))
-    backend.bind("tcp://*:" + str(backend_port))
+    print("frontend_port: ", frontend_port)
+    backend_address = "tcp://" + neighbor_ip + ":" + str(backend_port)
+    print("backend_address: ", backend_address)
+    backend.connect(backend_address)
 
     # Initialize broker poll set
     poller = zmq.Poller()
