@@ -42,7 +42,7 @@ def main():
     # send NRI and get info from Controller
     successor_ip, successor_port, own_port = get_successor_from_controller(client_socket, nri.__dict__)
 
-    # needed for VMs: VM ID, VRs, owner, node
+    # retreive info for creating VM objects.
     open_stack_connection = IdentityApiConnection()
     user_dict = open_stack_connection.list_users()
     # print("user_dict: ", user_dict)
@@ -50,10 +50,11 @@ def main():
     vms_dict = open_stack_connection.get_all_vms(user_dict)
     print("vms_dict: ", vms_dict)
     # vm_dict:  [{'instance-00000006': ('demo', 'n01')}, {'instance-00000005': ('demo', 'n02')}]
-    # TODO: get cores and ram quotas per user.
+
+    # TODO: get cores and ram quotas per user!!!
     cores, ram = open_stack_connection.get_quotas()
 
-    # filter VMs that are on this host.
+    # filter VMs that are on this host and create VM objects.
     # vms_on_this_host = []
     rui = RUI()  # TODO: separate RUI for every VM
     hostname = node.hostname
@@ -65,26 +66,11 @@ def main():
             max_mem, cpu_s = get_vrs(vm_name)
             print("parameters for VM creation: ", vm_name, max_mem, cpu_s, vm_owner)
             vm = VM(vm_name, [max_mem, cpu_s], vm_owner)
+            rui.get_utilization(vm_name)
             vm.update_rui(
                 [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
                  rui.network_bytes_transmitted])
             node.append_vm_and_update_endowments(vm)
-            # vms_on_this_host.append(inst.keys()[0])
-    # print("vms_on_this_host: ", vms_on_this_host)
-
-
-
-    # rui = RUI()
-    # if vms_on_this_host is not None:
-    #     for domain in vms_on_this_host:
-    #         max_mem, cpu_s = get_vrs(domain)
-    #         rui.get_utilization(domain)
-    #         # domain_id = hostname + "-" + str(domain)
-    #         vm = VM("domain_id", [max_mem, cpu_s], "demo")
-    #         vm.update_rui(
-    #             [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
-    #              rui.network_bytes_transmitted])
-    #         node.append_vm_and_update_endowments(vm)
 
     node.get_greediness_per_user()
 

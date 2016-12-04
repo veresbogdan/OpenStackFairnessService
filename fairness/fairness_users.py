@@ -1,4 +1,4 @@
-class User(object):
+class FairnessUser(object):
 
     def __init__(self):
         self.name = None
