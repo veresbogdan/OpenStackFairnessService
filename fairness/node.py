@@ -39,7 +39,7 @@ class Node(object):
     #     self.public_ip = Node.get_public_ip_address()
 
     def update_global_normalization(self, n_crs):
-        gn_list = [1 / n_crs['cpu'], 1 / n_crs['memory'], 1 / n_crs['disk_read_bytes'], 1 / n_crs['disk_write_bytes'], 1 / n_crs['network_receive'], 1 / n_crs['network_transmit']]
+        gn_list = [1 / int(n_crs['cpu']), 1 / int(n_crs['memory']), 1 / int(n_crs['disk_read_bytes']), 1 / int(n_crs['disk_write_bytes']), 1 / int(n_crs['network_receive']), 1 / int(n_crs['network_transmit'])]
         print("gn_list: ", gn_list)
         self.global_normalization = np.array(gn_list)
 
