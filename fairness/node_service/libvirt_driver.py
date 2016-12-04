@@ -20,6 +20,7 @@ class LibvirtConnection(object):
 
     # for VM infos
     def get_domain_info(self, domainID):
+        print("domainID: ", domainID)
         dom = LibvirtConnection.domain_lookup(self, domainID)
         state, maxmem, mem, cpus, cput = dom.info()
         return state, maxmem, cpus
