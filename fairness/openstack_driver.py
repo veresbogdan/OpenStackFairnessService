@@ -68,6 +68,7 @@ class IdentityApiConnection(object):
 
     def _check_token(self):
         if self.token is None:
+            print("token has been issued!")
             self._authenticate()
         time_now = datetime.utcnow().isoformat()
         if self.token_exp < time_now:
@@ -129,6 +130,6 @@ class IdentityApiConnection(object):
                 user_name = user_dict[user_id]
                 instance_name = json_text['servers'][i]['OS-EXT-SRV-ATTR:instance_name']
                 host = json_text['servers'][i]['OS-EXT-SRV-ATTR:host']
-                vm_dict[str(instance_name)] = (str(user_name), str(host))
+                vm_dict[str(instance_name)] = [str(user_name), str(host)]
                 list_of_all_vms.append(vm_dict)
         return list_of_all_vms

@@ -48,7 +48,7 @@ def main():
     # print("user_dict: ", user_dict)
     # user_dict:  {'4a6383e2a52f434386b2774ae8fe82ac': 'demo', 'bb097255bd524eb59debe189cbb0bd55': 'admin', 'bc39f112d92943bbbde80773ee01c1f1': 'glance', 'e6a534d6987048d8ab30fea4f7f34ca5': 'fairness', 'f387bb59a1454458b4ff8f82d9e51f7a': 'neutron', 'd928bbdff12d45d097ba58fdb90bac3c': 'nova'}
     vms_dict = open_stack_connection.get_all_vms(user_dict)
-    # print("vms_dict: ", vms_dict)
+    print("vms_dict: ", vms_dict)
     # vm_dict:  [{'instance-00000006': ('demo', 'n01')}, {'instance-00000005': ('demo', 'n02')}]
     # TODO: get cores and ram quotas per user.
     cores, ram = open_stack_connection.get_quotas()
