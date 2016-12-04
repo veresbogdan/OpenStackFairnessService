@@ -12,7 +12,6 @@ from fairness.node_service.rui import RUI
 from fairness.node_service.crs import CRS
 from fairness.openstack_driver import IdentityApiConnection
 from fairness.virtual_machines import VM
-from fairness.virtual_machines import quota_to_scalar
 
 crs = CRS()
 node = Node()
@@ -46,9 +45,41 @@ def main():
     # still needed for VMs: VM ID, VRs, owner, node
     open_stack_connection = IdentityApiConnection()
     user_dict = open_stack_connection.list_users()
-    print("user_dict: ", user_dict)
-    vm_dict = open_stack_connection.get_vms(user_dict)
-    print("vm_dict: ", vm_dict)
+    # print("user_dict: ", user_dict)
+    # user_dict:  {'4a6383e2a52f434386b2774ae8fe82ac': 'demo', 'bb097255bd524eb59debe189cbb0bd55': 'admin', 'bc39f112d92943bbbde80773ee01c1f1': 'glance', 'e6a534d6987048d8ab30fea4f7f34ca5': 'fairness', 'f387bb59a1454458b4ff8f82d9e51f7a': 'neutron', 'd928bbdff12d45d097ba58fdb90bac3c': 'nova'}
+    vms_dict = open_stack_connection.get_all_vms(user_dict)
+    # print("vms_dict: ", vms_dict)
+    # vm_dict:  [{'instance-00000006': ('demo', 'n01')}, {'instance-00000005': ('demo', 'n02')}]
+
+    # filter VMs that are on this host.
+    vms_on_this_host = []
+    hostname = node.hostname
+    for inst in vms_dict:
+        if inst.values()[0][1] == hostname:
+            vms_on_this_host.append(inst.keys()[0])
+    print("vms_on_this_host: ", vms_on_this_host)
+
+    rui = RUI()  # TODO: create new RUI for every VM.
+    # domain_id_list = rui.get_domain_id_list()
+    if vms_on_this_host is not None:
+        for domain in vms_on_this_host:
+            # print("")
+            # print("Domain ID:", domain, "on host", hostname)
+            max_mem, cpu_s = rui.get_vm_info(domain)
+            rui.get_utilization(domain)
+            # print("CPU time in sec: ", rui.cpu_time)
+            # print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)
+            # print("Disk stats (read in bytes):", rui.disk_bytes_read)
+            # print("Disk stats (write in bytes):", rui.disk_bytes_written)
+            # print("Network stats (read in bytes):", rui.network_bytes_received)
+            # print("Network stats (write in bytes):", rui.network_bytes_transmitted)
+
+            domain_id = hostname + "-" + str(domain)
+            vm = VM(domain_id, [max_mem, cpu_s], "demo", node)
+            vm.update_rui(
+                [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
+                 rui.network_bytes_transmitted])
+            node.update_endowments()
 
 
     # Prepare broker sockets
@@ -115,9 +146,8 @@ def asdf():
     # connect to OpenStack API
     open_stack_connection = IdentityApiConnection()
     user_dict = open_stack_connection.list_users()
-    # user_dict = {"demo": 0, "admin": 0}
     cores, ram = open_stack_connection.get_quotas()
-    vm_dict = open_stack_connection.get_vms(user_dict)
+    vm_dict = open_stack_connection.get_all_vms(user_dict)
     print("vm_dict: ", vm_dict)
 
     # initialize user greediness with 0's.
@@ -134,21 +164,21 @@ def asdf():
     # node = Node([1/crs[0], 1/crs[1], 1/crs[2], 1/crs[3], 1/crs[4], 1/crs[5]], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_initial_greediness)
     # print("Node initialized.")
 
+    # filter VMs that are on this host.
+    vms_on_this_host = []
     hostname = node.hostname
-
-    domain_id_list_new = []
     for inst in vm_dict:
         if inst.values()[0][1] == hostname:
-            domain_id_list_new.append(inst.keys()[0])
-    print("domain_id_list_new: ", domain_id_list_new)
+            vms_on_this_host.append(inst.keys()[0])
+    print("vms_on_this_host: ", vms_on_this_host)
 
     rui = RUI()  # TODO: create new RUI for every VM.
     # domain_id_list = rui.get_domain_id_list()
-    if domain_id_list_new is not None:
-        for domain in domain_id_list_new:
+    if vms_on_this_host is not None:
+        for domain in vms_on_this_host:
             # print("")
             # print("Domain ID:", domain, "on host", hostname)
-            max_mem, cpu_s = rui.get_vm_info(domain) # TODO: domains vms to get only those on local node.
+            max_mem, cpu_s = rui.get_vm_info(domain)
             rui.get_utilization(domain)
             # print("CPU time in sec: ", rui.cpu_time)
             # print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)

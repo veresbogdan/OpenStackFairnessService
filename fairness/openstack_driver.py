@@ -111,7 +111,7 @@ class IdentityApiConnection(object):
         ram = json_text['quota_set']['ram']  # in MB
         return cores, ram
 
-    def get_vms(self, user_dict):
+    def get_all_vms(self, user_dict):
         self._check_token()
         url = 'http://openstack-controller:8774/v2.1/servers/detail?all_tenants=1'
         headers = {'X-Auth-Token': self.token}
@@ -120,7 +120,7 @@ class IdentityApiConnection(object):
         # print r.headers
         # print r.text
         # print r.status_code
-        new_list = []
+        list_of_all_vms = []
         for i in range(len(json_text['servers'])):
             vm_dict = {}
             instance_status = json_text['servers'][i]['status']
@@ -130,5 +130,5 @@ class IdentityApiConnection(object):
                 instance_name = json_text['servers'][i]['OS-EXT-SRV-ATTR:instance_name']
                 host = json_text['servers'][i]['OS-EXT-SRV-ATTR:host']
                 vm_dict[str(instance_name)] = (str(user_name), str(host))
-                new_list.append(vm_dict)
-        return new_list
+                list_of_all_vms.append(vm_dict)
+        return list_of_all_vms
