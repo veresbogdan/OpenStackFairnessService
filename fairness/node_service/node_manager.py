@@ -12,19 +12,7 @@ from fairness.node import Node
 from fairness.virtual_machines import VM
 from fairness.virtual_machines import quota_to_scalar
 
-
-def get_successor_from_controller(socket, nri):
-    print("sending...")
-    json_message = json.dumps({'advertiser': Node.get_public_ip_address(), 'nri': nri})
-    socket.send(json_message)
-
-    print("waiting for response...")
-    json_response = socket.recv()
-    response = json.loads(json_response)
-    ip = response['successor_ip']
-    port = response['successor_port']
-    own_port = response['requester_port']
-    return ip, port, own_port
+crs = None
 
 
 def main():
@@ -52,6 +40,7 @@ def main():
     print("successor_ip: ", successor_ip)
 
 
+
     # Prepare broker sockets
     frontend = context.socket(zmq.ROUTER)
     backend = context.socket(zmq.DEALER)
@@ -73,12 +62,21 @@ def main():
         if socks.get(frontend) == zmq.POLLIN:
             message = frontend.recv_multipart()
             print("message: ", message)
+
+            # TODO: extract CRS, check if still same CRS, calculate new ug vector, forward info.
+            check_update_crs(message)
+
             backend.send_multipart(message)
 
         if socks.get(backend) == zmq.POLLIN:
             message = backend.recv_multipart()
             frontend.send_multipart(message)
 
+
+def check_update_crs(message):
+    global crs
+    crs = message['crs']
+    print("crs: ", crs)
 
 
 
@@ -146,7 +144,19 @@ def main():
 
     print("Quota to sclar: ", quota_to_scalar([cores, ram], node))
 
-    # Receiver(nri, rui)  # CRS and user greediness
+
+def get_successor_from_controller(socket, nri):
+    print("sending...")
+    json_message = json.dumps({'advertiser': Node.get_public_ip_address(), 'nri': nri})
+    socket.send(json_message)
+
+    print("waiting for response...")
+    json_response = socket.recv()
+    response = json.loads(json_response)
+    ip = response['successor_ip']
+    port = response['successor_port']
+    own_port = response['requester_port']
+    return ip, port, own_port
 
 
 # Routine 1:
