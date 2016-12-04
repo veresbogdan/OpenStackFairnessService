@@ -22,7 +22,7 @@ vm.update_rui([0, 10, 21, 34, 4, 7])
 vm = VM(2, [20, 10], "user_a", node)
 # the VM consumes 10 units of the first resource
 vm.update_rui([10, 0, 4, 8, 12, 23])
-print(vm.vm_id)
+print(vm.vm_name)
 print(vm.endowment)
 print(node.global_normalization)
 print(node.nri[:2])                 # this is a node parameter

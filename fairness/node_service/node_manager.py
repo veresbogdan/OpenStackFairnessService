@@ -89,11 +89,11 @@ def main():
     node.get_greediness_per_user()
 
     for vm in node.vms:
-        print(" VM ID: ", vm.vm_id)
-        print(vm.endowment)
-        print(node.global_normalization)
-        print(vm.owner)
-        print(vm.rui)
+        print("vm.vm_name: ", vm.vm_name)
+        print("vm.endowment: ", vm.endowment)
+        print("node.global_normalization: ", node.global_normalization)
+        print("vm.owner: ", vm.owner)
+        print("vm.rui: ", vm.rui)
         print("VM Heaviness: ", vm.heaviness)
     print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
     print("node.vms length: ", len(node.vms))
@@ -215,7 +215,7 @@ def asdf():
     node.get_greediness_per_user()
 
     for vm in node.vms:
-        print(" VM ID: ", vm.vm_id)
+        print("vm.vm_name: ", vm.vm_name)
         print(vm.endowment)
         print(node.global_normalization)
         print(vm.owner)

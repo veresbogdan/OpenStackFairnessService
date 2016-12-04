@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 from fairness.node_service.libvirt_driver import LibvirtConnection
 from fairness.node_service.rui import RUI
@@ -7,7 +8,7 @@ __author__ = 'Patrick'
 
 class VM:
 
-    def __init__(self, vm_id, vrs, owner):
+    def __init__(self, vm_name, vrs, owner):
         """
         :param vrs: sequence (list, np.array, etc.) that specifies the VM's VRs
         :param owner: string that specifies the VM's owner (must be key in the owner dictionary)
@@ -16,7 +17,7 @@ class VM:
         # assert len(vrs) == len(VM.nri)
         # assert owner in node.owners
 
-        self.vm_id = vm_id
+        self.vm_name = vm_name
         self.vrs = np.array(vrs)
         self.owner = owner
         self.rui = None             # change to RUI()
@@ -33,7 +34,7 @@ class VM:
 def get_vrs(domain_id):
     conn = LibvirtConnection()
     state, maxmem, cpus = conn.get_domain_info(domain_id)
-    print('The state:', state)
-    print('The max memory:', maxmem)
-    print('The number of vcpus:', cpus)
+    # print('The state:', state)
+    # print('The max memory:', maxmem)
+    # print('The number of vcpus:', cpus)
     return maxmem, cpus
