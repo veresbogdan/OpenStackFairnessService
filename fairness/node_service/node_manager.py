@@ -68,10 +68,10 @@ def main():
             rui.get_utilization(domain)
             # domain_id = hostname + "-" + str(domain)
             vm = VM("domain_id", [max_mem, cpu_s], "demo", node)
-            # vm.update_rui(
-            #     [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
-            #      rui.network_bytes_transmitted])
-            vm.update_rui(rui)
+            vm.update_rui(
+                [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
+                 rui.network_bytes_transmitted])
+            # vm.update_rui(rui)
             node.update_endowments()
 
     node.get_greediness_per_user()

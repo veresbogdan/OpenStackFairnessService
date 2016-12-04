@@ -18,7 +18,7 @@ class VM:
         self.vm_id = vm_id
         self.vrs = np.array(vrs)
         self.owner = owner
-        self.rui = RUI()             # change to RUI()
+        self.rui = None             # change to RUI()
         self.endowment = None
         node.vms.append(self)
 
@@ -27,4 +27,4 @@ class VM:
         :param rui: the VM's RUI in the current measurement period
         """
         # assert len(rui) == len(VM.global_normalization)
-        self.rui = rui
+        self.rui = np.array(rui)
