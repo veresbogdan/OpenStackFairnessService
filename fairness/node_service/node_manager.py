@@ -41,8 +41,7 @@ def main():
     # send NRI and get info from Controller
     successor_ip, successor_port, own_port = get_successor_from_controller(client_socket, nri.__dict__)
 
-    # TODO: create VMs and initialize RUI
-    # still needed for VMs: VM ID, VRs, owner, node
+    # needed for VMs: VM ID, VRs, owner, node
     open_stack_connection = IdentityApiConnection()
     user_dict = open_stack_connection.list_users()
     # print("user_dict: ", user_dict)
@@ -50,6 +49,8 @@ def main():
     vms_dict = open_stack_connection.get_all_vms(user_dict)
     # print("vms_dict: ", vms_dict)
     # vm_dict:  [{'instance-00000006': ('demo', 'n01')}, {'instance-00000005': ('demo', 'n02')}]
+    # TODO: get cores and ram quotas per user.
+    cores, ram = open_stack_connection.get_quotas()
 
     # filter VMs that are on this host.
     vms_on_this_host = []
@@ -73,6 +74,17 @@ def main():
             vm.update_rui(rui)
             node.update_endowments()
 
+    node.get_greediness_per_user()
+
+    for vm in node.vms:
+        print(" VM ID: ", vm.vm_id)
+        print(vm.endowment)
+        print(node.global_normalization)
+        print(vm.owner)
+        print(vm.rui)
+        print("VM Heaviness: ", vm.heaviness)
+    print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
+
 
     # Prepare broker sockets
     frontend = context.socket(zmq.ROUTER)
@@ -89,6 +101,7 @@ def main():
     poller.register(backend, zmq.POLLIN)
 
     # Switch messages between sockets
+    print("Node is ready to receive messages from the ring...")
     while 1:
         socks = dict(poller.poll())
 
@@ -195,7 +208,6 @@ def asdf():
         print(vm.owner)
         print(vm.rui)
         print("VM Heaviness: ", vm.heaviness)
-
     print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
 
 
