@@ -6,13 +6,13 @@ import sys
 import zmq
 
 from fairness.config_parser import MyConfigParser
+from fairness.node import Node
 from fairness.node_service.nri import NRI
 from fairness.node_service.rui import RUI
+from fairness.node_service.crs import CRS
 from fairness.openstack_driver import IdentityApiConnection
-from fairness.node import Node
 from fairness.virtual_machines import VM
 from fairness.virtual_machines import quota_to_scalar
-from fairness.node_service.crs import CRS
 
 crs = CRS()
 node = Node()
@@ -24,35 +24,40 @@ def main():
     controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
 
     nri = NRI()
-    node.update_nri(nri)
+    node.set_nri(nri)
     print("CPU weighted by BogoMIPS: ", nri.cpu)
-    print("Host memory size in kilobytes: ", nri.memory)
+    # print("Host memory size in kilobytes: ", nri.memory)
     print("Disk read speed in bytes/s: ", nri.disk_read_bytes)
-    print("Disk write speed in bytes/s: ", nri.disk_write_bytes)
-    print("Theoretical network receive throughput in bytes/s: ", nri.network_receive)
-    print("Theoretical network transmit throughput in bytes/s: ", nri.network_transmit)
+    # print("Disk write speed in bytes/s: ", nri.disk_write_bytes)
+    # print("Theoretical network receive throughput in bytes/s: ", nri.network_receive)
+    # print("Theoretical network transmit throughput in bytes/s: ", nri.network_transmit)
 
     context = zmq.Context()
-    #  Socket to talk to server
+    # create Socket to talk to server
     client_socket = context.socket(zmq.REQ)
     print("Connecting to Controller...")
     address = "tcp://" + controller_ip + ":5555"
     client_socket.connect(address)
 
-    # example of usage
-    # sender = Sender()
+    # send NRI and get info from Controller
     successor_ip, successor_port, own_port = get_successor_from_controller(client_socket, nri.__dict__)
-    print("successor_ip: ", successor_ip)
 
     # TODO: create VMs and initialize RUI
+    # still needed for VMs: VM ID, VRs, owner, node
+    open_stack_connection = IdentityApiConnection()
+    user_dict = open_stack_connection.list_users()
+    print("user_dict: ", user_dict)
+    vm_dict = open_stack_connection.get_vms(user_dict)
+    print("vm_dict: ", vm_dict)
+
 
     # Prepare broker sockets
     frontend = context.socket(zmq.ROUTER)
     backend = context.socket(zmq.DEALER)
     frontend.bind("tcp://*:" + own_port)
-    print("frontend_port: ", own_port)
+    # print("frontend_port: ", own_port)
     backend_address = "tcp://" + successor_ip + ":" + successor_port
-    print("backend_address: ", backend_address)
+    # print("backend_address: ", backend_address)
     backend.connect(backend_address)
 
     # Initialize broker poll set
@@ -101,8 +106,11 @@ def check_update_crs(payload_json):
         node.update_global_normalization(new_crs)
 
 
-def asdf():
 
+
+
+
+def asdf():
 
     # connect to OpenStack API
     open_stack_connection = IdentityApiConnection()
@@ -166,7 +174,7 @@ def asdf():
         print(vm.rui)
         print("VM Heaviness: ", vm.heaviness)
 
-    print("Quota to sclar: ", quota_to_scalar([cores, ram], node))
+    print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
 
 
 def get_successor_from_controller(socket, nri):
