@@ -1,3 +1,4 @@
+from __future__ import print_function
 import socket
 
 import numpy as np
@@ -9,7 +10,6 @@ from fairness.metrics import greediness_raw, GreedinessParameters
 
 
 class Node(object):
-
     def __init__(self, global_normalization, nri, owner_dictionary):
         """
         :param global_normalization: sequence (list, np.array, etc.) that specifies the cloud's global normalization vector
@@ -17,12 +17,31 @@ class Node(object):
         :param owner_dictionary: python dict with owners unicodes
         :return:
         """
-        self.nri = np.array(nri)
-        self.owners = owner_dictionary
+        self.nri = None
+        self.owners = None
         self.vms = list()
-        self.global_normalization = np.array(global_normalization)
+        self.global_normalization = None
         self.hostname = socket.gethostname()
         self.public_ip = Node.get_public_ip_address()
+
+    # def __init__(self, global_normalization, nri, owner_dictionary):
+    #     """
+    #     :param global_normalization: sequence (list, np.array, etc.) that specifies the cloud's global normalization vector
+    #     :param nri: sequence (list, np.array, etc.) that describes the node's resources. must have same length as norm.
+    #     :param owner_dictionary: python dict with owners unicodes
+    #     :return:
+    #     """
+    #     self.nri = np.array(nri)
+    #     self.owners = owner_dictionary
+    #     self.vms = list()
+    #     self.global_normalization = np.array(global_normalization)
+    #     self.hostname = socket.gethostname()
+    #     self.public_ip = Node.get_public_ip_address()
+
+    def update_global_normalization(self, n_crs):
+        gn_list = [1 / n_crs['cpu'], 1 / n_crs['memory'], 1 / n_crs['disk_read_bytes'], 1 / n_crs['disk_write_bytes'], 1 / n_crs['network_receive'], 1 / n_crs['network_transmit']]
+        print("gn_list: ", gn_list)
+        self.global_normalization = np.array(gn_list)
 
     def update_endowments(self):
         """

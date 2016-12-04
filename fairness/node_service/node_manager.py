@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import json
+import yaml
 import sys
 import zmq
 
@@ -14,6 +15,7 @@ from fairness.virtual_machines import quota_to_scalar
 from fairness.node_service.crs import CRS
 
 crs = CRS()
+node = Node()
 
 
 def main():
@@ -80,12 +82,16 @@ def main():
 
 def check_update_crs(payload_json):
     global crs
-    payload = json.loads(payload_json)
+    payload = yaml.safe_load(payload_json)
     new_crs = payload['crs']
     new_crs_hashed = hash(frozenset(new_crs.items()))
     print("new_crs: ", new_crs)
     print("new_crs_hashed: ", new_crs_hashed)
     print("crs.hash_value: ", crs.hash_value)
+    if crs.hash_value is not new_crs_hashed:
+        crs.hash_value = new_crs_hashed
+        node.update_global_normalization(new_crs)
+
 
 
 
