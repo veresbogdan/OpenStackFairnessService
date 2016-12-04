@@ -10,7 +10,7 @@ from fairness.metrics import greediness_raw, GreedinessParameters
 
 
 class Node(object):
-    def __init__(self, global_normalization, nri, owner_dictionary):
+    def __init__(self):
         """
         :param global_normalization: sequence (list, np.array, etc.) that specifies the cloud's global normalization vector
         :param nri: sequence (list, np.array, etc.) that describes the node's resources. must have same length as norm.
