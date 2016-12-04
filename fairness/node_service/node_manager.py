@@ -19,10 +19,12 @@ node = Node()
 
 
 def main():
+    global node
     config = MyConfigParser()
     controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
 
     nri = NRI()
+    node.update_nri(nri)
     print("CPU weighted by BogoMIPS: ", nri.cpu)
     print("Host memory size in kilobytes: ", nri.memory)
     print("Disk read speed in bytes/s: ", nri.disk_read_bytes)

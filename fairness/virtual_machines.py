@@ -11,7 +11,7 @@ class VM:
         :param owner: string that specifies the VM's owner (must be key in the owner dictionary)
         """
         # assert len(vrs) == len(VM.nri)
-        assert owner in node.owners
+        # assert owner in node.owners
 
         self.vm_id = vm_id
         self.vrs = np.array(vrs)
