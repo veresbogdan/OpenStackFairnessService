@@ -44,7 +44,7 @@ def main():
     successor_ip, successor_port, own_port = get_successor_from_controller(client_socket, nri.__dict__)
     print("successor_ip: ", successor_ip)
 
-
+    # TODO: create VMs and initialize RUI
 
     # Prepare broker sockets
     frontend = context.socket(zmq.ROUTER)
@@ -70,10 +70,14 @@ def main():
 
             # TODO: extract CRS, check if still same CRS, calculate new ug vector, forward info.
             payload_json = message[-1]
-            header_json = message[:-1]
+            # header_json = message[:-1]
             # print("payload: ", payload_json)
             # print("header: ", header_json)
             check_update_crs(payload_json)
+
+            # update RUI on all VMs
+
+            new_ug_vector = 0
 
             backend.send_multipart(message)
 
@@ -88,10 +92,11 @@ def check_update_crs(payload_json):
     payload = yaml.safe_load(payload_json)
     new_crs = payload['crs']
     new_crs_hashed = hash(frozenset(new_crs.items()))
-    print("new_crs: ", new_crs)
-    print("new_crs_hashed: ", new_crs_hashed)
-    print("crs.hash_value: ", crs.hash_value)
-    if crs.hash_value is not new_crs_hashed:
+    # print("new_crs: ", new_crs)
+    # print("new_crs_hashed: ", new_crs_hashed)
+    # print("crs.hash_value: ", crs.hash_value)
+    if crs.hash_value != new_crs_hashed:
+        print("CRS has changed!")
         crs.hash_value = new_crs_hashed
         node.update_global_normalization(new_crs)
 

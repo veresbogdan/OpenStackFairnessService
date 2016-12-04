@@ -1,4 +1,5 @@
 import numpy as np
+from fairness.node_service.rui import RUI
 
 __author__ = 'Patrick'
 
@@ -16,7 +17,7 @@ class VM:
         self.vm_id = vm_id
         self.vrs = np.array(vrs)
         self.owner = owner
-        self.rui = None
+        self.rui = None             # change to RUI()
         self.endowment = None
         node.vms.append(self)
 
