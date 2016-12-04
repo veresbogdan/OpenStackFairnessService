@@ -96,7 +96,7 @@ def check_update_crs(payload_json):
         node.update_global_normalization(new_crs)
 
 
-
+def asdf():
 
 
     # connect to OpenStack API
@@ -118,8 +118,8 @@ def check_update_crs(payload_json):
     crs = [11998, 4040944, 4040944000, 4040944000, 125000000, 125000000]
 
     # initialize node with 6 normalization factors and 6 resources.
-    node = Node([1/crs[0], 1/crs[1], 1/crs[2], 1/crs[3], 1/crs[4], 1/crs[5]], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_initial_greediness)
-    print("Node initialized.")
+    # node = Node([1/crs[0], 1/crs[1], 1/crs[2], 1/crs[3], 1/crs[4], 1/crs[5]], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_initial_greediness)
+    # print("Node initialized.")
 
     hostname = node.hostname
 
