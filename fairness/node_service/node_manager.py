@@ -57,28 +57,20 @@ def main():
     for inst in vms_dict:
         if inst.values()[0][1] == hostname:
             vms_on_this_host.append(inst.keys()[0])
+            # vm = VM()
     print("vms_on_this_host: ", vms_on_this_host)
 
-    rui = RUI()  # TODO: create new RUI for every VM.
-    # domain_id_list = rui.get_domain_id_list()
+    rui = RUI()  # TODO: separate RUI for every VM
     if vms_on_this_host is not None:
         for domain in vms_on_this_host:
-            # print("")
-            # print("Domain ID:", domain, "on host", hostname)
             max_mem, cpu_s = rui.get_vm_info(domain)
             rui.get_utilization(domain)
-            # print("CPU time in sec: ", rui.cpu_time)
-            # print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)
-            # print("Disk stats (read in bytes):", rui.disk_bytes_read)
-            # print("Disk stats (write in bytes):", rui.disk_bytes_written)
-            # print("Network stats (read in bytes):", rui.network_bytes_received)
-            # print("Network stats (write in bytes):", rui.network_bytes_transmitted)
-
-            domain_id = hostname + "-" + str(domain)
-            vm = VM(domain_id, [max_mem, cpu_s], "demo", node)
-            vm.update_rui(
-                [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
-                 rui.network_bytes_transmitted])
+            # domain_id = hostname + "-" + str(domain)
+            vm = VM("domain_id", [max_mem, cpu_s], "demo", node)
+            # vm.update_rui(
+            #     [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
+            #      rui.network_bytes_transmitted])
+            vm.update_rui(rui)
             node.update_endowments()
 
 
@@ -212,7 +204,7 @@ def get_successor_from_controller(socket, nri):
     json_message = json.dumps({'advertiser': Node.get_public_ip_address(), 'nri': nri})
     socket.send(json_message)
 
-    print("waiting for response...")
+    # print("waiting for response...")
     json_response = socket.recv()
     response = json.loads(json_response)
     ip = response['successor_ip']

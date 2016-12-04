@@ -28,7 +28,7 @@ print(node.global_normalization)
 print(node.nri[:2])                 # this is a node parameter
 print(vm.owner)
 # print(node.owners)                 # this is a node parameter
-print(vm.rui)
+print("rui: ", vm.rui)
 print(len(node.vms))               # this is a node parameter
 print(vm.vrs)
 
