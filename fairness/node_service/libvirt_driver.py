@@ -19,28 +19,27 @@ class LibvirtConnection(object):
     #     return domain_ids
 
     # for VM infos
-    def get_domain_info(self, domainID):
-        print("domainID: ", domainID)
-        dom = LibvirtConnection.domain_lookup(self, domainID)
+    def get_domain_info(self, domain_name):
+        dom = LibvirtConnection.domain_lookup(self, domain_name)
         state, maxmem, mem, cpus, cput = dom.info()
         return state, maxmem, cpus
 
-    def domain_lookup(self, domain_id):
-        dom = self.conn.lookupByName(domain_id)
+    def domain_lookup(self, domain_name):
+        dom = self.conn.lookupByName(domain_name)
         if dom is None:
-            print('Failed to find the domain ', domain_id)
+            print('Failed to find the domain ', domain_name)
             exit(1)
         return dom
 
     # for RUI
-    def get_vcpu_stats(self, domain_id):
-        dom = self.conn.lookupByName(domain_id)
+    def get_vcpu_stats(self, domain_name):
+        dom = self.conn.lookupByName(domain_name)
         # print "CPU stat in nanoseconds: ", dom.getCPUStats(True)
         cpu_time_seconds = (dom.getCPUStats(True)[0]['cpu_time']) / 1000000000.0
         return cpu_time_seconds
 
-    def get_memory_stats(self, domain_id):
-        dom = self.conn.lookupByName(domain_id)
+    def get_memory_stats(self, domain_name):
+        dom = self.conn.lookupByName(domain_name)
         print("Memory stats in Byte: ", dom.memoryStats())
         memory_stats = dom.memoryStats()
         swap_in = None
@@ -52,15 +51,15 @@ class LibvirtConnection(object):
         else:
             return rss
 
-    def get_network_stats(self, domain_id):
-        dom = self.conn.lookupByName(domain_id)
+    def get_network_stats(self, domain_name):
+        dom = self.conn.lookupByName(domain_name)
         tree = ElementTree.fromstring(dom.XMLDesc())
         iface = tree.find('devices/interface/target').get('dev')
         stats = dom.interfaceStats(iface)
         return stats[0], stats[4]
 
-    def get_disk_stats(self, domain_id):
-        dom = self.conn.lookupByName(domain_id)
+    def get_disk_stats(self, domain_name):
+        dom = self.conn.lookupByName(domain_name)
         tree = ElementTree.fromstring(dom.XMLDesc())
         device = tree.find('devices/disk/target').get('dev')
         rd_req, rd_bytes, wr_req, wr_bytes, err = dom.blockStats(device)

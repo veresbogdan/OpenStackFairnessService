@@ -59,13 +59,11 @@ def main():
     hostname = node.hostname
     for inst in vms_dict:
         if inst.values()[0][1] == hostname:
-            print(type(inst))
-            print("inst: ", inst)
             for key in inst:
                 vm_name = str(key)
-                print("vm_name: ", vm_name)
             vm_owner = inst.values()[0][0]
             max_mem, cpu_s = get_vrs(vm_name)
+            print("parameters for VM creation: ", vm_name, max_mem, cpu_s, vm_owner)
             vm = VM(vm_name, [max_mem, cpu_s], vm_owner)
             vm.update_rui(
                 [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
