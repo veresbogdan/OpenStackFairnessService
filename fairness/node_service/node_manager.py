@@ -11,8 +11,9 @@ from fairness.openstack_driver import IdentityApiConnection
 from fairness.node import Node
 from fairness.virtual_machines import VM
 from fairness.virtual_machines import quota_to_scalar
+from fairness.node_service.crs import CRS
 
-crs = None
+crs = CRS()
 
 
 def main():
@@ -80,10 +81,11 @@ def main():
 def check_update_crs(payload_json):
     global crs
     payload = json.loads(payload_json)
-    crs = payload['crs']
-    hashed_crs = hash(crs)
-    print("crs: ", crs)
-    print("hashed_crs: ", hashed_crs)
+    new_crs = payload['crs']
+    new_crs_hashed = hash(frozenset(new_crs.items()))
+    print("new_crs: ", new_crs)
+    print("new_crs_hashed: ", new_crs_hashed)
+    print("crs.hash_value: ", crs.hash_value)
 
 
 

@@ -7,6 +7,7 @@ class CRS(object):
         self._disk_write = 0
         self._network_rx = 0
         self._network_tx = 0
+        self._hash_value = 0
 
     @property
     def cpu(self):
@@ -55,6 +56,15 @@ class CRS(object):
     @network_tx.setter
     def network_tx(self, value):
         self._network_tx = value
+
+    # the hash value is used by the nodes
+    @property
+    def hash_value(self):
+        return self._hash_value
+
+    @hash_value.setter
+    def hash_value(self, value):
+        self._hash_value = value
 
     def update_crs(self, new_nri):
         self._cpu += new_nri['cpu']
