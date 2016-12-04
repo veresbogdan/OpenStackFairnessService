@@ -64,6 +64,10 @@ def main():
             print("message: ", message)
 
             # TODO: extract CRS, check if still same CRS, calculate new ug vector, forward info.
+            payload = message[-1]
+            header = message[:-1]
+            print("payload: ", payload)
+            print("header: ", header)
             check_update_crs(message)
 
             backend.send_multipart(message)
