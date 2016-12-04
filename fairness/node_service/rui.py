@@ -20,24 +20,6 @@ class RUI(object):
         self.network_bytes_transmitted = None
         self.time_stamp = None
 
-    # @staticmethod
-    # def get_domain_id_list():
-    #     conn = LibvirtConnection()
-    #     domain_id_list = conn.get_domain_ids()
-    #     if len(domain_id_list) == 0:
-    #         print(' No VM in running state')
-    #     else:
-    #         return domain_id_list
-
-    @staticmethod
-    def get_vm_info(domain_id):
-        conn = LibvirtConnection()
-        state, maxmem, cpus = conn.get_domain_info(domain_id)
-        print('The state:', state)
-        print('The max memory:', maxmem)
-        print('The number of vcpus:', cpus)
-        return maxmem, cpus
-
     def get_utilization(self, domain_id):
         conn = LibvirtConnection()
         self.cpu_time = conn.get_vcpu_stats(domain_id)

@@ -12,6 +12,7 @@ from fairness.node_service.rui import RUI
 from fairness.node_service.crs import CRS
 from fairness.openstack_driver import IdentityApiConnection
 from fairness.virtual_machines import VM
+from fairness.virtual_machines import get_vrs
 
 crs = CRS()
 node = Node()
@@ -53,26 +54,34 @@ def main():
     cores, ram = open_stack_connection.get_quotas()
 
     # filter VMs that are on this host.
-    vms_on_this_host = []
+    # vms_on_this_host = []
+    rui = RUI()  # TODO: separate RUI for every VM
     hostname = node.hostname
     for inst in vms_dict:
         if inst.values()[0][1] == hostname:
-            vms_on_this_host.append(inst.keys()[0])
-            # vm = VM()
-    print("vms_on_this_host: ", vms_on_this_host)
-
-    rui = RUI()  # TODO: separate RUI for every VM
-    if vms_on_this_host is not None:
-        for domain in vms_on_this_host:
-            max_mem, cpu_s = rui.get_vm_info(domain)
-            rui.get_utilization(domain)
-            # domain_id = hostname + "-" + str(domain)
-            vm = VM("domain_id", [max_mem, cpu_s], "demo")
+            vm_owner = inst.values()[0][0]
+            max_mem, cpu_s = get_vrs(inst)
+            vm = VM(inst, [max_mem, cpu_s], vm_owner)
             vm.update_rui(
                 [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
                  rui.network_bytes_transmitted])
-            # vm.update_rui(rui)
             node.append_vm_and_update_endowments(vm)
+            # vms_on_this_host.append(inst.keys()[0])
+    # print("vms_on_this_host: ", vms_on_this_host)
+
+
+
+    # rui = RUI()
+    # if vms_on_this_host is not None:
+    #     for domain in vms_on_this_host:
+    #         max_mem, cpu_s = get_vrs(domain)
+    #         rui.get_utilization(domain)
+    #         # domain_id = hostname + "-" + str(domain)
+    #         vm = VM("domain_id", [max_mem, cpu_s], "demo")
+    #         vm.update_rui(
+    #             [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
+    #              rui.network_bytes_transmitted])
+    #         node.append_vm_and_update_endowments(vm)
 
     node.get_greediness_per_user()
 
@@ -184,7 +193,7 @@ def asdf():
         for domain in vms_on_this_host:
             # print("")
             # print("Domain ID:", domain, "on host", hostname)
-            max_mem, cpu_s = rui.get_vm_info(domain)
+            max_mem, cpu_s = rui.get_vrs(domain)
             rui.get_utilization(domain)
             # print("CPU time in sec: ", rui.cpu_time)
             # print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)

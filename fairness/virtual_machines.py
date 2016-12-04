@@ -1,4 +1,5 @@
 import numpy as np
+from fairness.node_service.libvirt_driver import LibvirtConnection
 from fairness.node_service.rui import RUI
 
 __author__ = 'Patrick'
@@ -27,3 +28,12 @@ class VM:
         """
         # assert len(rui) == len(VM.global_normalization)
         self.rui = np.array(rui)
+
+
+def get_vrs(domain_id):
+    conn = LibvirtConnection()
+    state, maxmem, cpus = conn.get_domain_info(domain_id)
+    print('The state:', state)
+    print('The max memory:', maxmem)
+    print('The number of vcpus:', cpus)
+    return maxmem, cpus
