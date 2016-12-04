@@ -34,7 +34,7 @@ print(vm.vrs)
 
 # this must be called everytime the set of VMs on the node changes
 # it calculates the VMs endowments based on their VRs and the nodes NRI
-node.update_endowments()
+node.append_vm_and_update_endowments()
 
 # calculate the greediness of VMs on the node
 # will be stored in the heaviness attribute

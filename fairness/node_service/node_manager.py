@@ -67,12 +67,12 @@ def main():
             max_mem, cpu_s = rui.get_vm_info(domain)
             rui.get_utilization(domain)
             # domain_id = hostname + "-" + str(domain)
-            vm = VM("domain_id", [max_mem, cpu_s], "demo", node)
+            vm = VM("domain_id", [max_mem, cpu_s], "demo")
             vm.update_rui(
                 [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
                  rui.network_bytes_transmitted])
             # vm.update_rui(rui)
-            node.update_endowments()
+            node.append_vm_and_update_endowments(vm)
 
     node.get_greediness_per_user()
 
@@ -84,6 +84,7 @@ def main():
         print(vm.rui)
         print("VM Heaviness: ", vm.heaviness)
     print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
+    print("node.vms length: ", len(node.vms))
 
 
     # Prepare broker sockets
@@ -197,7 +198,7 @@ def asdf():
             vm.update_rui(
                 [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
                  rui.network_bytes_transmitted])
-            node.update_endowments()
+            node.append_vm_and_update_endowments()
 
     node.get_greediness_per_user()
 

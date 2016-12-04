@@ -39,12 +39,12 @@ class Node(object):
         # print("gn_list: ", gn_list)
         self.global_normalization = np.array(gn_list)
 
-    def update_endowments(self):
+    def append_vm_and_update_endowments(self, new_vm):
         """
         only needs to be called, when set of VMs changes
         :return:
         """
-
+        self.vms.append(new_vm)
         vr_sum = np.zeros(2)
 
         for vm in self.vms:

@@ -6,7 +6,7 @@ __author__ = 'Patrick'
 
 class VM:
 
-    def __init__(self, vm_id, vrs, owner, node):
+    def __init__(self, vm_id, vrs, owner):
         """
         :param vrs: sequence (list, np.array, etc.) that specifies the VM's VRs
         :param owner: string that specifies the VM's owner (must be key in the owner dictionary)
@@ -20,7 +20,6 @@ class VM:
         self.owner = owner
         self.rui = None             # change to RUI()
         self.endowment = None
-        node.vms.append(self)
 
     def update_rui(self, rui):
         """
