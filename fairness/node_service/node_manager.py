@@ -82,6 +82,7 @@ def main():
 
 def check_update_crs(payload_json):
     global crs
+    global node
     payload = yaml.safe_load(payload_json)
     new_crs = payload['crs']
     new_crs_hashed = hash(frozenset(new_crs.items()))
