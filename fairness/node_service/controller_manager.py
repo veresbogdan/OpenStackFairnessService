@@ -21,8 +21,8 @@ successor_port = 65535
 def get_unique_users(vm_dict):
     unique_user_list = []
     for item in vm_dict:
-        if item.value()[0][0] not in unique_user_list:
-            unique_user_list.append(item.value()[0][0])
+        if item.values()[0][0] not in unique_user_list:
+            unique_user_list.append(item.values()[0][0])
     return unique_user_list
 
 
