@@ -18,6 +18,14 @@ own_successor = 0
 successor_port = 65535
 
 
+def get_unique_users(vm_dict):
+    unique_user_list = []
+    for item in vm_dict:
+        if item.value()[0] not in unique_user_list:
+            unique_user_list.append(item.value()[0])
+    return unique_user_list
+
+
 def main():
     global start_ug_event
     global crs
@@ -40,6 +48,8 @@ def main():
     # print("user_dict: ", user_dict)
     vm_dict = open_stack_connection.get_all_vms(user_dict)
     print("vm_dict: ", vm_dict)
+    unique_users = get_unique_users(vm_dict)
+    print("unique_users: ", unique_users)
 
     # spawn a new (server) thread to listen for new incoming ug
     thread_crs = threading.Thread(target=ug_server)
@@ -99,17 +109,17 @@ def node_registering():
         message = nr_socket.recv()
 
         start_ug_event.clear()
-        print("Received request: %s" % message)
+        # print("Received request: %s" % message)
 
         # update CRS
         json_res = json.loads(message)
-        print("nri: ", json_res['nri'])
+        # print("nri: ", json_res['nri'])
         crs.update_crs(json_res['nri'])
         print("crs.cpu: ", crs.cpu)
         ip_list.remove(json_res['advertiser'])
         successor_ip = ip_list.pop(0)
         ip_list.append(str(json_res['advertiser']))
-        print("ip_list after append: ", ip_list)
+        # print("ip_list after append: ", ip_list)
 
         #  Send reply back to client
         requester_port = successor_port - 1
