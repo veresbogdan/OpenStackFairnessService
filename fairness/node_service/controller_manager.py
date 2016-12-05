@@ -9,6 +9,7 @@ from fairness.openstack_driver import IdentityApiConnection
 from fairness.node_service.crs import CRS
 from fairness.controller.utils_controller import get_compute_node_ips
 from fairness.node import Node
+from fairness.config_parser import MyConfigParser
 
 start_ug_event = threading.Event()
 own_successor_event = threading.Event()
@@ -37,7 +38,8 @@ def main():
     open_stack_connection = IdentityApiConnection()
     user_dict = open_stack_connection.list_users()
     # print("user_dict: ", user_dict)
-    # cores, ram = open_stack_connection.get_quotas()
+    vm_dict = open_stack_connection.get_all_vms(user_dict)
+    print("vm_dict: ", vm_dict)
 
     # spawn a new (server) thread to listen for new incoming ug
     thread_crs = threading.Thread(target=ug_server)
@@ -78,9 +80,11 @@ def node_registering():
     global crs
     global own_successor
     global successor_port
+    config = MyConfigParser()
+    nri_port = config.config_section_map('communication')['nri_port']
     nr_context = zmq.Context()
     nr_socket = nr_context.socket(zmq.REP)
-    nr_socket.bind("tcp://*:5555")
+    nr_socket.bind("tcp://*:" + nri_port)
 
     compute_node_ips = get_compute_node_ips()
     # print("compute_node_ips", compute_node_ips)
