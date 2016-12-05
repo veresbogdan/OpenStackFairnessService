@@ -121,6 +121,13 @@ def main():
             # print("header: ", header_json)
             check_update_crs(payload_json)
             print("global_normalization in the UG cycle: ", node.global_normalization)
+            node.get_greediness_per_user()
+            for item in node.vms:
+                print("item.vm_name: ", item.vm_name)
+                print("item.rui: ", item.rui)
+                print("item.owner: ", item.owner)
+                print("item.endowment: ", item.endowment)
+                print("item.heaviness: ", item.heaviness)
 
             # TODO: update RUI on all VMs
 
