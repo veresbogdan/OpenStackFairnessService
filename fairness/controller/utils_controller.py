@@ -9,7 +9,7 @@ def get_compute_node_ips():
         query = """select host_ip from compute_nodes where deleted=0"""
         db.query(query)
         r = db.use_result()
-        print("r from query: ", r)
+        # print("r from query: ", r)
         results = r.fetch_row(maxrows=0)
         ips_list = []
         for valor in results:

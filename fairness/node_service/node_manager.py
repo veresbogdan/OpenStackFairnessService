@@ -78,13 +78,18 @@ def main():
 
     node.get_greediness_per_user()
 
-    for vm in node.vms:
-        print("vm.vm_name: ", vm.vm_name)
-        print("vm.endowment: ", vm.endowment)
+    for item in node.vms:
+        print ("item: ", item)
+        print(len(item))
+        print(type(item))
+        print(item.__dict__)
+        print(" ")
+        print("item.vm_name: ", item.vm_name)
+        print("item.endowment: ", item.endowment)
         print("node.global_normalization: ", node.global_normalization)
-        print("vm.owner: ", vm.owner)
-        print("vm.rui: ", vm.rui)
-        print("VM Heaviness: ", vm.heaviness)
+        print("item.owner: ", item.owner)
+        print("item.rui: ", item.rui)
+        print("VM Heaviness: ", item.heaviness)
     print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
     print("node.vms length: ", len(node.vms))
 
