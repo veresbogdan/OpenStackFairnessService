@@ -22,6 +22,7 @@ class VM:
         self.owner = owner
         self.rui = None             # change to RUI()
         self.endowment = None
+        self.heaviness = None
 
     def update_rui(self, rui):
         """

@@ -90,6 +90,7 @@ def main():
     print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
     print("node.global_normalization: ", node.global_normalization)
     print("node.vms length: ", len(node.vms))
+    print("node.vms[0].heaviness: ", node.vms[0].heaviness)
 
     # Prepare broker sockets for the communication ring
     frontend = context.socket(zmq.ROUTER)
@@ -121,6 +122,9 @@ def main():
             # print("header: ", header_json)
             check_update_crs(payload_json)
             print("global_normalization in the UG cycle: ", node.global_normalization)
+            # for all VMs on this node:
+            #     - get RUI
+            #     - update RUI
             node.get_greediness_per_user()
             for item in node.vms:
                 print("item.vm_name: ", item.vm_name)
