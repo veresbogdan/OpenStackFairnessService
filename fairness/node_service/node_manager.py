@@ -79,21 +79,19 @@ def main():
     node.get_greediness_per_user()
 
     for item in node.vms:
-        print ("item: ", item)
-        print(len(item))
-        print(type(item))
-        print(item.__dict__)
-        print(" ")
+        # print ("item: ", item)   #  item:  <fairness.virtual_machines.VM instance at 0x7fabb7ee7b48>
+        # print(type(item))      #  <type 'instance'>
+        # print(item.__dict__)   #  {'vm_name': 'instance-00000006', 'vrs': array([65536,     1]), 'rui': array([  1.24843562e+03,   1.95080000e+05,   2.06991360e+07,   4.25984000e+05,   2.54716000e+06,   1.14800000e+04]), 'heaviness': 272104.33333333331, 'owner': 'demo', 'endowment': array([  1.19980000e+04,   1.00000000e+00])}
         print("item.vm_name: ", item.vm_name)
-        print("item.endowment: ", item.endowment)
-        print("node.global_normalization: ", node.global_normalization)
-        print("item.owner: ", item.owner)
         print("item.rui: ", item.rui)
+        print("item.owner: ", item.owner)
+        print("item.endowment: ", item.endowment)
         print("VM Heaviness: ", item.heaviness)
     print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
+    print("node.global_normalization: ", node.global_normalization)
     print("node.vms length: ", len(node.vms))
 
-    # Prepare broker sockets
+    # Prepare broker sockets for the communication ring
     frontend = context.socket(zmq.ROUTER)
     backend = context.socket(zmq.DEALER)
     frontend.bind("tcp://*:" + own_port)
@@ -114,13 +112,15 @@ def main():
 
         if socks.get(frontend) == zmq.POLLIN:
             message = frontend.recv_multipart()
-            print("message: ", message)
+            # print("message: ", message)
+            print("got message.")
 
             payload_json = message[-1]
             # header_json = message[:-1]
             # print("payload: ", payload_json)
             # print("header: ", header_json)
             check_update_crs(payload_json)
+            print("global_normalization in the UG cycle: ", node.global_normalization)
 
             # TODO: update RUI on all VMs
 
