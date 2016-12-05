@@ -16,10 +16,11 @@ from fairness.virtual_machines import get_vrs
 
 crs = CRS()
 node = Node()
-
+rui = RUI()
 
 def main():
     global node
+    global rui
     config = MyConfigParser()
     controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
     nri_port = config.config_section_map('communication')['nri_port']
@@ -52,11 +53,7 @@ def main():
     print("vms_dict: ", vms_dict)
     # vm_dict:  [{'instance-00000006': ('demo', 'n01')}, {'instance-00000005': ('demo', 'n02')}]
 
-    # TODO: get cores and ram quotas per user!!!
-    cores, ram = open_stack_connection.get_quotas()
-
     # filter out VMs that are not on this host and create VM objects for every VM on this host.
-    rui = RUI()  # TODO: separate RUI for every VM
     hostname = node.hostname
     for inst in vms_dict:
         if inst.values()[0][1] == hostname:
@@ -65,6 +62,7 @@ def main():
             vm_owner = inst.values()[0][0]
             max_mem, cpu_s = get_vrs(vm_name)
             print("parameters for VM creation: ", vm_name, max_mem, cpu_s, vm_owner)
+            # the VM is being created next
             vm = VM(vm_name, [max_mem, cpu_s], vm_owner)
             rui.get_utilization(vm_name)
             vm.update_rui(
@@ -78,19 +76,7 @@ def main():
 
     node.get_greediness_per_user()
 
-    for item in node.vms:
-        # print ("item: ", item)   #  item:  <fairness.virtual_machines.VM instance at 0x7fabb7ee7b48>
-        # print(type(item))      #  <type 'instance'>
-        # print(item.__dict__)   #  {'vm_name': 'instance-00000006', 'vrs': array([65536,     1]), 'rui': array([  1.24843562e+03,   1.95080000e+05,   2.06991360e+07,   4.25984000e+05,   2.54716000e+06,   1.14800000e+04]), 'heaviness': 272104.33333333331, 'owner': 'demo', 'endowment': array([  1.19980000e+04,   1.00000000e+00])}
-        print("item.vm_name: ", item.vm_name)
-        print("item.rui: ", item.rui)
-        print("item.owner: ", item.owner)
-        print("item.endowment: ", item.endowment)
-        print("VM Heaviness: ", item.heaviness)
-    print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
-    print("node.global_normalization: ", node.global_normalization)
-    print("node.vms length: ", len(node.vms))
-    print("node.vms[0].heaviness: ", node.vms[0].heaviness)
+    print_items_in_node(node.vms)
 
     # Prepare broker sockets for the communication ring
     frontend = context.socket(zmq.ROUTER)
@@ -125,13 +111,11 @@ def main():
             # for all VMs on this node:
             #     - get RUI
             #     - update RUI
+            get_and_update_rui(node.vms)
+
             node.get_greediness_per_user()
-            for item in node.vms:
-                print("item.vm_name: ", item.vm_name)
-                print("item.rui: ", item.rui)
-                print("item.owner: ", item.owner)
-                print("item.endowment: ", item.endowment)
-                print("item.heaviness: ", item.heaviness)
+
+            print_items_in_node(node.vms)
 
             # TODO: update RUI on all VMs
 
@@ -237,6 +221,27 @@ def get_successor_from_controller(socket, nri):
     port = response['successor_port']
     own_port = response['requester_port']
     return ip, port, own_port
+
+
+def get_and_update_rui(node_vms):
+    for item in node_vms:
+        rui.get_utilization(item.vm_name)
+
+
+def print_items_in_node(node_vms):
+    for item in node_vms:
+        # print ("item: ", item)   #  item:  <fairness.virtual_machines.VM instance at 0x7fabb7ee7b48>
+        # print(type(item))      #  <type 'instance'>
+        # print(item.__dict__)   #  {'vm_name': 'instance-00000006', 'vrs': array([65536,     1]), 'rui': array([  1.24843562e+03,   1.95080000e+05,   2.06991360e+07,   4.25984000e+05,   2.54716000e+06,   1.14800000e+04]), 'heaviness': 272104.33333333331, 'owner': 'demo', 'endowment': array([  1.19980000e+04,   1.00000000e+00])}
+        print("item.vm_name: ", item.vm_name)
+        print("item.rui: ", item.rui)
+        print("item.owner: ", item.owner)
+        print("item.endowment: ", item.endowment)
+        print("VM Heaviness: ", item.heaviness)
+    print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
+    print("node.global_normalization: ", node.global_normalization)
+    print("node.vms length: ", len(node.vms))
+    print("node.vms[0].heaviness: ", node.vms[0].heaviness)
 
 
 # Routine 1:

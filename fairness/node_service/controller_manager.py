@@ -51,6 +51,13 @@ def main():
     unique_users = get_unique_users(vm_dict)
     print("unique_users: ", unique_users)
 
+    # TODO: get cores and ram quotas per user and not only for the demo user. See in actual function.
+    user_vector = {}
+    for user in unique_users:
+        cores, ram = open_stack_connection.get_quotas(user)
+        user_vector['user'] = [-cores, -ram]
+        print(user_vector)
+
     # spawn a new (server) thread to listen for new incoming ug
     thread_crs = threading.Thread(target=ug_server)
     thread_crs.daemon = True

@@ -101,10 +101,10 @@ class IdentityApiConnection(object):
         json_text = json.loads(r.text)
         print r.text
 
-    def get_quotas(self):
+    def get_quotas(self, user):
         # TODO: get quotas also for all other users. (not only for "demo" user)
         self._check_token()
-        url = 'http://openstack-controller:8774/v2.1/os-quota-sets/e655d37b5181407281277b8fb1eef3f4?user_id=demo'
+        url = 'http://openstack-controller:8774/v2.1/os-quota-sets/e655d37b5181407281277b8fb1eef3f4?user_id=' + user
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
         json_text = json.loads(r.text)
