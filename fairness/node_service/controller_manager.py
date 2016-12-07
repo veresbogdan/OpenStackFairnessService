@@ -66,11 +66,13 @@ def main():
     print("sum_of_quotas_array: ", sum_of_quotas_array)
     row_2 = 0
     for user in unique_users:
-        initial_user_vector[user] = np.negative(crs_array) / sum_of_quotas_array * quotas_array[row_2]
+        values_for_initial_user_vector = crs_array / np.negative(sum_of_quotas_array) * quotas_array[row_2]
+        value = values_for_initial_user_vector.sum()
+        print("value: ", value)
+        initial_user_vector[user] = value
         row_2 += 1
         print(user + "'s, initial_user_vector: ", initial_user_vector[user])
     print("initial_user_vector: ", initial_user_vector)
-    # TODO: multiply initial_user_vector with -1
 
     # TODO: reduce initial_user_vector from 6 values to 1 value per user.
 
