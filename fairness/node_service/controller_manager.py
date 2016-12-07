@@ -66,6 +66,7 @@ def main():
                            "network_receive": str(crs.network_rx),
                            "network_transmit": str(crs.network_tx)},
                    "ug": initial_user_vector}
+        print("message sent: ", message)
         json_message = json.dumps(message)
         client_socket.send(json_message)
         ug_response = client_socket.recv()

@@ -238,7 +238,7 @@ def print_items_in_node(node_vms):
         print("item.owner: ", item.owner)
         print("item.endowment: ", item.endowment)
         print("VM Heaviness: ", item.heaviness)
-    print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
+    # print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
     print("node.global_normalization: ", node.global_normalization)
     print("node.vms length: ", len(node.vms))
     print("node.vms[0].heaviness: ", node.vms[0].heaviness)
