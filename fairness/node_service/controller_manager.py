@@ -4,6 +4,7 @@ import threading
 import json
 import zmq
 import time
+import numpy as np
 
 from fairness.openstack_driver import IdentityApiConnection
 from fairness.node_service.crs import CRS
@@ -42,7 +43,7 @@ def main():
     thread_crs.daemon = True
     thread_crs.start()
 
-    # TODO: get users and their's quota
+    # get users and their's quota
     open_stack_connection = IdentityApiConnection()
     user_dict = open_stack_connection.list_users()
     # print("user_dict: ", user_dict)
@@ -51,12 +52,19 @@ def main():
     unique_users = get_unique_users(vm_dict)
     print("unique_users: ", unique_users)
 
-    # TODO: get cores and ram quotas per user and not only for the demo user. See in actual function.
-    user_vector = {}
+    # get cores and ram quotas per user.
+    initial_user_vector = {}
+    quotas_array = np.ones(len(unique_users), 6)
+    row = 0
     for user in unique_users:
         cores, ram = open_stack_connection.get_quotas(user)
-        user_vector['user'] = [-cores, -ram]
-        print(user_vector)
+        quotas_array[row, [0, 1]] = [cores, ram]
+        row += 1
+        initial_user_vector[user] = [-cores, -ram, -1, -1, -1, -1]
+        print("initial_user_vector: ", initial_user_vector)
+        print("quotas_array: ", quotas_array)
+
+    # TODO: reduce initial_user_vector from 6 values to 1 value per user.
 
     # spawn a new (server) thread to listen for new incoming ug
     thread_crs = threading.Thread(target=ug_server)
@@ -72,7 +80,13 @@ def main():
     while 1:
         start_ug_event.wait()
         print("sending message...")
-        message = {"crs": {"cpu": str(crs.cpu), "memory": str(crs.memory), "disk_read_bytes": str(crs.disk_read), "disk_write_bytes": str(crs.disk_write), "network_receive": str(crs.network_rx), "network_transmit": str(crs.network_tx)}, "ug": {"user_1": 60, "user_2": 50}}
+        message = {"crs": {"cpu": str(crs.cpu),
+                           "memory": str(crs.memory),
+                           "disk_read_bytes": str(crs.disk_read),
+                           "disk_write_bytes": str(crs.disk_write),
+                           "network_receive": str(crs.network_rx),
+                           "network_transmit": str(crs.network_tx)},
+                   "ug": {"user_1": 60, "user_2": 50}}
         json_message = json.dumps(message)
         client_socket.send(json_message)
         ug_response = client_socket.recv()
