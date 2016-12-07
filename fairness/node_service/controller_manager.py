@@ -60,13 +60,15 @@ def main():
         cores, ram = open_stack_connection.get_quotas(user)
         quotas_array[row] = [cores, ram, 1, 1, 1, 1]
         row += 1
-    crs_array = np.array([crs.cpu, crs.memory, crs.disk_read, crs.disk_write, crs.network_rx, crs.network_tx])
+    # crs_array = np.array([crs.cpu, crs.memory, crs.disk_read, crs.disk_write, crs.network_rx, crs.network_tx])
+    crs_array = np.array([4, 6000, 600, 400, 2000, 2000])
     sum_of_quotas_array = quotas_array.sum(axis=0)
     print("quotas_array: ", quotas_array)
     print("sum_of_quotas_array: ", sum_of_quotas_array)
     row_2 = 0
     for user in unique_users:
         values_for_initial_user_vector = crs_array / np.negative(sum_of_quotas_array) * quotas_array[row_2]
+        print("values_for_initial_user_vector: ", values_for_initial_user_vector)
         value = values_for_initial_user_vector.sum()
         print("value: ", value)
         initial_user_vector[user] = value
