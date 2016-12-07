@@ -140,6 +140,7 @@ def node_registering():
 
 
 def init_user_vector():
+    global crs
     global initial_user_vector
     # get users and their's quota
     open_stack_connection = IdentityApiConnection()
@@ -158,8 +159,8 @@ def init_user_vector():
         cores, ram = open_stack_connection.get_quotas(user)
         quotas_array[row] = [cores, ram, 1, 1, 1, 1]
         row += 1
-    # crs_array = np.array([crs.cpu, crs.memory, crs.disk_read, crs.disk_write, crs.network_rx, crs.network_tx])
-    crs_array = np.array([4, 6000, 600, 400, 2000, 2000])
+    crs_array = np.array([crs.cpu, crs.memory, crs.disk_read, crs.disk_write, crs.network_rx, crs.network_tx])
+    # crs_array = np.array([4, 6000, 600, 400, 2000, 2000])
     sum_of_quotas_array = quotas_array.sum(axis=0)
     # print("quotas_array: ", quotas_array)
     # print("sum_of_quotas_array: ", sum_of_quotas_array)
