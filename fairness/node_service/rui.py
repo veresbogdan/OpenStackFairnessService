@@ -29,8 +29,3 @@ class RUI(object):
         self.network_bytes_received = conn.get_network_stats(domain_id)[0]
         self.network_bytes_transmitted = conn.get_network_stats(domain_id)[1]
         self.time_stamp = datetime.now().time()
-
-    # TODO
-    def get_user_greediness(self):
-
-        return 'TODO Greed ' + NRI._get_public_ip_address()
