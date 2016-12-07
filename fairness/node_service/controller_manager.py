@@ -54,11 +54,11 @@ def main():
 
     # get cores and ram quotas per user.
     initial_user_vector = {}
-    quotas_array = np.ones(len(unique_users), 6)
+    quotas_array = np.ones((len(unique_users), 6))
     row = 0
     for user in unique_users:
         cores, ram = open_stack_connection.get_quotas(user)
-        quotas_array[row, [0, 1]] = [cores, ram]
+        quotas_array[row] = [-cores, -ram, -1, -1, -1, -1]
         row += 1
         initial_user_vector[user] = [-cores, -ram, -1, -1, -1, -1]
         print("initial_user_vector: ", initial_user_vector)
