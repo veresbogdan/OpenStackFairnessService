@@ -21,6 +21,7 @@ own_successor = 0
 successor_port = 65535
 initial_user_vector = None
 vm_dict = None
+open_stack_connection = IdentityApiConnection()
 
 
 def main():
@@ -141,10 +142,10 @@ def init_user_vector():
     global crs
     global initial_user_vector
     global vm_dict
+    global open_stack_connection
 
     # get users and their's quota
     if vm_dict is None:
-        open_stack_connection = IdentityApiConnection()
         user_dict = open_stack_connection.list_users()
         vm_dict = open_stack_connection.get_all_vms(user_dict)
     unique_user_list = []
