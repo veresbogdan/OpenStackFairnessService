@@ -20,17 +20,6 @@ successor_port = 65535
 initial_user_vector = None
 
 
-def get_unique_users():
-    open_stack_connection = IdentityApiConnection()
-    user_dict = open_stack_connection.list_users()
-    vm_dict = open_stack_connection.get_all_vms(user_dict)
-    unique_user_list = []
-    for item in vm_dict:
-        if item.values()[0][0] not in unique_user_list:
-            unique_user_list.append(item.values()[0][0])
-    return unique_user_list
-
-
 def main():
     global start_ug_event
     global crs
@@ -150,13 +139,19 @@ def init_user_vector():
     global initial_user_vector
 
     # get users and their's quota
-    unique_users = get_unique_users()
+    open_stack_connection = IdentityApiConnection()
+    user_dict = open_stack_connection.list_users()
+    vm_dict = open_stack_connection.get_all_vms(user_dict)
+    unique_user_list = []
+    for item in vm_dict:
+        if item.values()[0][0] not in unique_user_list:
+            unique_user_list.append(item.values()[0][0])
 
     # get cores and ram quotas per user.
     initial_user_vector = {}
-    quotas_array = np.ones((len(unique_users), 6))
+    quotas_array = np.ones((len(unique_user_list), 6))
     row = 0
-    for user in unique_users:
+    for user in unique_user_list:
         cores, ram = open_stack_connection.get_quotas(user)
         quotas_array[row] = [cores, ram, 1, 1, 1, 1]
         row += 1
@@ -168,7 +163,7 @@ def init_user_vector():
                           crs.network_tx])
     sum_of_quotas_array = quotas_array.sum(axis=0)
     row_2 = 0
-    for user in unique_users:
+    for user in unique_user_list:
         values_for_initial_user_vector = crs_array / np.negative(sum_of_quotas_array) * quotas_array[row_2]
         value = values_for_initial_user_vector.sum()
         initial_user_vector[user] = value
