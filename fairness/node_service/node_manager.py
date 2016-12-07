@@ -18,6 +18,7 @@ crs = CRS()
 node = Node()
 rui = RUI()
 
+
 def main():
     global node
     global rui
@@ -108,16 +109,13 @@ def main():
             # print("header: ", header_json)
             check_update_crs(payload_json)
             print("global_normalization in the UG cycle: ", node.global_normalization)
-            # for all VMs on this node:
-            #     - get RUI
-            #     - update RUI
+
+            # for all VMs on this node: get RUI, update RUI
             get_and_update_rui(node.vms)
 
             node.get_greediness_per_user()
 
             print_items_in_node(node.vms)
-
-            # TODO: update RUI on all VMs
 
             # TODO: calculate new User Greediness vector, forward info.
             new_ug_vector = 0

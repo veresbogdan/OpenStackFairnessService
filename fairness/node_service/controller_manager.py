@@ -1,16 +1,18 @@
 from __future__ import print_function
+
+import json
 import sys
 import threading
-import json
-import zmq
 import time
-import numpy as np
 
-from fairness.openstack_driver import IdentityApiConnection
-from fairness.node_service.crs import CRS
-from fairness.controller.utils_controller import get_compute_node_ips
-from fairness.node import Node
+import numpy as np
+import zmq
+
 from fairness.config_parser import MyConfigParser
+from fairness.node import Node
+from fairness.node_service.crs import CRS
+from fairness.node_service.utils_controller import get_compute_node_ips
+from fairness.openstack_driver import IdentityApiConnection
 
 start_ug_event = threading.Event()
 own_successor_event = threading.Event()
@@ -18,6 +20,7 @@ crs = CRS()
 own_successor = 0
 successor_port = 65535
 initial_user_vector = None
+vm_dict = None
 
 
 def main():
@@ -137,11 +140,13 @@ def init_user_vector():
     """
     global crs
     global initial_user_vector
+    global vm_dict
 
     # get users and their's quota
-    open_stack_connection = IdentityApiConnection()
-    user_dict = open_stack_connection.list_users()
-    vm_dict = open_stack_connection.get_all_vms(user_dict)
+    if vm_dict is None:
+        open_stack_connection = IdentityApiConnection()
+        user_dict = open_stack_connection.list_users()
+        vm_dict = open_stack_connection.get_all_vms(user_dict)
     unique_user_list = []
     for item in vm_dict:
         if item.values()[0][0] not in unique_user_list:
