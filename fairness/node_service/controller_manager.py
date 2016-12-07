@@ -20,7 +20,10 @@ successor_port = 65535
 initial_user_vector = None
 
 
-def get_unique_users(vm_dict):
+def get_unique_users():
+    open_stack_connection = IdentityApiConnection()
+    user_dict = open_stack_connection.list_users()
+    vm_dict = open_stack_connection.get_all_vms(user_dict)
     unique_user_list = []
     for item in vm_dict:
         if item.values()[0][0] not in unique_user_list:
@@ -58,7 +61,6 @@ def main():
     client_socket.connect(address)
     while 1:
         start_ug_event.wait()
-        print("sending message...")
         message = {"crs": {"cpu": str(crs.cpu),
                            "memory": str(crs.memory),
                            "disk_read_bytes": str(crs.disk_read),
@@ -140,16 +142,15 @@ def node_registering():
 
 
 def init_user_vector():
+    """
+    Get a list with unique users and initialize the user greediness vector.
+    :return: None
+    """
     global crs
     global initial_user_vector
+
     # get users and their's quota
-    open_stack_connection = IdentityApiConnection()
-    user_dict = open_stack_connection.list_users()
-    # print("user_dict: ", user_dict)
-    vm_dict = open_stack_connection.get_all_vms(user_dict)
-    # print("vm_dict: ", vm_dict)
-    unique_users = get_unique_users(vm_dict)
-    # print("unique_users: ", unique_users)
+    unique_users = get_unique_users()
 
     # get cores and ram quotas per user.
     initial_user_vector = {}
@@ -159,21 +160,20 @@ def init_user_vector():
         cores, ram = open_stack_connection.get_quotas(user)
         quotas_array[row] = [cores, ram, 1, 1, 1, 1]
         row += 1
-    crs_array = np.array([crs.cpu, crs.memory, crs.disk_read, crs.disk_write, crs.network_rx, crs.network_tx])
-    # crs_array = np.array([4, 6000, 600, 400, 2000, 2000])
+    crs_array = np.array([crs.cpu,
+                          crs.memory,
+                          crs.disk_read,
+                          crs.disk_write,
+                          crs.network_rx,
+                          crs.network_tx])
     sum_of_quotas_array = quotas_array.sum(axis=0)
-    # print("quotas_array: ", quotas_array)
-    # print("sum_of_quotas_array: ", sum_of_quotas_array)
     row_2 = 0
     for user in unique_users:
         values_for_initial_user_vector = crs_array / np.negative(sum_of_quotas_array) * quotas_array[row_2]
-        # print("values_for_initial_user_vector: ", values_for_initial_user_vector)
         value = values_for_initial_user_vector.sum()
-        # print("value: ", value)
         initial_user_vector[user] = value
         row_2 += 1
         print(user + "'s, initial_user_vector: ", initial_user_vector[user])
-    # print("initial_user_vector: ", initial_user_vector)
 
 
 def ug_server():
