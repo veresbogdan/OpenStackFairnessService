@@ -25,13 +25,19 @@ open_stack_connection = IdentityApiConnection()
 
 
 def main():
+    """
+    This is the main function of the Controller Node. It spawns two child threads:
+    One for the node registering server, and one for the communication ring endpoint.
+    When everything is ready it starts sending around the UG message with the main thread.
+    :return: This code enters in a endless loop sending around the UG message
+    """
     global start_ug_event
     global crs
     global own_successor
     global initial_user_vector
     main_context = zmq.Context()
 
-    # stop ug-ring
+    # prevent that ug-ring starts too early. Too early means: before all nodes advertised their NRI.
     start_ug_event.clear()
     # prevent to connect ug client to (own_successor = 0)
     own_successor_event.clear()
@@ -74,19 +80,19 @@ def main():
 
 def node_registering():
     """
-    the new thread:
-       receives the NRI
-       updates the global CRS
-       sends neighbor IP
-       set semaphore for ug_server
-    :return:
+    This new thread does:
+       - receives the NRI
+       - updates the global CRS
+       - sends neighbor IP
+       - assigns its own successor after all fairness nodes are registered.
+       - gives OK for starting the User Greediness (UG) cycles.
+    :return: This code enters in a endless loop waiting for new nodes to register.
     """
     global start_ug_event
     global own_successor_event
     global crs
     global own_successor
     global successor_port
-    global user_vec
     config = MyConfigParser()
     nri_port = config.config_section_map('communication')['nri_port']
     nr_context = zmq.Context()
@@ -118,13 +124,15 @@ def node_registering():
         ip_list.append(str(json_res['advertiser']))
         # print("ip_list after append: ", ip_list)
 
-        #  Send reply back to client
+        # Send reply back to client (successor_ip, successor_port, requester_port),
+        # and set the successor port number in the global variable successor_port for the next requester.
         requester_port = successor_port - 1
         message_1 = {"successor_ip": str(successor_ip), "successor_port": str(successor_port), "requester_port": str(requester_port)}
         successor_port -= 1
         json_message = json.dumps(message_1)
         nr_socket.send(json_message)
 
+        # when all fairness nodes are registered the UG cycle can start.
         if len(ip_list) <= 1:
             init_user_vector()
             own_successor = ip_list.pop(0)
@@ -135,9 +143,10 @@ def node_registering():
 
 def init_user_vector():
     """
-    Get a list with unique users and initialize the user greediness vector.
+    Get from OpenStack API a list with unique users and initialize the user greediness vector to send around.
     :return: None
     """
+    # TODO: To get the weighted CPU in initial_user_vector: "crs cpu" / "number of total CPUs in infrastructure". Then multiply the quota value with the result of previous calculation. Ex: 42/6=7 -> 20*7=140
     global crs
     global initial_user_vector
     global vm_dict
@@ -158,8 +167,10 @@ def init_user_vector():
     row = 0
     for user in unique_user_list:
         cores, ram = open_stack_connection.get_quotas(user)
-        quotas_array[row] = [cores, ram, 1, 1, 1, 1]
+        quotas_array[row] = [cores, ram, 1, 1, 1, 1]  # Only the first two values are needed. The rest is just filled up with ones (dummy).
         row += 1
+
+    # fill the crs array and sum it up to a scalar.
     crs_array = np.array([crs.cpu,
                           crs.memory,
                           crs.disk_read,
@@ -178,19 +189,17 @@ def init_user_vector():
 
 def ug_server():
     """
-    the ug message will end up here after one complete cycle.
-    :return:
+    The User Greediness (UG) message will end up on this server after one complete cycle and this server will
+    send back the ACK message.
+    :return: This code enters in a endless loop.
     """
-    global start_ug_event
-    global crs
-    global own_successor
     ug_server_context = zmq.Context()
     server_socket = ug_server_context.socket(zmq.REP)
     server_socket.bind("tcp://*:65535")
     while 1:
         updated_ug_message = server_socket.recv()
         # print("updated_ug_message: ", updated_ug_message)
-        server_socket.send("ug received.")
+        server_socket.send("UG received.")
 
 
 if __name__ == '__main__':

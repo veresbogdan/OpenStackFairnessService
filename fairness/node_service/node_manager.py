@@ -20,6 +20,9 @@ rui = RUI()
 
 
 def main():
+    """
+    This is the start script for all Compute Nodes. The whole logic comes together in this function.
+    """
     global node
     global rui
     config = MyConfigParser()
