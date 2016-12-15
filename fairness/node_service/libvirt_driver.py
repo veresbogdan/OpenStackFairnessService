@@ -40,7 +40,7 @@ class LibvirtConnection(object):
 
     def get_memory_stats(self, domain_name):
         dom = self.conn.lookupByName(domain_name)
-        print("Memory stats in Byte: ", dom.memoryStats())
+        # print("Memory stats in Byte: ", dom.memoryStats())
         memory_stats = dom.memoryStats()
         swap_in = None
         if 'swap_in' in memory_stats:

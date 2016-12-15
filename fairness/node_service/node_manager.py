@@ -228,12 +228,13 @@ def get_and_update_rui(node_vms):
 
 def print_items_in_node(node_vms):
     for item in node_vms:
+        print("-----------")
         # print ("item: ", item)   #  item:  <fairness.virtual_machines.VM instance at 0x7fabb7ee7b48>
         # print(type(item))      #  <type 'instance'>
         # print(item.__dict__)   #  {'vm_name': 'instance-00000006', 'vrs': array([65536,     1]), 'rui': array([  1.24843562e+03,   1.95080000e+05,   2.06991360e+07,   4.25984000e+05,   2.54716000e+06,   1.14800000e+04]), 'heaviness': 272104.33333333331, 'owner': 'demo', 'endowment': array([  1.19980000e+04,   1.00000000e+00])}
         print("item.vm_name: ", item.vm_name)
         print("item.rui: ", item.rui)
-        print("item.owner: ", item.owner)
+        # print("item.owner: ", item.owner)
         print("item.endowment: ", item.endowment)
         print("VM Heaviness: ", item.heaviness)
     # print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))

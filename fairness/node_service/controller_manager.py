@@ -125,9 +125,8 @@ def node_registering():
         json_message = json.dumps(message_1)
         nr_socket.send(json_message)
 
-        init_user_vector()
-
         if len(ip_list) <= 1:
+            init_user_vector()
             own_successor = ip_list.pop(0)
             print("own_successor: ", own_successor)
             start_ug_event.set()
