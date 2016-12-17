@@ -2,8 +2,7 @@ from __future__ import print_function
 
 from datetime import datetime
 
-from fairness.node_service.libvirt_driver import LibvirtConnection
-from fairness.node_service.nri import NRI
+from fairness.libvirt_driver import LibvirtConnection
 
 
 class RUI(object):

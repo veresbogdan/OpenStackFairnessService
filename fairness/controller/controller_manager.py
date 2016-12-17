@@ -7,12 +7,12 @@ import time
 
 import numpy as np
 import zmq
+from fairness.crs import CRS
 
 from fairness.config_parser import MyConfigParser
 from fairness.node import Node
-from fairness.node_service.crs import CRS
-from fairness.node_service.utils_controller import get_compute_node_ips
 from fairness.openstack_driver import IdentityApiConnection
+from fairness.utils_controller import get_compute_node_ips
 
 start_ug_event = threading.Event()
 own_successor_event = threading.Event()

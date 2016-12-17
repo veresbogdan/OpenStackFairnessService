@@ -1,16 +1,17 @@
 from __future__ import print_function
 
 import json
-import yaml
 import sys
+
+import yaml
 import zmq
+from fairness.crs import CRS
+from fairness.nri import NRI
 
 from fairness.config_parser import MyConfigParser
 from fairness.node import Node
-from fairness.node_service.nri import NRI
-from fairness.node_service.rui import RUI
-from fairness.node_service.crs import CRS
 from fairness.openstack_driver import IdentityApiConnection
+from fairness.rui import RUI
 from fairness.virtual_machines import VM
 from fairness.virtual_machines import get_vrs
 

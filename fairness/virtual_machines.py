@@ -1,7 +1,7 @@
 from __future__ import print_function
+
 import numpy as np
-from fairness.node_service.libvirt_driver import LibvirtConnection
-from fairness.node_service.rui import RUI
+from fairness.libvirt_driver import LibvirtConnection
 
 __author__ = 'Patrick'
 
