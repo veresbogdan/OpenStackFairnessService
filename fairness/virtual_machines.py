@@ -25,7 +25,7 @@ class VM:
         self.endowment = None
         self.heaviness = None
 
-    def update_rui(self, rui, rui_object):
+    def update_rui(self, rui_object, rui):
         """
         :param rui_object: the rui object
         :param rui: the VM's RUI in the current measurement period
