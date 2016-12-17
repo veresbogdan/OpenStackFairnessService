@@ -69,13 +69,13 @@ def main():
             vm = VM(vm_name, [max_mem, cpu_s], vm_owner)
             rui = RUI()
             rui.get_utilization(vm_name)
-            vm.update_rui(
-                [rui.cpu_time,
-                 rui.memory_used,
-                 rui.disk_bytes_read,
-                 rui.disk_bytes_written,
-                 rui.network_bytes_received,
-                 rui.network_bytes_transmitted])
+            vm.update_rui(rui,
+                          [rui.cpu_time,
+                           rui.memory_used,
+                           rui.disk_bytes_read,
+                           rui.disk_bytes_written,
+                           rui.network_bytes_received,
+                           rui.network_bytes_transmitted])
             node.append_vm_and_update_endowments(vm)
 
     node.get_greediness_per_user()
@@ -226,7 +226,7 @@ def get_successor_from_controller(socket, nri):
 
 def get_and_update_rui(node_vms):
     for item in node_vms:
-        rui = item.rui
+        rui = item.rui_obj
         rui.get_utilization(item.vm_name)
 
 

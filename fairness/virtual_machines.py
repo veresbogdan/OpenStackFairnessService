@@ -20,15 +20,18 @@ class VM:
         self.vm_name = vm_name
         self.vrs = np.array(vrs)
         self.owner = owner
-        self.rui = None             # change to RUI()
+        self.rui = None             # change to RUI()???
+        self.rui_obj = None
         self.endowment = None
         self.heaviness = None
 
-    def update_rui(self, rui):
+    def update_rui(self, rui, rui_object):
         """
+        :param rui_object: the rui object
         :param rui: the VM's RUI in the current measurement period
         """
         # assert len(rui) == len(VM.global_normalization)
+        self.rui_obj = rui_object
         self.rui = np.array(rui)
 
 
