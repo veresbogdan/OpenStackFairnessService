@@ -17,7 +17,6 @@ from fairness.virtual_machines import get_vrs
 
 crs = CRS()
 node = Node()
-rui = RUI()
 
 
 def main():
@@ -25,7 +24,6 @@ def main():
     This is the start script for all Compute Nodes. The whole logic comes together in this function.
     """
     global node
-    global rui
     config = MyConfigParser()
     controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
     nri_port = config.config_section_map('communication')['nri_port']
@@ -69,6 +67,7 @@ def main():
             print("parameters for VM creation: ", vm_name, max_mem, cpu_s, vm_owner)
             # the VM is being created next
             vm = VM(vm_name, [max_mem, cpu_s], vm_owner)
+            rui = RUI()
             rui.get_utilization(vm_name)
             vm.update_rui(
                 [rui.cpu_time,
@@ -227,6 +226,7 @@ def get_successor_from_controller(socket, nri):
 
 def get_and_update_rui(node_vms):
     for item in node_vms:
+        rui = item.rui
         rui.get_utilization(item.vm_name)
 
 
