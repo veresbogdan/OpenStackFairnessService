@@ -21,7 +21,7 @@ class RUI(object):
 
     def get_utilization(self, domain_id):
         conn = LibvirtConnection()
-        print("cpu_time before:", self.cpu_time)
+        print("cpu_time beforet:", self.cpu_time)
         self.cpu_time = conn.get_vcpu_stats(domain_id) - self.cpu_time
         print("cpu_time after:", self.cpu_time)
         self.memory_used = conn.get_memory_stats(domain_id) - self.memory_used
