@@ -32,7 +32,7 @@ class RUI(object):
         # retrieving the new values and calculating difference.
         conn = LibvirtConnection()
 
-        # difference in cpu time used.
+        # difference in cpu_bogo time used.
         self.cpu_time = conn.get_vcpu_stats(domain_id)
         cpu_time = self.cpu_time - last_cpu_time
 

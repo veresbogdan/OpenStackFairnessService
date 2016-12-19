@@ -60,7 +60,7 @@ def main():
     client_socket.connect(address)
     while 1:
         start_ug_event.wait()
-        message = {"crs": {"cpu": str(crs.cpu),
+        message = {"crs": {"cpu_bogo": str(crs.cpu_bogo),
                            "memory": str(crs.memory),
                            "disk_read_bytes": str(crs.disk_read),
                            "disk_write_bytes": str(crs.disk_write),
@@ -118,7 +118,7 @@ def node_registering():
         json_res = json.loads(message)
         # print("nri: ", json_res['nri'])
         crs.update_crs(json_res['nri'])
-        print("crs.cpu: ", crs.cpu)
+        print("crs.cpu_bogo: ", crs.cpu_bogo)
         ip_list.remove(json_res['advertiser'])
         successor_ip = ip_list.pop(0)
         ip_list.append(str(json_res['advertiser']))
@@ -144,9 +144,10 @@ def node_registering():
 def init_user_vector():
     """
     Get from OpenStack API a list with unique users and initialize the user greediness vector to send around.
+    CRS needs to be ready for use.
     :return: None
     """
-    # TODO: To get the weighted CPU in initial_user_vector: "crs cpu" / "number of total CPUs in infrastructure". Then multiply the quota value with the result of previous calculation. Ex: 42/6=7 -> 20*7=140
+    # TODO: To get the weighted CPU in initial_user_vector: "crs.cpu_bogo" / "crs.cpu_num". Then multiply the quota value with the result of previous calculation. Ex: 42/6=7 -> 20*7=140
     global crs
     global initial_user_vector
     global vm_dict
@@ -167,11 +168,16 @@ def init_user_vector():
     row = 0
     for user in unique_user_list:
         cores, ram = open_stack_connection.get_quotas(user)
-        quotas_array[row] = [cores, ram, 1, 1, 1, 1]  # Only the first two values are needed. The rest is just filled up with ones (dummy).
+        cpu_ratio = crs.cpu_bogo / crs.cpu_num
+        cores_weighted = cores * cpu_ratio
+        print(cores)
+        print(cpu_ratio)
+        print("cores_weighted: ", cores_weighted)
+        quotas_array[row] = [cores_weighted, ram, 1, 1, 1, 1]  # Only the first two values are needed. The rest is just filled up with ones (dummy).
         row += 1
 
     # fill the crs array and sum it up to a scalar.
-    crs_array = np.array([crs.cpu,
+    crs_array = np.array([crs.cpu_bogo,
                           crs.memory,
                           crs.disk_read,
                           crs.disk_write,

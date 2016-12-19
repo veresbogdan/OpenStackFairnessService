@@ -13,7 +13,8 @@ class NRI(object):
     old_inverted_greed = {}
 
     def __init__(self):
-        self.cpu = 1  # amount of CPU cores on the compute node, normalized by the node's BogoMIPS
+        self.cpu_bogo = 1  # number of CPU cores on the compute node, normalized by the node's BogoMIPS
+        self.cpu_num = 1  # number of CPU cores on the compute node
         self.memory = 1  # total amount of installed memory in kilobytes
         self.disk_read_bytes = 1  # combined disk read speeds of all disks in bytes/s
         self.disk_write_bytes = 1  # combined disk write speeds of all disks in bytes/s
@@ -25,7 +26,8 @@ class NRI(object):
         """ Retrieve the values for NRI and fill the object fields.
         :return: None
         """
-        self.cpu = NRI._get_cpu_count_weighted(self)
+        self.cpu_bogo = NRI._get_cpu_count_weighted(self)
+        self.cpu_num = multiprocessing.cpu_count()
         self.memory = NRI._get_installed_memory()
         # self.disk_read_bytes = NRI._get_disk_read_speeds()
         # self.disk_write_bytes = NRI._get_disk_write_speeds()

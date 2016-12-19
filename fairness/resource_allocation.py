@@ -247,7 +247,7 @@
 #         return domain.schedulerParameters()['cpu_shares']
 #
 #     def _set_cpu_priority(self, instance_name, priority):
-#         """Sets the cpu share priority of an instance
+#         """Sets the cpu_bogo share priority of an instance
 #
 #         The CPU with the highest shares value gets most resources
 #

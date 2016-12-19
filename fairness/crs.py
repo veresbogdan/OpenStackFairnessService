@@ -1,7 +1,8 @@
 class CRS(object):
 
     def __init__(self):
-        self._cpu = 0
+        self._cpu_bogo = 0
+        self._cpu_num = 0
         self._memory = 0
         self._disk_read = 0
         self._disk_write = 0
@@ -10,12 +11,20 @@ class CRS(object):
         self._hash_value = 0
 
     @property
-    def cpu(self):
-        return self._cpu
+    def cpu_bogo(self):
+        return self._cpu_bogo
 
-    @cpu.setter
-    def cpu(self, value):
-        self._cpu = value
+    @cpu_bogo.setter
+    def cpu_bogo(self, value):
+        self._cpu_bogo = value
+
+    @property
+    def cpu_num(self):
+        return self._cpu_num
+
+    @cpu_num.setter
+    def cpu_num(self, value):
+        self._cpu_num = value
 
     @property
     def memory(self):
@@ -67,7 +76,8 @@ class CRS(object):
         self._hash_value = value
 
     def update_crs(self, new_nri):
-        self._cpu += new_nri['cpu']
+        self._cpu_bogo += new_nri['cpu_bogo']
+        self._cpu_num += new_nri['cpu_num']
         self._memory += new_nri['memory']
         self._disk_read += new_nri['disk_read_bytes']
         self._disk_write += new_nri['disk_write_bytes']

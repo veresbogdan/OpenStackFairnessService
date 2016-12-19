@@ -26,7 +26,7 @@ setup(
     version='0.1.1.dev1',
 
     description='A service to enforce a fair resource utilization in a OpenStack infrastructure '
-                'by automatic and dynamic reallocation of the resources (cpu, mem, disk, network) during runtime.',
+                'by automatic and dynamic reallocation of the resources (cpu_bogo, mem, disk, network) during runtime.',
     long_description=long_description,
 
     # The project's main homepage.

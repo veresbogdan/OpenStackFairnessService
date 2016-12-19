@@ -28,9 +28,10 @@ def main():
     controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
     nri_port = config.config_section_map('communication')['nri_port']
 
+    # retrieve NRI for the current node.
     nri = NRI()
     node.set_nri(nri)
-    # print("CPU weighted by BogoMIPS: ", nri.cpu)
+    # print("CPU weighted by BogoMIPS: ", nri.cpu_bogo)
     # print("Host memory size in kilobytes: ", nri.memory)
     print("Disk read speed in bytes/s: ", nri.disk_read_bytes)
     # print("Disk write speed in bytes/s: ", nri.disk_write_bytes)

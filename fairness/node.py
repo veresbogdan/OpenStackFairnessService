@@ -31,11 +31,11 @@ class Node(object):
     #     self.public_ip = Node.get_public_ip_address()
 
     def set_nri(self, nri):
-        array_nri = [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit]
+        array_nri = [nri.cpu_bogo, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit]
         self.nri = np.array(array_nri)
 
     def update_global_normalization(self, n_crs):
-        gn_list = [1.0 / int(n_crs['cpu']), 1.0 / int(n_crs['memory']), 1.0 / int(n_crs['disk_read_bytes']), 1.0 / int(n_crs['disk_write_bytes']), 1.0 / int(n_crs['network_receive']), 1.0 / int(n_crs['network_transmit'])]
+        gn_list = [1.0 / int(n_crs['cpu_bogo']), 1.0 / int(n_crs['memory']), 1.0 / int(n_crs['disk_read_bytes']), 1.0 / int(n_crs['disk_write_bytes']), 1.0 / int(n_crs['network_receive']), 1.0 / int(n_crs['network_transmit'])]
         # print("gn_list: ", gn_list)
         self.global_normalization = np.array(gn_list)
 
