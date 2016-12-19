@@ -42,9 +42,9 @@ class RUI(object):
 
         self.disk_bytes_read = conn.get_disk_stats(domain_id)[0]  # 2 for IOPS
         disk_bytes_read = self.disk_bytes_read - last_disk_bytes_read
-        print(self.disk_bytes_read)
-        print(last_disk_bytes_read)
-        print("disk_bytes_read: ", disk_bytes_read)
+        # print(self.disk_bytes_read)
+        # print(last_disk_bytes_read)
+        # print("disk_bytes_read: ", disk_bytes_read)
 
         self.disk_bytes_written = conn.get_disk_stats(domain_id)[1]  # 3 for IOPS
         disk_bytes_written = self.disk_bytes_written - last_disk_bytes_written

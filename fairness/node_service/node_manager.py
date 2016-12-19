@@ -76,7 +76,7 @@ def main():
                            rui_list[3],
                            rui_list[4],
                            rui_list[5]])
-            # print("rui_list: ", rui_list)
+            print("rui_list: ", rui_list)
             node.append_vm_and_update_endowments(vm)
 
     node.get_greediness_per_user()
@@ -172,7 +172,7 @@ def get_and_update_rui(node_vms):
                        rui_list[3],
                        rui_list[4],
                        rui_list[5]])
-        # print("rui_list: ", rui_list)
+        print("rui_list: ", rui_list)
 
 
 def print_items_in_node(node_vms):
