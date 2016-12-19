@@ -30,7 +30,7 @@ def main():
 
     nri = NRI()
     node.set_nri(nri)
-    print("CPU weighted by BogoMIPS: ", nri.cpu)
+    # print("CPU weighted by BogoMIPS: ", nri.cpu)
     # print("Host memory size in kilobytes: ", nri.memory)
     print("Disk read speed in bytes/s: ", nri.disk_read_bytes)
     # print("Disk write speed in bytes/s: ", nri.disk_write_bytes)
@@ -76,6 +76,7 @@ def main():
                            rui_list[3],
                            rui_list[4],
                            rui_list[5]])
+            print("rui_list: ", rui_list)
             node.append_vm_and_update_endowments(vm)
 
     node.get_greediness_per_user()
@@ -111,7 +112,7 @@ def main():
             # print("payload: ", payload_json)
             # print("header: ", header_json)
             check_update_crs(payload_json)
-            print("global_normalization in the UG cycle: ", node.global_normalization)
+            # print("global_normalization in the UG cycle: ", node.global_normalization)
 
             # for all VMs on this node: get RUI, update RUI
             get_and_update_rui(node.vms)
@@ -171,6 +172,7 @@ def get_and_update_rui(node_vms):
                        rui_list[3],
                        rui_list[4],
                        rui_list[5]])
+        print("rui_list: ", rui_list)
 
 
 def print_items_in_node(node_vms):
@@ -185,8 +187,8 @@ def print_items_in_node(node_vms):
         # print("item.endowment: ", item.endowment)
         print("VM Heaviness: ", item.heaviness)
     # print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
-    print("node.global_normalization: ", node.global_normalization)
-    print("node.vms length: ", len(node.vms))
+    # print("node.global_normalization: ", node.global_normalization)
+    # print("node.vms length: ", len(node.vms))
     print("node.vms[0].heaviness: ", node.vms[0].heaviness)
 
 

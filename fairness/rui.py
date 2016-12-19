@@ -45,8 +45,8 @@ class RUI(object):
         self.network_bytes_transmitted = conn.get_network_stats(domain_id)[1] - self.network_bytes_transmitted
         network_bytes_tx = self.network_bytes_transmitted - last_network_bytes_tx
         self.time_stamp = datetime.now()
-        print("last_time_stamp: ", last_time_stamp)
+        # print("last_time_stamp: ", last_time_stamp)
         time_lapse = self.time_stamp - last_time_stamp
-        print("time_lapse: ", time_lapse)
+        # print("time_lapse: ", time_lapse)
 
         return [cpu_time, memory_used, disk_bytes_read, disk_bytes_written, network_bytes_rx, network_bytes_tx, time_lapse]
