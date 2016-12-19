@@ -17,7 +17,7 @@ class RUI(object):
         self.disk_bytes_written = 0
         self.network_bytes_received = 0
         self.network_bytes_transmitted = 0
-        self.time_stamp = datetime.now().time()
+        self.time_stamp = datetime.now()
 
     def get_utilization(self, domain_id):
 
@@ -44,7 +44,8 @@ class RUI(object):
         network_bytes_rx = self.network_bytes_received - last_network_bytes_rx
         self.network_bytes_transmitted = conn.get_network_stats(domain_id)[1] - self.network_bytes_transmitted
         network_bytes_tx = self.network_bytes_transmitted - last_network_bytes_tx
-        self.time_stamp = datetime.now().time()
+        self.time_stamp = datetime.now()
+        print("last_time_stamp: ", last_time_stamp)
         time_lapse = self.time_stamp - last_time_stamp
         print("time_lapse: ", time_lapse)
 
