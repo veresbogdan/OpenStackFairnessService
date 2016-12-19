@@ -32,8 +32,13 @@ class RUI(object):
 
         # retrieving the new values and calculating difference.
         conn = LibvirtConnection()
+
         self.cpu_time = conn.get_vcpu_stats(domain_id)
+        print(self.cpu_time)
+        print(last_cpu_time)
         cpu_time = self.cpu_time - last_cpu_time
+        print("cpu_time: ", cpu_time)
+
         self.memory_used = conn.get_memory_stats(domain_id)
         memory_used = self.memory_used - last_memory_used
         self.disk_bytes_read = conn.get_disk_stats(domain_id)[0] - self.disk_bytes_read  # 2 for IOPS
