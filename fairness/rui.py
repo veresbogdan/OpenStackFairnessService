@@ -40,18 +40,17 @@ class RUI(object):
         # get the current memory in use.
         memory_used = conn.get_memory_stats(domain_id)
 
-        self.disk_bytes_read = conn.get_disk_stats(domain_id)[0] - self.disk_bytes_read  # 2 for IOPS
+        self.disk_bytes_read = conn.get_disk_stats(domain_id)[0]  # 2 for IOPS
         disk_bytes_read = self.disk_bytes_read - last_disk_bytes_read
         print(self.disk_bytes_read)
         print(last_disk_bytes_read)
         print("disk_bytes_read: ", disk_bytes_read)
 
-
-        self.disk_bytes_written = conn.get_disk_stats(domain_id)[1] - self.disk_bytes_written  # 3 for IOPS
+        self.disk_bytes_written = conn.get_disk_stats(domain_id)[1]  # 3 for IOPS
         disk_bytes_written = self.disk_bytes_written - last_disk_bytes_written
-        self.network_bytes_received = conn.get_network_stats(domain_id)[0] - self.network_bytes_received
+        self.network_bytes_received = conn.get_network_stats(domain_id)[0]
         network_bytes_rx = self.network_bytes_received - last_network_bytes_rx
-        self.network_bytes_transmitted = conn.get_network_stats(domain_id)[1] - self.network_bytes_transmitted
+        self.network_bytes_transmitted = conn.get_network_stats(domain_id)[1]
         network_bytes_tx = self.network_bytes_transmitted - last_network_bytes_tx
         self.time_stamp = datetime.now()
         # print("last_time_stamp: ", last_time_stamp)
