@@ -8,7 +8,7 @@ __author__ = 'Patrick'
 
 class VM:
 
-    def __init__(self, vm_name, vrs, owner):
+    def __init__(self, vm_name, vrs, owner, rui_object):
         """
         :param vrs: sequence (list, np.array, etc.) that specifies the VM's VRs
         :param owner: string that specifies the VM's owner (must be key in the owner dictionary)
@@ -21,7 +21,7 @@ class VM:
         self.vrs = np.array(vrs)
         self.owner = owner
         self.rui = None             # change to RUI()???
-        self.rui_obj = None
+        self.rui_obj = rui_object
         self.endowment = None
         self.heaviness = None
 

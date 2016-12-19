@@ -38,7 +38,7 @@ def main():
     # print("Theoretical network transmit throughput in bytes/s: ", nri.network_transmit)
 
     context = zmq.Context()
-    # create Socket to talk to server
+    # create ZeroMQ Socket to talk to the server
     client_socket = context.socket(zmq.REQ)
     print("Connecting to Controller...")
     address = "tcp://" + controller_ip + ":" + nri_port
@@ -66,16 +66,16 @@ def main():
             max_mem, cpu_s = get_vrs(vm_name)
             print("parameters for VM creation: ", vm_name, max_mem, cpu_s, vm_owner)
             # the VM is being created next
-            vm = VM(vm_name, [max_mem, cpu_s], vm_owner)
             rui = RUI()
-            rui.get_utilization(vm_name)
+            rui_list = rui.get_utilization(vm_name)
+            vm = VM(vm_name, [max_mem, cpu_s], vm_owner, rui)
             vm.update_rui(rui,
-                          [rui.cpu_time,
-                           rui.memory_used,
-                           rui.disk_bytes_read,
-                           rui.disk_bytes_written,
-                           rui.network_bytes_received,
-                           rui.network_bytes_transmitted])
+                          [rui_list[0],
+                           rui_list[1],
+                           rui_list[2],
+                           rui_list[3],
+                           rui_list[4],
+                           rui_list[5]])
             node.append_vm_and_update_endowments(vm)
 
     node.get_greediness_per_user()
@@ -146,70 +146,6 @@ def check_update_crs(payload_json):
         node.update_global_normalization(new_crs)
 
 
-# def asdf():
-
-    # connect to OpenStack API
-    # open_stack_connection = IdentityApiConnection()
-    # user_dict = open_stack_connection.list_users()
-    # cores, ram = open_stack_connection.get_quotas()
-    # vm_dict = open_stack_connection.get_all_vms(user_dict)
-    # print("vm_dict: ", vm_dict)
-
-    # initialize user greediness with 0's.
-    # user_initial_greediness = {}
-    # for key, value in user_dict.items():
-    #     user_initial_greediness[value] = 0
-    # print("user_initial_greediness: ", user_initial_greediness)
-    # print("user_dict: ", user_dict)
-
-    # crs = [11998, 4040944, 4040944000, 4040944000, 125000000, 125000000]
-
-    # initialize node with 6 normalization factors and 6 resources.
-    # node = Node([1/crs[0], 1/crs[1], 1/crs[2], 1/crs[3], 1/crs[4], 1/crs[5]], [nri.cpu, nri.memory, nri.disk_read_bytes, nri.disk_write_bytes, nri.network_receive, nri.network_transmit], user_initial_greediness)
-    # print("Node initialized.")
-
-    # filter VMs that are on this host.
-    # vms_on_this_host = []
-    # hostname = node.hostname
-    # for inst in vm_dict:
-    #     if inst.values()[0][1] == hostname:
-    #         vms_on_this_host.append(inst.keys()[0])
-    # print("vms_on_this_host: ", vms_on_this_host)
-
-    # rui = RUI()
-    # domain_id_list = rui.get_domain_id_list()
-    # if vms_on_this_host is not None:
-    #     for domain in vms_on_this_host:
-            # print("")
-            # print("Domain ID:", domain, "on host", hostname)
-            # max_mem, cpu_s = rui.get_vrs(domain)
-            # rui.get_utilization(domain)
-            # print("CPU time in sec: ", rui.cpu_time)
-            # print("Memory usage (rss) in Bytes (incl. swap_in if available): ", rui.memory_used)
-            # print("Disk stats (read in bytes):", rui.disk_bytes_read)
-            # print("Disk stats (write in bytes):", rui.disk_bytes_written)
-            # print("Network stats (read in bytes):", rui.network_bytes_received)
-            # print("Network stats (write in bytes):", rui.network_bytes_transmitted)
-
-    #         domain_id = hostname + "-" + str(domain)
-    #         vm = VM(domain_id, [max_mem, cpu_s], "demo", node)
-    #         vm.update_rui(
-    #             [rui.cpu_time, rui.memory_used, rui.disk_bytes_read, rui.disk_bytes_written, rui.network_bytes_received,
-    #              rui.network_bytes_transmitted])
-    #         node.append_vm_and_update_endowments()
-    #
-    # node.get_greediness_per_user()
-    #
-    # for vm in node.vms:
-    #     print("vm.vm_name: ", vm.vm_name)
-    #     print(vm.endowment)
-    #     print(node.global_normalization)
-    #     print(vm.owner)
-    #     print(vm.rui)
-    #     print("VM Heaviness: ", vm.heaviness)
-    # print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
-
-
 def get_successor_from_controller(socket, nri):
     print("sending...")
     json_message = json.dumps({'advertiser': Node.get_public_ip_address(), 'nri': nri})
@@ -227,7 +163,14 @@ def get_successor_from_controller(socket, nri):
 def get_and_update_rui(node_vms):
     for item in node_vms:
         rui = item.rui_obj
-        rui.get_utilization(item.vm_name)
+        rui_list = rui.get_utilization(item.vm_name)
+        item.update_rui(rui,
+                      [rui_list[0],
+                       rui_list[1],
+                       rui_list[2],
+                       rui_list[3],
+                       rui_list[4],
+                       rui_list[5]])
 
 
 def print_items_in_node(node_vms):
@@ -245,33 +188,6 @@ def print_items_in_node(node_vms):
     print("node.global_normalization: ", node.global_normalization)
     print("node.vms length: ", len(node.vms))
     print("node.vms[0].heaviness: ", node.vms[0].heaviness)
-
-
-# Routine 1:
-# Collect NRI on the current node
-# Send NRI to next node
-# Receive NRI from the last nodes in the ring
-# Do it on start up and check every X seconds if there was some change in the infrastructure
-# (e.g. new nodes or died nodes). If changes happened, re-do collecting and advertising procedure.
-
-# Routine 2:
-# Collect information about the VMs on the node.
-# Do it on start up and re-collect information every X seconds for the case that
-# there was some changes in the VMs
-
-# Routine 3:
-# Collect RUI of living VMs
-# Calculate node heavinesses
-# Send heaviness to the next node
-# Receive the heaviness vector of the last node in the ring
-# update heaviness vector with own heaviness
-
-# Routine 4:
-# Calculate user heavinesses
-# Map the heaviness to priorities
-
-# Routine 5:
-# Reallocate resources via libvirt
 
 
 if __name__ == '__main__':
