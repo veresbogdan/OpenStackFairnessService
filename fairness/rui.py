@@ -17,7 +17,7 @@ class RUI(object):
         self.disk_bytes_written = 0
         self.network_bytes_received = 0
         self.network_bytes_transmitted = 0
-        self.time_stamp = 0
+        self.time_stamp = datetime.now().time()
 
     def get_utilization(self, domain_id):
 
