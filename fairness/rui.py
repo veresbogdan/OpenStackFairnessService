@@ -23,7 +23,6 @@ class RUI(object):
 
         # memorizing the values of the last period
         last_cpu_time = self.cpu_time
-        # last_memory_used = self.memory_used
         last_disk_bytes_read = self.disk_bytes_read
         last_disk_bytes_written = self.disk_bytes_written
         last_network_bytes_rx = self.network_bytes_received
@@ -37,24 +36,22 @@ class RUI(object):
         self.cpu_time = conn.get_vcpu_stats(domain_id)
         cpu_time = self.cpu_time - last_cpu_time
 
-        # get the current memory in use.
+        # get the current memory in use. Memory is not time shared.
+        # No difference to previous period is needed.
         memory_used = conn.get_memory_stats(domain_id)
 
+        # get difference in DiskIO and NetworkIO
         self.disk_bytes_read = conn.get_disk_stats(domain_id)[0]  # 2 for IOPS
         disk_bytes_read = self.disk_bytes_read - last_disk_bytes_read
-        # print(self.disk_bytes_read)
-        # print(last_disk_bytes_read)
-        # print("disk_bytes_read: ", disk_bytes_read)
-
         self.disk_bytes_written = conn.get_disk_stats(domain_id)[1]  # 3 for IOPS
         disk_bytes_written = self.disk_bytes_written - last_disk_bytes_written
         self.network_bytes_received = conn.get_network_stats(domain_id)[0]
         network_bytes_rx = self.network_bytes_received - last_network_bytes_rx
         self.network_bytes_transmitted = conn.get_network_stats(domain_id)[1]
         network_bytes_tx = self.network_bytes_transmitted - last_network_bytes_tx
+
+        # get the elapsed time between this and the last measurement.
         self.time_stamp = datetime.now()
-        # print("last_time_stamp: ", last_time_stamp)
         time_lapse = self.time_stamp - last_time_stamp
-        # print("time_lapse: ", time_lapse)
 
         return [cpu_time, memory_used, disk_bytes_read, disk_bytes_written, network_bytes_rx, network_bytes_tx, time_lapse]
