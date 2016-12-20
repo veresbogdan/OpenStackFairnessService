@@ -103,6 +103,7 @@ def main():
     while 1:
         socks = dict(poller.poll())
 
+        # the CRS + UGV arrives here.
         if socks.get(frontend) == zmq.POLLIN:
             message = frontend.recv_multipart()
             # print("message: ", message)
@@ -116,7 +117,7 @@ def main():
             # print("global_normalization in the UG cycle: ", node.global_normalization)
 
             # for all VMs on this node: get RUI, update RUI
-            get_and_update_rui(node.vms)
+            get_and_update_rui()
 
             node.get_greediness_per_user()
 
@@ -162,17 +163,17 @@ def get_successor_from_controller(socket, nri):
     return ip, port, own_port
 
 
-def get_and_update_rui(node_vms):
-    for item in node_vms:
-        rui = item.rui_obj
-        rui_list = rui.get_utilization(item.vm_name)
-        item.update_rui(rui,
-                      [rui_list[0],
-                       rui_list[1],
-                       rui_list[2],
-                       rui_list[3],
-                       rui_list[4],
-                       rui_list[5]])
+def get_and_update_rui():
+    for vm in node.vms:
+        rui = vm.rui_obj
+        rui_list = rui.get_utilization(vm.vm_name)
+        vm.update_rui(rui,
+                        [rui_list[0],
+                         rui_list[1],
+                         rui_list[2],
+                         rui_list[3],
+                         rui_list[4],
+                         rui_list[5]])
         # print("rui_list: ", rui_list)
 
 
