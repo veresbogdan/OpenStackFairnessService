@@ -82,7 +82,7 @@ def main():
 
     node.get_greediness_per_user()
 
-    print_items_in_node(node.vms)
+    print_items_in_node()
 
     # Prepare broker sockets for the communication ring
     frontend = context.socket(zmq.ROUTER)
@@ -121,7 +121,7 @@ def main():
 
             node.get_greediness_per_user()
 
-            print_items_in_node(node.vms)
+            print_items_in_node()
 
             # TODO: calculate new User Greediness vector, forward info.
             new_ug_vector = 0
@@ -177,17 +177,17 @@ def get_and_update_rui():
         # print("rui_list: ", rui_list)
 
 
-def print_items_in_node(node_vms):
-    for item in node_vms:
+def print_items_in_node():
+    for vm in node.vms:
         print("---------------------------------------------------")
-        # print ("item: ", item)   #  item:  <fairness.virtual_machines.VM instance at 0x7fabb7ee7b48>
-        # print(type(item))      #  <type 'instance'>
-        # print(item.__dict__)   #  {'vm_name': 'instance-00000006', 'vrs': array([65536,     1]), 'rui': array([  1.24843562e+03,   1.95080000e+05,   2.06991360e+07,   4.25984000e+05,   2.54716000e+06,   1.14800000e+04]), 'heaviness': 272104.33333333331, 'owner': 'demo', 'endowment': array([  1.19980000e+04,   1.00000000e+00])}
-        print("item.vm_name: ", item.vm_name)
-        # print("item.rui: ", item.rui)
-        # print("item.owner: ", item.owner)
-        # print("item.endowment: ", item.endowment)
-        print("VM Heaviness: ", item.heaviness)
+        # print ("vm: ", vm)   #  vm:  <fairness.virtual_machines.VM instance at 0x7fabb7ee7b48>
+        # print(type(vm))      #  <type 'instance'>
+        # print(vm.__dict__)   #  {'vm_name': 'instance-00000006', 'vrs': array([65536,     1]), 'rui': array([  1.24843562e+03,   1.95080000e+05,   2.06991360e+07,   4.25984000e+05,   2.54716000e+06,   1.14800000e+04]), 'heaviness': 272104.33333333331, 'owner': 'demo', 'endowment': array([  1.19980000e+04,   1.00000000e+00])}
+        print("vm.vm_name: ", vm.vm_name)
+        # print("vm.rui: ", vm.rui)
+        # print("vm.owner: ", vm.owner)
+        # print("vm.endowment: ", vm.endowment)
+        print("VM Heaviness: ", vm.heaviness)
     # print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
     # print("node.global_normalization: ", node.global_normalization)
     # print("node.vms length: ", len(node.vms))
