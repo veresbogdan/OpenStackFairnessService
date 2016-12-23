@@ -66,7 +66,7 @@ def main():
                            "disk_write_bytes": str(crs.disk_write),
                            "network_receive": str(crs.network_rx),
                            "network_transmit": str(crs.network_tx)},
-                   "ug": initial_user_vector}
+                   "ugv": initial_user_vector}
         print("message sent: ", message)
         json_message = json.dumps(message)
         client_socket.send(json_message)
@@ -176,21 +176,23 @@ def init_user_vector():
         quotas_array[row] = [cores_weighted, ram, 1, 1, 1, 1]  # Only the first two values are needed. The rest is just filled up with ones (dummy).
         row += 1
 
-    # fill the crs array and sum it up to a scalar.
+    # usm the quotas_array up to a scalar for the initialization of the UGV.
+    sum_of_quotas_array = quotas_array.sum(axis=0)  # axis=0 to sum over columns
+
     crs_array = np.array([crs.cpu_bogo,
                           crs.memory,
                           crs.disk_read,
                           crs.disk_write,
                           crs.network_rx,
                           crs.network_tx])
-    sum_of_quotas_array = quotas_array.sum(axis=0)
     row_2 = 0
     for user in unique_user_list:
+        # vec = CRS / Quota of all users * user's Quota /// this is calculated for all 6 resources.
         values_for_initial_user_vector = crs_array / np.negative(sum_of_quotas_array) * quotas_array[row_2]
-        value = values_for_initial_user_vector.sum()
-        initial_user_vector[user] = value
+        initial_user_scalar = values_for_initial_user_vector.sum()
+        initial_user_vector[user] = initial_user_scalar
         row_2 += 1
-        print(user + "'s, initial_user_vector: ", initial_user_vector[user])
+        print(user + "'s, initial_user_scalar: ", initial_user_vector[user])
 
 
 def ug_server():
