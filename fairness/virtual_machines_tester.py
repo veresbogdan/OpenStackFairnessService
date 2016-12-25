@@ -39,7 +39,7 @@ node.append_vm_and_update_endowments()
 
 # calculate the greediness of VMs on the node
 # will be stored in the heaviness attribute
-Node.get_greediness_per_user(node)
+Node.update_greediness_per_vm(node)
 
 # print the VMs heaviness/greediness
 for vm in node.vms:

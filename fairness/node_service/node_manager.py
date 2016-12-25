@@ -64,6 +64,7 @@ def main():
             for key in inst:
                 vm_name = str(key)
             vm_owner = inst.values()[0][0]
+            # get VRs here:
             max_mem, cpu_s = get_vrs(vm_name)
             print("parameters for VM creation: ", vm_name, max_mem, cpu_s, vm_owner)
             # the VM is being created next
@@ -78,9 +79,12 @@ def main():
                            rui_list[4],
                            rui_list[5]])
             # print("rui_list: ", rui_list)
+
+            # this must be called every time the set of VMs on the node changes
+            # it calculates the VMs endowments based on their VRs and the nodes NRI
             node.append_vm_and_update_endowments(vm)
 
-    node.get_greediness_per_user()
+    node.update_greediness_per_vm()
 
     print_items_in_node()
 
@@ -119,7 +123,7 @@ def main():
             # for all VMs on this node: get RUI, update RUI
             get_and_update_rui()
 
-            node.get_greediness_per_user()
+            node.update_greediness_per_vm()
 
             print_items_in_node()
 
@@ -191,7 +195,7 @@ def print_items_in_node():
     # print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
     # print("node.global_normalization: ", node.global_normalization)
     # print("node.vms length: ", len(node.vms))
-    print("node.vms[0].heaviness: ", node.vms[0].heaviness)
+    # print("node.vms[0].heaviness: ", node.vms[0].heaviness)
 
 
 if __name__ == '__main__':

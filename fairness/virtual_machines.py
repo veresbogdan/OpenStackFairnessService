@@ -10,9 +10,10 @@ class VM:
 
     def __init__(self, vm_name, vrs, owner, rui_object):
         """
+        :param vm_name: the name of the VM. For example 'instance-00000006'
         :param vrs: sequence (list, np.array, etc.) that specifies the VM's VRs
         :param owner: string that specifies the VM's owner (must be key in the owner dictionary)
-        :param node: this is the node object created in a prior step
+        :param rui_object: the object with the RUI values.
         """
         # assert len(vrs) == len(VM.nri)
         # assert owner in node.owners
