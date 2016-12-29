@@ -11,7 +11,7 @@ from fairness.crs import CRS
 
 from fairness.config_parser import MyConfigParser
 from fairness.node import Node
-from fairness.openstack_driver import IdentityApiConnection
+from fairness.openstack_driver import OpenstackApiConnection
 from fairness.utils_controller import get_compute_node_ips
 
 start_ug_event = threading.Event()
@@ -21,7 +21,7 @@ own_successor = 0
 successor_port = 65535
 initial_user_vector = None
 vm_dict = None
-open_stack_connection = IdentityApiConnection()
+open_stack_connection = OpenstackApiConnection()
 
 
 def main():

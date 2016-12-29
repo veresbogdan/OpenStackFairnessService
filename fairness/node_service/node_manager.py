@@ -10,7 +10,7 @@ from fairness.nri import NRI
 
 from fairness.config_parser import MyConfigParser
 from fairness.node import Node
-from fairness.openstack_driver import IdentityApiConnection
+from fairness.openstack_driver import OpenstackApiConnection
 from fairness.rui import RUI
 from fairness.virtual_machines import VM
 from fairness.virtual_machines import get_vrs
@@ -49,7 +49,7 @@ def main():
     successor_ip, successor_port, own_port = get_successor_from_controller(client_socket, nri.__dict__)
 
     # retreive info for creating VM objects.
-    open_stack_connection = IdentityApiConnection()
+    open_stack_connection = OpenstackApiConnection()
     user_dict = open_stack_connection.list_users()
     # print("user_dict: ", user_dict)
     # user_dict:  {'4a6383e2a52f434386b2774ae8fe82ac': 'demo', 'bb097255bd524eb59debe189cbb0bd55': 'admin', 'bc39f112d92943bbbde80773ee01c1f1': 'glance', 'e6a534d6987048d8ab30fea4f7f34ca5': 'fairness', 'f387bb59a1454458b4ff8f82d9e51f7a': 'neutron', 'd928bbdff12d45d097ba58fdb90bac3c': 'nova'}

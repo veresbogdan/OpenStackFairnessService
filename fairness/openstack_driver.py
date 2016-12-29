@@ -10,8 +10,8 @@ from fairness.config_parser import MyConfigParser
 # then add the credentials to the fairness.ini file.
 
 
-class IdentityApiConnection(object):
-    """ This class is to make Keystone API calls. """
+class OpenstackApiConnection(object):
+    """ This class is to make OpenStack API calls. """
 
     def __init__(self):
         self.token = None
