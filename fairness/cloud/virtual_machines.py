@@ -1,7 +1,8 @@
 from __future__ import print_function
 
 import numpy as np
-from fairness.libvirt_driver import LibvirtConnection
+
+from fairness.drivers.libvirt_driver import LibvirtConnection
 
 __author__ = 'Patrick'
 

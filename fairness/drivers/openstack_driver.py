@@ -1,8 +1,10 @@
-import requests
 import json
 from datetime import datetime
 
-from fairness.config_parser import MyConfigParser
+import requests
+
+from fairness.cloud.config_parser import MyConfigParser
+
 
 # to use this, the fairness user with admin rights has to be created on openStack:
 #   $ openstack user create --domain default --password-prompt fairness

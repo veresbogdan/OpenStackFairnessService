@@ -1,8 +1,8 @@
 from __future__ import print_function
 
-from fairness.node import Node
-from fairness.nri import NRI
-from virtual_machines import VM
+from fairness.cloud.node import Node
+from fairness.cloud.nri import NRI
+from fairness.cloud.virtual_machines import VM
 
 __author__ = 'Patrick'
 

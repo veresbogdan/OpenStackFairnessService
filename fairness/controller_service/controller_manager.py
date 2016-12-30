@@ -7,12 +7,12 @@ import time
 
 import numpy as np
 import zmq
-from fairness.crs import CRS
 
-from fairness.config_parser import MyConfigParser
-from fairness.node import Node
-from fairness.openstack_driver import OpenstackApiConnection
-from fairness.utils_controller import get_compute_node_ips
+from fairness.cloud.config_parser import MyConfigParser
+from fairness.cloud.crs import CRS
+from fairness.cloud.node import Node
+from fairness.drivers.mysql_driver import get_compute_node_ips
+from fairness.drivers.openstack_driver import OpenstackApiConnection
 
 start_ug_event = threading.Event()
 own_successor_event = threading.Event()

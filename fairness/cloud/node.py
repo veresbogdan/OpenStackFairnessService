@@ -1,8 +1,10 @@
 from __future__ import print_function
+
 import socket
 
 import numpy as np
-from fairness.metrics import greediness_raw, GreedinessParameters
+
+from fairness.cloud.metrics import greediness_raw, GreedinessParameters
 
 __author__ = 'Patrick'
 

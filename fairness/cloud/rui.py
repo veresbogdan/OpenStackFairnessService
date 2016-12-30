@@ -2,7 +2,7 @@ from __future__ import print_function
 
 from datetime import datetime
 
-from fairness.libvirt_driver import LibvirtConnection
+from fairness.drivers.libvirt_driver import LibvirtConnection
 
 
 class RUI(object):

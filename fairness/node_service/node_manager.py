@@ -5,15 +5,15 @@ import sys
 
 import yaml
 import zmq
-from fairness.crs import CRS
-from fairness.nri import NRI
 
-from fairness.config_parser import MyConfigParser
-from fairness.node import Node
-from fairness.openstack_driver import OpenstackApiConnection
-from fairness.rui import RUI
-from fairness.virtual_machines import VM
-from fairness.virtual_machines import get_vrs
+from fairness.cloud.config_parser import MyConfigParser
+from fairness.cloud.crs import CRS
+from fairness.cloud.node import Node
+from fairness.cloud.nri import NRI
+from fairness.cloud.rui import RUI
+from fairness.cloud.virtual_machines import VM
+from fairness.cloud.virtual_machines import get_vrs
+from fairness.drivers.openstack_driver import OpenstackApiConnection
 
 crs = CRS()
 node = Node()
@@ -64,12 +64,17 @@ def main():
             for key in inst:
                 vm_name = str(key)
             vm_owner = inst.values()[0][0]
-            # get VRs here:
+
+            # get VRs
             max_mem, cpu_s = get_vrs(vm_name)
-            print("parameters for VM creation: ", vm_name, max_mem, cpu_s, vm_owner)
-            # the VM is being created next
+            # TODO: check if it's needed to convert VR's cpu_s with BogoMIPS!
+
+            # create RUI and retrieve data from host
             rui = RUI()
             rui_list = rui.get_utilization(vm_name)
+
+            # create and initialize VMs
+            print("All parameters for VM creation, without RUI: ", vm_name, max_mem, cpu_s, vm_owner)
             vm = VM(vm_name, [max_mem, cpu_s], vm_owner, rui)
             vm.update_rui(rui,
                           [rui_list[0],
