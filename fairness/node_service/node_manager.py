@@ -48,10 +48,9 @@ def main():
     # send NRI and get info from Controller
     successor_ip, successor_port, own_port = get_successor_from_controller(client_socket, nri.__dict__)
 
-    # retreive info for creating VM objects.
+    # retrieve info for creating VM objects.
     open_stack_connection = OpenstackApiConnection()
     user_dict = open_stack_connection.list_users()
-    # print("user_dict: ", user_dict)
     # user_dict:  {'4a6383e2a52f434386b2774ae8fe82ac': 'demo', 'bb097255bd524eb59debe189cbb0bd55': 'admin', 'bc39f112d92943bbbde80773ee01c1f1': 'glance', 'e6a534d6987048d8ab30fea4f7f34ca5': 'fairness', 'f387bb59a1454458b4ff8f82d9e51f7a': 'neutron', 'd928bbdff12d45d097ba58fdb90bac3c': 'nova'}
     vms_dict = open_stack_connection.get_all_vms(user_dict)
     print("vms_dict: ", vms_dict)
@@ -123,18 +122,14 @@ def main():
             # print("payload: ", payload_json)
             # print("header: ", header_json)
             check_update_crs(payload_json)
-            # print("global_normalization in the UG cycle: ", node.global_normalization)
 
             # for all VMs on this node: get RUI, update RUI
             get_and_update_rui()
-
             node.update_greediness_per_vm()
 
             print_items_in_node()
 
-            # TODO: calculate new User Greediness vector, forward info.
-            new_ug_vector = 0
-
+            # TODO: replace values in the old UGV and forward updated UGV. Take care with the zmq header!
             backend.send_multipart(message)
 
         # this if is for the ACK messages that come back from the server.
