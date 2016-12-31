@@ -16,7 +16,7 @@ Execute following steps on the controller and all compute nodes:
 2. cd into the new folder
 3. ``git clone https://github.com/patanric/fairness-service.git``
 4. On the Controller run the controller_manager.py as root
-``cd fairness-service/fairness/node_service``
+    ``cd fairness-service/fairness/node_service``
 ``sudo python controller_manager.py ../../fairness.ini``
 5. On the Compute nodes run the node_manager.py
 ``cd fairness-service/fairness/node_service``
