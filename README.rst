@@ -11,7 +11,8 @@ Installation instructions
 -------------------------
 
 Execute following steps on the controller and all compute nodes:
-(``.``) Create a folder in /usr/lib/python2.7/dist-packages
+
+1. Create a folder in /usr/lib/python2.7/dist-packages
 2. cd into the new folder
 3. ``git clone https://github.com/patanric/fairness-service.git``
 4. On the Controller run the controller_manager.py as root
