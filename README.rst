@@ -2,7 +2,7 @@ Fairness Service
 ================
 
 A service to enforce a fair resource utilization in a OpenStack infrastructure
-by automatic and dynamic reallocation of the resources (CPU, RAM, DiskI/O, NetworkI/O)
+by automatic and dynamic reallocation of the resources (CPU, RAM, Disk I/O, Network I/O)
 during runtime.
 
 ----
