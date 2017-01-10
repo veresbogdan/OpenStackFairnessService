@@ -14,8 +14,9 @@ class Sender:
     def __init__(self, nri=None):
         print("Connecting to get the neighbor…")
         config = MyConfigParser()
-        controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
-        address = "tcp://" + controller_ip + ":5555"
+        controller_ip = config.config_section_map('communication')['controller_ip']
+        controller_port = config.config_section_map('communication')['controller_port']
+        address = "tcp://" + controller_ip + ":" + controller_port
         self.socket.connect(address)
         json_string = json.dumps({'neighbor': NRI._get_public_ip_address(), 'nri': nri.__dict__})
         self.socket.send(json_string)
@@ -32,15 +33,6 @@ class Sender:
             self.socket.connect(address)
 
     def send_crs(self, message):
-        # own_nri = nri.__dict__
-
-        # if crs_sent < 1:
-        # if 'crs' not in nri.server_crs:
-        #     nri.server_crs['crs'] = {}
-        #
-        # nri.server_crs['crs'] = utils.dsum(nri.server_crs['crs'], own_nri)
-
-        # json_string = json.dumps(nri.server_crs)
         self.socket.send(message)
         self.socket.recv()
 

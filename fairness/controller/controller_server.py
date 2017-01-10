@@ -1,16 +1,17 @@
 # coding=utf-8
 import json
-import thread
 import time
 import zmq
 
 from fairness import utils
 from fairness.controller.controller_manager import ControllerManager
 from fairness.node_service.nri import NRI
+from fairness.config_parser import MyConfigParser
 
 
 class Server:
-    interval = 10
+    config = MyConfigParser()
+    interval = config.config_section_map('communication')['ring_interval']
     context = zmq.Context()
     client_socket = context.socket(zmq.REQ)
 
@@ -61,6 +62,8 @@ class Server:
                         self.send_crs(ips_list[0])
 
             if 'crs' in json_msj:
+                # first send back ack reply (before sending a message to the next node)
+                socket.send("")
                 print 'start grid ring...'
 
                 global start
@@ -69,6 +72,8 @@ class Server:
                 self.start_greed_ring()
 
             if 'greed' in json_msj:
+                # first send back ack reply (before sending a message to the next node)
+                socket.send("")
                 print 'got greed...'
 
                 # measure time again, subtract
@@ -79,7 +84,6 @@ class Server:
 
                 self.client_socket.send(message)
                 self.client_socket.recv()
-
 
     def send_crs(self, ip):
         #  Socket to talk to server
