@@ -1,27 +1,23 @@
 # coding=utf-8
 import json
-from collections import defaultdict
-
 import zmq
 
+from fairness import utils
 from fairness.config_parser import MyConfigParser
 from fairness.node_service.nri import NRI
-
-import api
-
 
 class Sender:
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
 
     #  Socket to talk to server
-    def __init__(self):
+    def __init__(self, nri=None):
         print("Connecting to get the neighbor…")
         config = MyConfigParser()
         controller_ip = config.config_section_map('keystone_authtoken')['controller_ip']
         address = "tcp://" + controller_ip + ":5555"
         self.socket.connect(address)
-        json_string = json.dumps({'neighbor': NRI._get_public_ip_address()})
+        json_string = json.dumps({'neighbor': NRI._get_public_ip_address(), 'nri': nri.__dict__})
         self.socket.send(json_string)
 
         response = self.socket.recv()
@@ -35,36 +31,17 @@ class Sender:
 
             self.socket.connect(address)
 
-    def dsum(*dicts):
-        ret = defaultdict(int)
-        for d in dicts:
-            if type(d) is dict:
-                for k, v in d.items():
-                    if v is not None:
-                        ret[k] += v
-                    else:
-                        ret[k] += 0
-        return dict(ret)
+    def send_crs(self, message):
+        # own_nri = nri.__dict__
 
-    def dminus(*dicts):
-        ret = defaultdict(int)
-        for d in dicts:
-            if type(d) is dict:
-                for k, v in d.items():
-                    ret[k] -= v
-        return dict(ret)
+        # if crs_sent < 1:
+        # if 'crs' not in nri.server_crs:
+        #     nri.server_crs['crs'] = {}
+        #
+        # nri.server_crs['crs'] = utils.dsum(nri.server_crs['crs'], own_nri)
 
-    def send_crs(self, nri, crs_sent):
-        own_nri = nri.__dict__
-
-        if crs_sent < 1:
-            if 'crs' not in nri.server_crs:
-                nri.server_crs['crs'] = {}
-
-            nri.server_crs['crs'] = self.dsum(nri.server_crs['crs'], own_nri)
-
-        json_string = json.dumps(nri.server_crs)
-        self.socket.send(json_string)
+        # json_string = json.dumps(nri.server_crs)
+        self.socket.send(message)
         self.socket.recv()
 
     def send_greediness(self, nri):
@@ -73,9 +50,9 @@ class Sender:
         if 'greed' not in nri.server_greediness:
             nri.server_greediness['greed'] = {}
 
-        nri.server_greediness['greed'] = self.dsum(nri.server_greediness['greed'], own_greed)
-        nri.server_greediness['greed'] = self.dsum(nri.server_greediness['greed'], nri.old_inverted_greed)
-        nri.old_inverted_greed = self.dminus(own_greed)
+        nri.server_greediness['greed'] = utils.dsum(nri.server_greediness['greed'], own_greed)
+        nri.server_greediness['greed'] = utils.dsum(nri.server_greediness['greed'], nri.old_inverted_greed)
+        nri.old_inverted_greed = utils.dminus(own_greed)
 
         json_string = json.dumps(nri.server_greediness)
         self.socket.send(json_string)
