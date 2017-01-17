@@ -16,7 +16,7 @@ class NodeServer:
     def __init__(self, nri=None, node=None):
         self.nri = nri
         self.node = node
-        self.sender = NodeClient(nri)
+        self.sender = NodeClient(nri, node)
 
         context = zmq.Context()
         socket = context.socket(zmq.REP)
