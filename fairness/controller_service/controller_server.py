@@ -94,6 +94,6 @@ class ControllerServer:
         self.client_socket.recv()
 
     def start_greed_ring(self):
-        json_string = json.dumps({'greed': self.manager.get_initial_user_vector})
+        json_string = json.dumps({'greed': self.manager.get_initial_user_vector()})
         self.client_socket.send(json_string)
         self.client_socket.recv()
