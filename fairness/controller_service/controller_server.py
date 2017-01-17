@@ -4,25 +4,24 @@ import time
 import zmq
 
 from fairness import utils
-from fairness.controller.controller_manager import ControllerManager
 from fairness.node_service.nri import NRI
 from fairness.config_parser import MyConfigParser
 
 
-class Server:
+class ControllerServer:
     config = MyConfigParser()
     interval = config.config_section_map('communication')['ring_interval']
+    zmq_port = config.config_section_map('communication')['controller_port']
     context = zmq.Context()
     client_socket = context.socket(zmq.REQ)
 
     def __init__(self, manager=None):
         self.manager = manager
         self.host_no = 0
-        self.crs = {}
 
         server_socket = self.context.socket(zmq.REP)
         # get own ip here from the manager
-        server_socket.bind("tcp://" + NRI._get_public_ip_address() + ":5555")
+        server_socket.bind("tcp://" + NRI.get_public_ip_address() + ":" + self.zmq_port)
 
         while True:
             #  Wait for next request from clients
@@ -38,7 +37,7 @@ class Server:
             json_msj = json.loads(message)
 
             if 'nri' in json_msj:
-                self.crs = utils.dsum(self.crs, json_msj['nri'])
+                self.manager.crs = utils.dsum(self.manager.crs, json_msj['nri'])
 
             if 'neighbor' in json_msj:
                 req_ip = json_msj['neighbor']
@@ -48,7 +47,7 @@ class Server:
 
                     # the last node in the node list gets the controller as neighbor
                     if index == len(ips_list) - 1:
-                        return_message = {'neighbor': NRI._get_public_ip_address()}
+                        return_message = {'neighbor': NRI.get_public_ip_address()}
                     else:
                         return_message = {'neighbor': ips_list[index + 1]}
 
@@ -88,17 +87,13 @@ class Server:
     def send_crs(self, ip):
         #  Socket to talk to server
         print('Connecting to first node…')
-        self.client_socket.connect("tcp://" + ip + ":5555")
+        self.client_socket.connect("tcp://" + ip + ":" + self.zmq_port)
 
-        json_string = json.dumps({'crs': self.crs})
+        json_string = json.dumps({'crs': self.manager.crs})
         self.client_socket.send(json_string)
         self.client_socket.recv()
 
     def start_greed_ring(self):
-        json_string = json.dumps({'greed': {}})
+        json_string = json.dumps({'greed': self.manager.get_initial_user_vector})
         self.client_socket.send(json_string)
         self.client_socket.recv()
-
-
-# TODO start the controller service nicely
-Server(ControllerManager())

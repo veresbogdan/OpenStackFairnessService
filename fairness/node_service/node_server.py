@@ -1,21 +1,27 @@
 # coding=utf-8
 import json
 import thread
+
 import zmq
+
+from fairness.node_service.node_client import NodeClient
 from fairness.node_service.nri import NRI
-from fairness.communication.zmq_sender import Sender
+from fairness.config_parser import MyConfigParser
 
 
-class Receiver:
+class NodeServer:
+    config = MyConfigParser()
+    zmq_port = config.config_section_map('communication')['controller_port']
 
-    def __init__(self, nri=None):
+    def __init__(self, nri=None, node=None):
         self.nri = nri
-        self.sender = Sender(nri)
+        self.node = node
+        self.sender = NodeClient(nri)
 
         context = zmq.Context()
         socket = context.socket(zmq.REP)
         # get own ip here from the manager
-        socket.bind("tcp://" + NRI._get_public_ip_address() + ":5555")
+        socket.bind("tcp://" + NRI.get_public_ip_address() + ":" + self.zmq_port)
 
         while True:
             #  Wait for next request from clients
@@ -32,6 +38,9 @@ class Receiver:
 
             if 'crs' in json_msj:
                 self.nri.server_crs['crs'] = json_msj['crs']
+
+                # TODO check this
+                self.node.update_global_normalization(self.nri.server_crs['crs'])
                 self.sender.send_crs(message)
 
                 print 'the crs: '
@@ -46,6 +55,3 @@ class Receiver:
 
                 print 'the list of user greeds: '
                 print self.nri.server_greediness
-
-# just for test purposes (remove this)
-Receiver(NRI())

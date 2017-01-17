@@ -6,19 +6,22 @@ from fairness import utils
 from fairness.config_parser import MyConfigParser
 from fairness.node_service.nri import NRI
 
-class Sender:
+
+class NodeClient:
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
 
     #  Socket to talk to server
-    def __init__(self, nri=None):
+    def __init__(self, nri=None, node=None):
+        self.node = node
+
         print("Connecting to get the neighbor…")
         config = MyConfigParser()
         controller_ip = config.config_section_map('communication')['controller_ip']
         controller_port = config.config_section_map('communication')['controller_port']
         address = "tcp://" + controller_ip + ":" + controller_port
         self.socket.connect(address)
-        json_string = json.dumps({'neighbor': NRI._get_public_ip_address(), 'nri': nri.__dict__})
+        json_string = json.dumps({'neighbor': NRI.get_public_ip_address(), 'nri': nri.__dict__})
         self.socket.send(json_string)
 
         response = self.socket.recv()
@@ -37,7 +40,7 @@ class Sender:
         self.socket.recv()
 
     def send_greediness(self, nri):
-        own_greed = self.get_vm_greediness()
+        own_greed = self.node.get_user_greediness()
 
         if 'greed' not in nri.server_greediness:
             nri.server_greediness['greed'] = {}
@@ -50,6 +53,4 @@ class Sender:
         self.socket.send(json_string)
         self.socket.recv()
 
-    # TODO + move
-    def get_vm_greediness(self):
-        return {'Demo': 5, 'Other': 3, 'Last': 2}
+        # TODO reallocation here

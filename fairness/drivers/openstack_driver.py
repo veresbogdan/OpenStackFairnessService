@@ -1,6 +1,7 @@
-import requests
 import json
-import datetime
+from datetime import datetime
+
+import requests
 
 from fairness.config_parser import MyConfigParser
 
@@ -9,17 +10,18 @@ from fairness.config_parser import MyConfigParser
 #   $ openstack role add --project service --user fairness admin
 # then add the credentials to the fairness.ini file.
 
-# TODO: import config file and extract username and password for the payload
-# TODO: Should the domain be looked up with a diffenrent API call? But which one? And how to get the initial token?
 
-
-class IdentityApiConnection(object):
-    """ This class is to make Keystone API calls. """
+class OpenstackApiConnection(object):
+    """ This class is to make OpenStack API calls. """
 
     def __init__(self):
         self.token = None
         self.token_exp = None
         self.token_issued = None
+        # temp url for testing; change this back to http://openstack-controller:
+        self.openstack_url = 'http://b04.csg.uzh.ch:'
+        self.openstack_compute_port = '8774'
+        self.openstack_admin_port = '35357'
 
     def _authenticate(self):
         """ The first step to call any other OpenStack API is to authenticate
@@ -34,7 +36,7 @@ class IdentityApiConnection(object):
         project_domain_name = config.config_section_map('keystone_authtoken')['project_domain_name']
 
         if self.token is None:
-            url = 'http://openstack-controller:35357/v3/auth/tokens'
+            url = self.openstack_url + self.openstack_admin_port + '/v3/auth/tokens'
             payload = {
                 "auth": {
                     "identity": {
@@ -68,8 +70,10 @@ class IdentityApiConnection(object):
 
     def _check_token(self):
         if self.token is None:
+            print("token has been issued!")
             self._authenticate()
-        time_now = datetime.datetime.utcnow().isoformat()
+        time_now = datetime.utcnow().isoformat()
+
         if self.token_exp < time_now:
             print "Token Expired at (UTC+1, so substract 1 hour): ", self.token_exp
             print "Time Now (UTC): ", time_now
@@ -78,54 +82,55 @@ class IdentityApiConnection(object):
 
     def list_users(self):
         self._check_token()
-        url = 'http://openstack-controller:35357/v3/users'
+        url = self.openstack_url + self.openstack_admin_port +'/v3/users'
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
-        # print r.headers
-        # print r.text
-        # print r.status_code
         json_text = json.loads(r.text)
         user_dict = {}
+
         for i in range(len(json_text["users"])):
             user = str(json_text['users'][i]['name'])
             user_id = str(json_text['users'][i]['id'])
             user_dict[user_id] = user
+
         return user_dict
 
     def list_projects(self):
         self._check_token()
-        url = 'http://openstack-controller:35357/v3/projects'
+        url = self.openstack_url + self.openstack_admin_port + '/v3/projects'
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
         json_text = json.loads(r.text)
         print r.text
 
-    def get_quotas(self):
+    def get_quotas(self, user):
         self._check_token()
-        url = 'http://openstack-controller:8774/v2.1/os-quota-sets/e655d37b5181407281277b8fb1eef3f4?user_id=demo'
+        url = self.openstack_url + self.openstack_compute_port + '/v2.1/os-quota-sets/e655d37b5181407281277b8fb1eef3f4?user_id=' + user
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
         json_text = json.loads(r.text)
         cores = json_text['quota_set']['cores']
         ram = json_text['quota_set']['ram']  # in MB
+
         return cores, ram
 
-    def get_vms(self, user_dict):
+    def get_all_vms(self, user_dict):
         self._check_token()
-        url = 'http://openstack-controller:8774/v2.1/servers/detail?all_tenants=1'
+        url = self.openstack_url + self.openstack_compute_port + '/v2.1/servers/detail?all_tenants=1'
         headers = {'X-Auth-Token': self.token}
         r = requests.get(url, headers=headers)
         json_text = json.loads(r.text)
-        # print r.headers
-        # print r.text
-        # print r.status_code
-        vm_dict = {}
+        list_of_all_vms = []
+
         for i in range(len(json_text['servers'])):
+            vm_dict = {}
             instance_status = json_text['servers'][i]['status']
             if instance_status == "ACTIVE":
                 user_id = json_text['servers'][i]['user_id']
                 user_name = user_dict[user_id]
                 instance_name = json_text['servers'][i]['OS-EXT-SRV-ATTR:instance_name']
                 host = json_text['servers'][i]['OS-EXT-SRV-ATTR:host']
-                vm_dict[str(instance_name)] = (str(user_name), str(host))
-        return vm_dict
+                vm_dict[str(instance_name)] = [str(user_name), str(host)]
+                list_of_all_vms.append(vm_dict)
+
+        return list_of_all_vms

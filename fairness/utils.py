@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+
 def dsum(*dicts):
     ret = defaultdict(int)
     for d in dicts:
@@ -10,6 +11,7 @@ def dsum(*dicts):
                 else:
                     ret[k] += 0
     return dict(ret)
+
 
 def dminus(*dicts):
     ret = defaultdict(int)
