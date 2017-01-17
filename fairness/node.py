@@ -74,20 +74,20 @@ class Node(object):
         The endowments were updated in the append_vm_and_update_endowments() method of this module.
         :return: None
         """
+        if self.vms:
+            rui = np.empty([len(self.vms), len(self.vms[0].rui[:2])])
+            endowments = np.empty([len(self.vms), len(self.vms[0].endowment)])
 
-        rui = np.empty([len(self.vms), len(self.vms[0].rui[:2])])
-        endowments = np.empty([len(self.vms), len(self.vms[0].endowment)])
+            for i in range(len(self.vms)):  # concatenate the endowments vector
+                rui[i, :] = self.vms[i].rui[:2]
+                endowments[i, :] = self.vms[i].endowment
 
-        for i in range(len(self.vms)):  # concatenate the endowments vector
-            rui[i, :] = self.vms[i].rui[:2]
-            endowments[i, :] = self.vms[i].endowment
+            greediness = \
+                greediness_raw(endowments, rui, self.global_normalization[:2], GreedinessParameters()) \
+                + np.sum(self.global_normalization[:2] * endowments, axis=1)
 
-        greediness = \
-            greediness_raw(endowments, rui, self.global_normalization[:2], GreedinessParameters()) \
-            + np.sum(self.global_normalization[:2] * endowments, axis=1)
-
-        for i in range(len(self.vms)):
-            self.vms[i].heaviness = greediness[i]
+            for i in range(len(self.vms)):
+                self.vms[i].heaviness = greediness[i]
 
     def quota_to_scalar(self, quota):
         """
