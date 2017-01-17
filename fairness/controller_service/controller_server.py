@@ -77,7 +77,7 @@ class ControllerServer:
 
                 # measure time again, subtract
                 end = time.time()
-                sleep_time = self.interval - (end - start)
+                sleep_time = float(self.interval) - (end - start)
                 time.sleep(sleep_time)
                 start = time.time()
 
