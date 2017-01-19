@@ -51,6 +51,7 @@ class NodeManager:
                 # it calculates the VMs endowments based on their VRs and the nodes NRI
                 self.node.append_vm_and_update_endowments(vm)
 
+        # TODO check this is needed here
         self.node.update_greediness_per_vm()
 
         self.print_items_in_node()

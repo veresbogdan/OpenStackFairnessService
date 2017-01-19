@@ -4,10 +4,12 @@ import numpy as np
 
 from fairness.controller_service.controller_server import ControllerServer
 from fairness.drivers.openstack_driver import OpenstackApiConnection
+from fairness.node import Node
 
 
 class ControllerManager:
     def __init__(self):
+        self.node = Node()
         self.crs = {}
         # self.ips_list = ['192.168.1.123', '192.168.1.124', '192.168.1.125']
 
@@ -79,9 +81,10 @@ class ControllerManager:
                               self.crs['network_receive'],
                               self.crs['network_transmit']])
         row = 0
+        self.node.update_global_normalization(self.crs)
         for user in unique_user_list:
             # vec = CRS / Quota of all users * user's Quota /// this is calculated for all 6 resources.
-            values_for_initial_user_vector = crs_array / np.negative(sum_of_quotas_array) * quotas_array[row]
+            values_for_initial_user_vector = self.node.global_normalization / np.negative(sum_of_quotas_array) * quotas_array[row]
             initial_user_scalar = values_for_initial_user_vector.sum()
             initial_user_vector[user] = initial_user_scalar
             row += 1
