@@ -18,8 +18,7 @@ class OpenstackApiConnection(object):
         self.token = None
         self.token_exp = None
         self.token_issued = None
-        # temp url for testing; change this back to http://openstack-controller:
-        self.openstack_url = 'http://b04.csg.uzh.ch:'
+        self.openstack_url = 'http://openstack-controller:'
         self.openstack_compute_port = '8774'
         self.openstack_admin_port = '35357'
 
