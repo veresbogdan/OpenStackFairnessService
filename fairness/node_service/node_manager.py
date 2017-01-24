@@ -9,6 +9,9 @@ from fairness.virtual_machines import get_vrs
 
 class NodeManager:
     def __init__(self):
+        """
+        Initialize the Node Manager
+        """
         self.node = Node()
         self.nri = NRI()
         self.node.set_nri(self.nri)

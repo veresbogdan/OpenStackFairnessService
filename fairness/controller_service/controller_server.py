@@ -16,6 +16,10 @@ class ControllerServer:
     client_socket = context.socket(zmq.REQ)
 
     def __init__(self, manager=None):
+        """
+        Initialize the controller server and start the ZMQ listener
+        :param manager: the controller manager
+        """
         self.manager = manager
         self.host_no = 0
 
@@ -33,6 +37,11 @@ class ControllerServer:
             self.manage_message(message, server_socket)
 
     def manage_message(self, message, socket):
+        """
+        The method that manages accordingly each received message.
+        :param message: the received message
+        :param socket: the ZMQ socket
+        """
         if message is not None:
             json_msj = json.loads(message)
 
@@ -85,7 +94,10 @@ class ControllerServer:
                 self.client_socket.recv()
 
     def send_crs(self, ip):
-        #  Socket to talk to server
+        """
+        Method that connects to the first node to send the CRS when the CRS calculation is complete
+        :param ip: the ip of the node to send to
+        """
         print('Connecting to first node…')
         self.client_socket.connect("tcp://" + ip + ":" + self.zmq_port)
 
@@ -94,6 +106,9 @@ class ControllerServer:
         self.client_socket.recv()
 
     def start_greed_ring(self):
+        """
+        Method that computes the initial greediness vector and starts the ZMQ ring
+        """
         json_string = json.dumps({'greed': self.manager.get_initial_user_vector()})
         self.client_socket.send(json_string)
         self.client_socket.recv()

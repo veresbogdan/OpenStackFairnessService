@@ -14,6 +14,11 @@ class NodeServer:
     zmq_port = config.config_section_map('communication')['controller_port']
 
     def __init__(self, nri=None, node=None):
+        """
+        Initialize the node server and start the ZMQ listener
+        :param nri: the nri class
+        :param node: the node class
+        """
         self.nri = nri
         self.node = node
         self.sender = NodeClient(nri, node)
@@ -33,6 +38,10 @@ class NodeServer:
             thread.start_new_thread(self.manage_message, (message,))
 
     def manage_message(self, message):
+        """
+        The method that manages accordingly each received message.
+        :param message: the received message
+        """
         if message is not None:
             json_msj = json.loads(message)
 

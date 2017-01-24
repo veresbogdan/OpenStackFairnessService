@@ -13,6 +13,12 @@ class NodeClient:
 
     #  Socket to talk to server
     def __init__(self, nri=None, node=None):
+        """
+        The initialization of the Node Client. First get the neighbour ip from the controller, then connect with ZMQ to
+        the respective neighbour node.
+        :param nri:
+        :param node:
+        """
         self.node = node
 
         print("Connecting to get the neighbor…")
@@ -36,19 +42,29 @@ class NodeClient:
             self.socket.connect(address)
 
     def send_crs(self, message):
+        """
+        Send the CRS vector to the next node
+        :param message: the message to send
+        """
         self.socket.send(message)
         self.socket.recv()
 
     def send_greediness(self, nri):
+        """
+        Calculate own greediness and send the result to the next node in the ring
+        :param nri: the nri class
+        """
         own_greed = self.node.get_user_greediness()
 
         if 'greed' not in nri.server_greediness:
             nri.server_greediness['greed'] = {}
 
+        # add to the received greediness and substract own old value
         nri.server_greediness['greed'] = utils.dsum(nri.server_greediness['greed'], own_greed)
         nri.server_greediness['greed'] = utils.dsum(nri.server_greediness['greed'], nri.old_inverted_greed)
         nri.old_inverted_greed = utils.dminus(own_greed)
 
+        # send the result to the next node
         json_string = json.dumps(nri.server_greediness)
         self.socket.send(json_string)
         self.socket.recv()

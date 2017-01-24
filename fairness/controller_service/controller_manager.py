@@ -26,6 +26,10 @@ class ControllerManager:
 
     @staticmethod
     def get_compute_node_ips():
+        """
+        Get the ips of all compute nodes of openstack from the database
+        :return: a tuple of ips
+        """
         try:
             password = 'wasserfall'
             db = mysql.connect(user="root", passwd=password, db="nova")
