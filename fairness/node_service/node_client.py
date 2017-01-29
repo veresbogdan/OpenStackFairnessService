@@ -5,6 +5,7 @@ import zmq
 from fairness import utils
 from fairness.config_parser import MyConfigParser
 from fairness.node_service.nri import NRI
+from fairness.node_service.reallocation_manager import ReallocationManager
 
 
 class NodeClient:
@@ -20,6 +21,7 @@ class NodeClient:
         :param node:
         """
         self.node = node
+        self.reallocation_manager = ReallocationManager(node, nri)
 
         print("Connecting to get the neighbor…")
         config = MyConfigParser()
@@ -69,4 +71,4 @@ class NodeClient:
         self.socket.send(json_string)
         self.socket.recv()
 
-        # TODO reallocation here
+        self.reallocation_manager.reallocate()

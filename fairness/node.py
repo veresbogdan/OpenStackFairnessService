@@ -20,6 +20,12 @@ class Node(object):
         self.hostname = socket.gethostname()
         self.public_ip = NRI.get_public_ip_address()
 
+    def get_vm(self, vm_name):
+        if self.vms is not None:
+            for vm in self.vms:
+                if vm.vm_name == vm_name:
+                    return vm
+
     def set_nri(self, nri):
         """
         fills the nri NumPy array in the node class.
