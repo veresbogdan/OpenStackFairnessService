@@ -23,7 +23,7 @@ class VM:
         self.rui_obj = rui_object
         self.endowment = None
         self.heaviness = None
-        self.last_priority = None
+        self.last_priority = 0
 
     def update_rui(self, rui_object, rui):
         """
