@@ -12,7 +12,7 @@ class ReallocationManager:
         """ Apply priorities for all stored instance heavinesses """
         self._calculate_local_heavinesses()
 
-        if self.node.vm is not None:
+        if self.node.vms is not None:
             for vm in self.node.vms:
                 priority = self.heaviness_to_priority(vm.vm_name, vm.heaviness)
 
