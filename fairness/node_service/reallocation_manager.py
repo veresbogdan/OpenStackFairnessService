@@ -34,7 +34,7 @@ class ReallocationManager:
         """
 
         for vm in self.node.vms:
-            vm.heaviness += self.nri.server_greediness[vm.owner]
+            vm.heaviness += self.nri.server_greediness['greed'][vm.owner]
 
             # users_needed = set()
             # remaining_users = set()
