@@ -2,10 +2,8 @@
 import json
 import zmq
 
-from fairness import utils
 from fairness.config_parser import MyConfigParser
 from fairness.node_service.nri import NRI
-from fairness.node_service.reallocation_manager import ReallocationManager
 
 
 class NodeClient:
@@ -21,7 +19,6 @@ class NodeClient:
         :param node:
         """
         self.node = node
-        self.reallocation_manager = ReallocationManager(node, nri)
 
         print("Connecting to get the neighbor…")
         config = MyConfigParser()
@@ -51,24 +48,11 @@ class NodeClient:
         self.socket.send(message)
         self.socket.recv()
 
-    def send_greediness(self, nri):
+    def send_greediness(self, hvn):
         """
-        Calculate own greediness and send the result to the next node in the ring
         :param nri: the nri class
         """
-        own_greed = self.node.get_user_greediness()
-
-        if 'greed' not in nri.server_greediness:
-            nri.server_greediness['greed'] = {}
-
-        # add to the received greediness and substract own old value
-        nri.server_greediness['greed'] = utils.dsum(nri.server_greediness['greed'], own_greed)
-        nri.server_greediness['greed'] = utils.dsum(nri.server_greediness['greed'], nri.old_inverted_greed)
-        nri.old_inverted_greed = utils.dminus(own_greed)
-
         # send the result to the next node
-        json_string = json.dumps(nri.server_greediness)
+        json_string = json.dumps({'hvn': hvn})
         self.socket.send(json_string)
         self.socket.recv()
-
-        self.reallocation_manager.reallocate()

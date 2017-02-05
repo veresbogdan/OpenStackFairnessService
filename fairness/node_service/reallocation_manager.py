@@ -2,9 +2,8 @@ from fairness.drivers.libvirt_driver import LibvirtConnection
 
 
 class ReallocationManager:
-    def __init__(self, node=None, nri=None):
+    def __init__(self, node=None):
         self.node = node
-        self.nri = nri
         self.host = self.node.hostname
         self.libvirt = LibvirtConnection()
 
@@ -34,58 +33,7 @@ class ReallocationManager:
         """
 
         for vm in self.node.vms:
-            vm.heaviness += self.nri.server_greediness['greed'][vm.owner]
-
-            # users_needed = set()
-            # remaining_users = set()
-            # user_heavinesses = dict()
-            # user_endowments = dict()
-            #
-            # self._local_heavinesses = self._fairness_heavinesses[self.host].get()
-            #
-            # for instance_name, instance_info in self._local_heavinesses.iteritems():
-            #     users_needed.add(instance_info['user_id'])
-            #
-            # for host, queue in self._fairness_heavinesses.iteritems():
-            #     if queue.qsize() > 0 or host == self.host:
-            #         if host == self.host:
-            #             heavinesses = self._local_heavinesses
-            #         else:
-            #             heavinesses = queue.get()
-            #         for instance_name, instance_info in heavinesses.iteritems():
-            #             if instance_info['user_id'] in users_needed:
-            #                 if instance_info['user_id'] in user_heavinesses:
-            #                     user_heavinesses[instance_info['user_id']] += instance_info['heaviness']
-            #                 else:
-            #                     user_heavinesses[instance_info['user_id']] = instance_info['heaviness']
-            #
-            #                 if instance_info['user_id'] in user_endowments:
-            #                     user_endowments[instance_info['user_id']] += instance_info['normalized_endowment']
-            #                 else:
-            #                     user_endowments[instance_info['user_id']] = instance_info['normalized_endowment']
-            #             else:
-            #                 remaining_users.add(instance_info['user_id'])
-            #
-            # # Normalize the quota and sum up all elements once and
-            # # use it for all users
-            # quota = self._fairness_quota * self._global_norm
-            # quota_sum = (quota.cpu_time +
-            #              quota.disk_bytes_read +
-            #              quota.disk_bytes_written +
-            #              quota.network_bytes_received +
-            #              quota.network_bytes_transmitted +
-            #              quota.memory_used)
-            #
-            # for user_id in users_needed:
-            #     user_heavinesses[user_id] = self._subtract_residual_quota(
-            #         quota_sum,
-            #         user_heavinesses[user_id],
-            #         user_endowments[user_id])
-            #
-            # for instance_name, instance_info in self._local_heavinesses.iteritems():
-            #     instance_info['heaviness'] = (user_heavinesses[instance_info['user_id']] + instance_info['heaviness'])
-            #
-            # self._user_count = len(users_needed) + len(remaining_users)
+            vm.heaviness += self.node.hvn_dict[vm.owner]
 
     def heaviness_to_priority(self, vm_name, heaviness):
         """ Convert the heaviness of an instance into a priority

@@ -4,6 +4,7 @@ import time
 import zmq
 
 from fairness import utils
+from fairness.controller_service.controller import Controller
 from fairness.node_service.nri import NRI
 from fairness.config_parser import MyConfigParser
 
@@ -21,6 +22,7 @@ class ControllerServer:
         :param manager: the controller manager
         """
         self.manager = manager
+        self.controller = Controller
         self.host_no = 0
 
         server_socket = self.context.socket(zmq.REP)
@@ -49,40 +51,22 @@ class ControllerServer:
                 self.manager.crs = utils.dsum(self.manager.crs, json_msj['nri'])
 
             if 'neighbor' in json_msj:
-                req_ip = json_msj['neighbor']
-                ips_list = self.manager.ips_list
-                if req_ip in ips_list:
-                    index = ips_list.index(req_ip)
-
-                    # the last node in the node list gets the controller as neighbor
-                    if index == len(ips_list) - 1:
-                        return_message = {'neighbor': NRI.get_public_ip_address()}
-                    else:
-                        return_message = {'neighbor': ips_list[index + 1]}
-
-                    self.host_no += 1
-                    json_string = json.dumps(return_message)
-                    socket.send(json_string)
-
-                    if self.host_no == len(ips_list):
-                        print 'send crs...'
-                        # the controller gets the first node from the node list as neighbor
-                        self.send_crs(ips_list[0])
+                self.manage_neighbor_message(json_msj, socket)
 
             if 'crs' in json_msj:
                 # first send back ack reply (before sending a message to the next node)
                 socket.send("")
-                print 'start grid ring...'
+                print 'start hvn ring...'
 
                 global start
                 start = time.time()
 
                 self.start_greed_ring()
 
-            if 'greed' in json_msj:
+            if 'hvn' in json_msj:
                 # first send back ack reply (before sending a message to the next node)
                 socket.send("")
-                print 'got greed...'
+                print 'got hvn...'
 
                 # measure time again, subtract
                 end = time.time()
@@ -93,6 +77,27 @@ class ControllerServer:
                 self.client_socket.send(message)
                 self.client_socket.recv()
 
+    def manage_neighbor_message(self, json_msj, socket):
+        req_ip = json_msj['neighbor']
+        ips_list = self.manager.ips_list
+        if req_ip in ips_list:
+            index = ips_list.index(req_ip)
+
+            # the last node in the node list gets the controller as neighbor
+            if index == len(ips_list) - 1:
+                return_message = {'neighbor': NRI.get_public_ip_address()}
+            else:
+                return_message = {'neighbor': ips_list[index + 1]}
+
+            self.host_no += 1
+            json_string = json.dumps(return_message)
+            socket.send(json_string)
+
+            if self.host_no == len(ips_list):
+                print 'send crs...'
+                # the controller gets the first node from the node list as neighbor
+                self.send_crs(ips_list[0])
+
     def send_crs(self, ip):
         """
         Method that connects to the first node to send the CRS when the CRS calculation is complete
@@ -101,7 +106,7 @@ class ControllerServer:
         print('Connecting to first node…')
         self.client_socket.connect("tcp://" + ip + ":" + self.zmq_port)
 
-        json_string = json.dumps({'crs': self.manager.crs})
+        json_string = json.dumps({'crs': self.controller.forward_crs(self.manager.crs)})
         self.client_socket.send(json_string)
         self.client_socket.recv()
 
@@ -109,6 +114,6 @@ class ControllerServer:
         """
         Method that computes the initial greediness vector and starts the ZMQ ring
         """
-        json_string = json.dumps({'greed': self.manager.get_initial_user_vector()})
+        json_string = json.dumps({'hvn': self.controller.start_hvn_rotation()})
         self.client_socket.send(json_string)
         self.client_socket.recv()

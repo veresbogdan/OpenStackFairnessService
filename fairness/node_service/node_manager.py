@@ -1,10 +1,9 @@
+from fairness.drivers.libvirt_driver import LibvirtConnection
 from fairness.drivers.openstack_driver import OpenstackApiConnection
 from fairness.node_service.node_server import NodeServer
 from fairness.node_service.nri import NRI
-from fairness.node import Node
 from fairness.node_service.rui import RUI
-from fairness.virtual_machines import VM
-from fairness.virtual_machines import get_vrs
+from fairness.nova_comp import ThisNode
 
 
 class NodeManager:
@@ -12,9 +11,9 @@ class NodeManager:
         """
         Initialize the Node Manager
         """
-        self.node = Node()
         self.nri = NRI()
-        self.node.set_nri(self.nri)
+        self.node = ThisNode(self.nri.cpu_num, self.nri.cpu_bogo, self.nri.memory, self.nri.disk_read_bytes,
+                             self.nri.network_receive)
 
         # retrieve info for creating VM objects.
         open_stack_connection = OpenstackApiConnection()
@@ -31,8 +30,7 @@ class NodeManager:
                 vm_owner = inst.values()[0][0]
 
                 # get VRs
-                max_mem, cpu_s = get_vrs(vm_name)
-                # TODO: check if it's needed to convert VR's cpu_s with BogoMIPS!
+                max_mem, cpu_s = self.get_vrs(vm_name)
 
                 # create RUI and retrieve data from host
                 rui = RUI()
@@ -40,27 +38,22 @@ class NodeManager:
 
                 # create and initialize VMs
                 print("All parameters for VM creation, without RUI: ", vm_name, max_mem, cpu_s, vm_owner)
-                vm = VM(vm_name, [max_mem, cpu_s], vm_owner, rui)
-                vm.update_rui(rui,
-                              [rui_list[0],
-                               rui_list[1],
-                               rui_list[2],
-                               rui_list[3],
-                               rui_list[4],
-                               rui_list[5]])
-                # print("rui_list: ", rui_list)
 
-                # this must be called every time the set of VMs on the node changes
-                # it calculates the VMs endowments based on their VRs and the nodes NRI
-                self.node.append_vm_and_update_endowments(vm)
-
-        # TODO check this is needed here
-        self.node.update_greediness_per_vm()
+                self.node.add_vm(vm_name, vm_owner, cpu_s, max_mem)
+                self.node.update_vms_rui(vm_name, rui_list[0], rui_list[1], rui_list[2], rui_list[4])
 
         self.print_items_in_node()
 
         # start the node server and client
         NodeServer(self.nri, self.node)
+
+    def get_vrs(self, domain_id):
+        conn = LibvirtConnection()
+        state, maxmem, cpus = conn.get_domain_info(domain_id)
+        # print('The state:', state)
+        # print('The max memory:', maxmem)
+        # print('The number of vcpus:', cpus)
+        return maxmem, cpus
 
     def print_items_in_node(self):
         for vm in self.node.vms:

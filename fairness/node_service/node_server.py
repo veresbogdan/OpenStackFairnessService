@@ -7,6 +7,7 @@ import zmq
 from fairness.node_service.node_client import NodeClient
 from fairness.node_service.nri import NRI
 from fairness.config_parser import MyConfigParser
+from fairness.node_service.reallocation_manager import ReallocationManager
 
 
 class NodeServer:
@@ -19,9 +20,9 @@ class NodeServer:
         :param nri: the nri class
         :param node: the node class
         """
-        self.nri = nri
         self.node = node
         self.sender = NodeClient(nri, node)
+        self.reallocation_manager = ReallocationManager(node)
 
         context = zmq.Context()
         socket = context.socket(zmq.REP)
@@ -46,21 +47,19 @@ class NodeServer:
             json_msj = json.loads(message)
 
             if 'crs' in json_msj:
-                self.nri.server_crs['crs'] = json_msj['crs']
+                self.node.forward_crs(json_msj['crs'])
 
-                # TODO check this
-                self.node.update_global_normalization(self.nri.server_crs['crs'])
                 self.sender.send_crs(message)
 
                 print 'the crs: '
-                print self.nri.server_crs
+                print self.node.crs_dict
 
-                # do work here
+            if 'hvn' in json_msj:
+                hvn = self.node.forward_hvn(json_msj['hvn'])
 
-            if 'greed' in json_msj:
-                self.nri.server_greediness['greed'] = json_msj['greed']
+                self.sender.send_greediness(hvn)
 
-                self.sender.send_greediness(self.nri)
+                print 'the list of user hvn: '
+                print self.node.hvn_dict
 
-                print 'the list of user greeds: '
-                print self.nri.server_greediness
+                self.reallocation_manager.reallocate()
