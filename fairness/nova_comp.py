@@ -1,5 +1,4 @@
 import socket
-
 from fairness.virtual_machine import VM
 
 import numpy as np
