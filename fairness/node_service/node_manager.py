@@ -61,11 +61,11 @@ class NodeManager:
             # print ("vm: ", vm)   #  vm:  <fairness.virtual_machines.VM instance at 0x7fabb7ee7b48>
             # print(type(vm))      #  <type 'instance'>
             # print(vm.__dict__)   #  {'vm_name': 'instance-00000006', 'vrs': array([65536,     1]), 'rui': array([  1.24843562e+03,   1.95080000e+05,   2.06991360e+07,   4.25984000e+05,   2.54716000e+06,   1.14800000e+04]), 'heaviness': 272104.33333333331, 'owner': 'demo', 'endowment': array([  1.19980000e+04,   1.00000000e+00])}
-            print("vm.vm_name: ", vm.ident)
+            print("vm.vm_name: ", vm)
             # print("vm.rui: ", vm.rui)
             # print("vm.owner: ", vm.owner)
             # print("vm.endowment: ", vm.endowment)
-            print("VM Heaviness: ", vm.heaviness)
+            # print("VM Heaviness: ", vm.heaviness)
             # print("Quota to scalar: ", node.quota_to_scalar([cores, ram]))
             # print("node.global_normalization: ", node.global_normalization)
             # print("node.vms length: ", len(node.vms))
