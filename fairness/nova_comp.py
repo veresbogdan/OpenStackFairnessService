@@ -23,7 +23,7 @@ class ThisNode:
                              'RAM': ram,
                              'disk': disk,
                              'net': net,
-                             'vec': np.array([cpu * bogo, ram, disk, net])
+                             'vec': list(np.array([cpu * bogo, ram, disk, net]))
                              }
         # this_node.own_nri_vec = np.array([cpu*bogo, ram, disk, net])
         self.added_to_crs = False
