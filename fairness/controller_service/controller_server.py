@@ -5,6 +5,7 @@ import zmq
 
 from fairness import utils
 from fairness.controller_service.controller import Controller
+from fairness.drivers.openstack_driver import OpenstackApiConnection
 from fairness.node_service.nri import NRI
 from fairness.config_parser import MyConfigParser
 
@@ -114,6 +115,23 @@ class ControllerServer:
         """
         Method that computes the initial greediness vector and starts the ZMQ ring
         """
+        self.add_users()
+
         json_string = json.dumps({'hvn': self.controller.start_hvn_rotation()})
         self.client_socket.send(json_string)
         self.client_socket.recv()
+
+    def add_users(self):
+        open_stack_connection = OpenstackApiConnection()
+
+        # get users and their's quota
+        user_dict = open_stack_connection.list_users()
+        vm_dict = open_stack_connection.get_all_vms(user_dict)
+        unique_user_list = []
+        for item in vm_dict:
+            if item.values()[0][0] not in unique_user_list:
+                unique_user_list.append(item.values()[0][0])
+
+        for user in unique_user_list:
+            cores, ram = open_stack_connection.get_quotas(user)
+            self.controller.add_user(user, cores, ram)
