@@ -8,7 +8,10 @@ def dsum(*dicts):
             for k, v in d.items():
                 if type(v) is list:
                     if v is not None and v:
-                        ret[k] = [x + y for x, y in zip(ret[k], v)]
+                        if ret[k] is None:
+                            ret[k] = v
+                        else:
+                            ret[k] = [x + y for x, y in zip(ret[k], v)]
                     else:
                         ret[k] = [0,0,0,0]
                 else:
