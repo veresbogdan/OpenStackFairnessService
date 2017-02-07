@@ -8,6 +8,7 @@ from fairness.node_service.node_client import NodeClient
 from fairness.node_service.nri import NRI
 from fairness.config_parser import MyConfigParser
 from fairness.node_service.reallocation_manager import ReallocationManager
+from fairness.node_service.rui import RUI
 
 
 class NodeServer:
@@ -55,6 +56,7 @@ class NodeServer:
                 print self.node.crs_dict
 
             if 'hvn' in json_msj:
+                self.update_rui_list()
                 hvn = self.node.forward_hvn(json_msj['hvn'])
 
                 self.sender.send_greediness(hvn)
@@ -63,3 +65,9 @@ class NodeServer:
                 print self.node.hvn_dict
 
                 self.reallocation_manager.reallocate()
+
+    def update_rui_list(self):
+        for vm_name in self.node.vms:
+            rui = RUI()
+            rui_list = rui.get_utilization(vm_name)
+            self.node.update_vms_rui(vm_name, rui_list[0], rui_list[1], rui_list[2]+rui_list[3], rui_list[4]+rui_list[5])

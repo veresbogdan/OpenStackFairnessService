@@ -14,25 +14,12 @@ class Controller:
 
         self.users = dict()
 
-    def start_crs_collection(self):
-        """
-        Call before start_hvn_colletion()
-        :return:
-        """
-        # todo: discuss, which dictionary entries are needed
-        crs_dict = {'CPUs': 0,
-                    'bogoXcpus': 0,
-                    'RAM': 0,
-                    'disk': 0,
-                    'net': 0,
-                    'vec': np.array([0, 0, 0, 0])
-                    }
-
     # This method is called by the controller when receiving the crs_dict
     # This method ensure that the crs_dict is forwarded only once
     def forward_crs(self, crs_dict_in):
         """
-        Call when receiving the crs_dict.
+        Called by the controller when receiving the crs_dict
+        Ensures that the crs_dict is forwarded only once
         :param crs_dict_in:
         :return:
         """
@@ -43,16 +30,15 @@ class Controller:
             #	crs_vec[iter] = crs_vec[pr]
             #	iter += 1
             #	else:
-            print "++++"
-            print (1. * 3 / 4)
-            print crs_dict_in['vec']
-            print "++++"
-            crs_dict_in['vec'] = (1. * 3 / 4) / crs_dict_in['vec']
-
+            for i in range(len(crs_dict_in['vec'])):
+                if crs_dict_in['vec'][i] != 0:
+                    crs_dict_in['vec'][i] = (1. * len(self.users) / 4) / crs_dict_in['vec'][i]
+                else:
+                    crs_dict_in['vec'][i] = 0.
             self.crs_dict = dict(crs_dict_in)
             self.crs_forwarded = True
 
-        return dict(crs_dict_in)
+            return dict(crs_dict_in)
 
     def add_user(self, idnt, vcpu, vram, disk=1, netw=1):
         """
@@ -80,9 +66,11 @@ class Controller:
         sum_of_quotas = np.zeros(4)
         for user in self.users:
             sum_of_quotas += self.users[user].quota
+        for i in range(4):
+            if sum_of_quotas[i] == 0:
+                sum_of_quotas[i] = 1
 
         for user in self.users:
-            hvn_dict[user] = sum(1.0 * (self.users[user].quota / sum_of_quotas)) / 4  # * np.array([crs_dict['CPUs'], crs_dict['RAM'], crs_dict['disk'], crs_dict['net']]))
+            hvn_dict[user] = -sum(1.0 * len(self.users) * (self.users[user].quota / sum_of_quotas))/4# * np.array([crs_dict['CPUs'], crs_dict['RAM'], crs_dict['disk'], crs_dict['net']]))
 
-            # send the initial dict
         return hvn_dict

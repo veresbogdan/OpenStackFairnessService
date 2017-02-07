@@ -80,7 +80,7 @@ class ReallocationManager:
         """
 
         domain = self.libvirt.domain_lookup(vm_name)
-        cpu_shares = self.convert_priority_range(priority, 1, 100)
+        cpu_shares = self.node.get_priority(vm_name, 1, 100)
         params = domain.schedulerParameters()
         params['cpu_shares'] = long(cpu_shares)
 
@@ -101,7 +101,7 @@ class ReallocationManager:
 
         domain = self.libvirt.domain_lookup(vm_name)
         total_memory = domain.maxMemory()
-        softlimit = self.convert_priority_range(priority, 10240, total_memory)
+        softlimit = self.node.get_priority(vm_name, 10240, total_memory)
         result = domain.setMemoryParameters(
             {'soft_limit': int(softlimit)})
 
@@ -120,7 +120,7 @@ class ReallocationManager:
         """
         domain = self.libvirt.domain_lookup(vm_name)
 
-        io_weight = self.convert_priority_range(priority, 100, 1000)
+        io_weight = self.node.get_priority(vm_name, 100, 1000)
         params = domain.blkioParameters()
         params['weight'] = io_weight
         result = domain.setBlkioParameters(params)

@@ -3,8 +3,7 @@ import numpy as np
 
 class VM:
     """This class is used internally only"""
-
-    def __init__(self, ident, owner, vcpus, vram):
+    def __init__(self, ident, owner, vcpus, vram, disk=1, net=1):
         """
         Instantiate a VM object
         :param ident: a string with the VM's unique identifier
@@ -18,15 +17,13 @@ class VM:
 
         self.vcpus = vcpus
         self.vram = vram
-        self.vrs = np.array([vcpus, vram, 1, 1])
+        self.vrs = np.array([vcpus, vram, disk, net])
 
         self.rui = None
         self.endowment = None
-    #     TODO shouldn't VM have also a heaviness?
         self.heaviness = None
 
     # add the VM to the dictionary with the node's VMs
-
     def update_rui(self, cpu_time, ram, disk=0, net=0):
         """
         Update the resources the VM consumed
@@ -35,5 +32,5 @@ class VM:
         :param disk: Disk IO in ?? utilized by the VM
         :param net: Sum of traffic in ?? send and received by the VM
         """
-        # assert len(rui) == len(VM.nri)
+        #assert len(rui) == len(VM.nri)
         self.rui = np.array([cpu_time, ram, disk, net])

@@ -40,7 +40,7 @@ class NodeManager:
                 print("All parameters for VM creation, without RUI: ", vm_name, max_mem, cpu_s, vm_owner)
 
                 self.node.add_vm(vm_name, vm_owner, cpu_s, max_mem)
-                self.node.update_vms_rui(vm_name, rui_list[0], rui_list[1], rui_list[2], rui_list[4])
+                self.node.update_vms_rui(vm_name, rui_list[0], rui_list[1], rui_list[2]+rui_list[3], rui_list[4]+rui_list[5])
 
         self.print_items_in_node()
 

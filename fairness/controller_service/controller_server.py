@@ -22,7 +22,7 @@ class ControllerServer:
         :param manager: the controller manager
         """
         self.manager = manager
-        self.controller = Controller
+        self.controller = Controller()
         self.host_no = 0
 
         server_socket = self.context.socket(zmq.REP)
