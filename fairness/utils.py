@@ -6,10 +6,13 @@ def dsum(*dicts):
     for d in dicts:
         if type(d) is dict:
             for k, v in d.items():
-                if v is not None:
-                    ret[k] += v
+                if type(v) is list and v is not None:
+                    d = dsum(d, v)
                 else:
-                    ret[k] += 0
+                    if v is not None:
+                        ret[k] += v
+                    else:
+                        ret[k] += 0
     return dict(ret)
 
 
