@@ -9,8 +9,11 @@ def dsum(*dicts):
         if type(d) is dict:
             for k, v in d.items():
                 if type(v) is list:
-                    # TODO sum up the vec?
-                    pass
+                    # TODO sum up the list?
+                    if v is not None:
+                        ret[k] = [x + y for x, y in zip(ret[k], v)]
+                    else:
+                        ret[k] = list()
                 else:
                     if v is not None:
                         ret[k] += v
