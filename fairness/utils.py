@@ -11,7 +11,7 @@ def dsum(*dicts):
                         if ret[k] is None:
                             ret[k] = v
                         else:
-                            ret[k] = [x + y for x, y in zip(ret[k], v)]
+                            ret[k] = [x + y for x, y in zip(list(ret[k]), v)]
                     else:
                         ret[k] = [0,0,0,0]
                 else:
