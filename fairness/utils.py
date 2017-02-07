@@ -10,10 +10,10 @@ def dsum(*dicts):
             for k, v in d.items():
                 if type(v) is list:
                     # TODO sum up the list?
-                    if v is not None:
+                    if v is not None and not v:
                         ret[k] = [x + y for x, y in zip(ret[k], v)]
                     else:
-                        ret[k] = list()
+                        ret[k] = [0,0,0,0]
                 else:
                     if v is not None:
                         ret[k] += v
