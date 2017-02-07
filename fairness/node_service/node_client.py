@@ -26,7 +26,7 @@ class NodeClient:
         controller_port = config.config_section_map('communication')['controller_port']
         address = "tcp://" + controller_ip + ":" + controller_port
         self.socket.connect(address)
-        json_string = json.dumps({'neighbor': NRI.get_public_ip_address(), 'nri': nri.__dict__})
+        json_string = json.dumps({'neighbor': NRI.get_public_ip_address(), 'nri': node.own_nri_dict})
         self.socket.send(json_string)
 
         response = self.socket.recv()
