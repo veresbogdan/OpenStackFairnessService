@@ -22,6 +22,7 @@ class VM:
         self.rui = None
         self.endowment = None
         self.heaviness = None
+        self.last_priority = 0
 
     # add the VM to the dictionary with the node's VMs
     def update_rui(self, cpu_time, ram, disk=0, net=0):
