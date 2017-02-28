@@ -13,14 +13,14 @@ class ReallocationManager:
 
         if self.node.vms is not None:
             for vm in self.node.vms:
-                priority = self.heaviness_to_priority(self.node.vms[vm].vm_name, self.node.vms[vm].heaviness)
+                priority = self.heaviness_to_priority(self.node.vms[vm].ident, self.node.vms[vm].heaviness)
 
-                print self.node.vms[vm].vm_name + ': Heaviness: ' + str(self.node.vms[vm].heaviness) + ' -> Priority: ' + str(priority)
+                print self.node.vms[vm].ident + ': Heaviness: ' + str(self.node.vms[vm].heaviness) + ' -> Priority: ' + str(priority)
 
-                self.set_cpu_priority(self.node.vms[vm].vm_name, priority)
-                self.set_memory_priority(self.node.vms[vm].vm_name, priority)
-                self.set_disk_priority(self.node.vms[vm].vm_name, priority)
-                self.set_net_priority(self.node.vms[vm].vm_name, priority)
+                self.set_cpu_priority(self.node.vms[vm].ident, priority)
+                self.set_memory_priority(self.node.vms[vm].ident, priority)
+                self.set_disk_priority(self.node.vms[vm].ident, priority)
+                self.set_net_priority(self.node.vms[vm].ident, priority)
 
                 # TODO check if prioritization worked; save data
 

@@ -50,6 +50,8 @@ class ControllerServer:
 
             if 'nri' in json_msj:
                 self.manager.crs = utils.dsum(self.manager.crs, json_msj['nri'])
+                print 'current crs: '
+                print self.manager.crs
 
             if 'neighbor' in json_msj:
                 self.manage_neighbor_message(json_msj, socket)
