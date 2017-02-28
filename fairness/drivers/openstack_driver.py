@@ -18,7 +18,7 @@ class OpenstackApiConnection(object):
         self.token = None
         self.token_exp = None
         self.token_issued = None
-        self.openstack_url = 'http://openstack-controller:'
+        self.openstack_url = 'http://controller:'
         self.openstack_compute_port = '8774'
         self.openstack_admin_port = '35357'
 
@@ -64,6 +64,7 @@ class OpenstackApiConnection(object):
             r = requests.post(url, data=json.dumps(payload))
             self.token = r.headers['X-Subject-Token']
             json_text = json.loads(r.text)
+            print self.token
             self.token_exp = json_text['token']['expires_at']
             self.token_issued = json_text['token']['issued_at']
 
