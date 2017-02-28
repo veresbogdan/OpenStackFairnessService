@@ -13,14 +13,14 @@ class ReallocationManager:
 
         if self.node.vms is not None:
             for vm in self.node.vms:
-                priority = self.heaviness_to_priority(vm.vm_name, vm.heaviness)
+                priority = self.heaviness_to_priority(self.node.vms[vm].vm_name, self.node.vms[vm].heaviness)
 
-                print vm.vm_name + ': Heaviness: ' + str(vm.heaviness) + ' -> Priority: ' + str(priority)
+                print self.node.vms[vm].vm_name + ': Heaviness: ' + str(self.node.vms[vm].heaviness) + ' -> Priority: ' + str(priority)
 
-                self.set_cpu_priority(vm.vm_name, priority)
-                self.set_memory_priority(vm.vm_name, priority)
-                self.set_disk_priority(vm.vm_name, priority)
-                self.set_net_priority(vm.vm_name, priority)
+                self.set_cpu_priority(self.node.vms[vm].vm_name, priority)
+                self.set_memory_priority(self.node.vms[vm].vm_name, priority)
+                self.set_disk_priority(self.node.vms[vm].vm_name, priority)
+                self.set_net_priority(self.node.vms[vm].vm_name, priority)
 
                 # TODO check if prioritization worked; save data
 
@@ -33,7 +33,7 @@ class ReallocationManager:
         """
 
         for vm in self.node.vms:
-            vm.heaviness += self.node.hvn_dict[vm.owner]
+            self.node.vms[vm].heaviness += self.node.hvn_dict[self.node.vms[vm].owner]
 
     def heaviness_to_priority(self, vm_name, heaviness):
         """ Convert the heaviness of an instance into a priority
