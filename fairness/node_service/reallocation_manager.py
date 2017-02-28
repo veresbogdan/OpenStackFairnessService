@@ -58,8 +58,8 @@ class ReallocationManager:
             if priority < -50:
                 priority = -50
         # Eliminate harsh jumps in priorities compared to old priorities
-        last_priority = self.node.get_vm(vm_name).last_priority
-        self.node.get_vm(vm_name).last_priority = priority
+        last_priority = self.node.vms[vm_name].last_priority
+        self.node.vms[vm_name].last_priority = priority
         difference = abs(priority - last_priority) * 0.1
         if priority < last_priority:
             priority = last_priority - difference
