@@ -50,8 +50,6 @@ class ControllerServer:
 
             if 'nri' in json_msj:
                 self.manager.crs = utils.dsum(self.manager.crs, json_msj['nri'])
-                print 'current crs: '
-                print self.manager.crs
 
             if 'neighbor' in json_msj:
                 self.manage_neighbor_message(json_msj, socket)
@@ -108,6 +106,7 @@ class ControllerServer:
         """
         print('Connecting to first node…')
         self.client_socket.connect("tcp://" + ip + ":" + self.zmq_port)
+        self.add_users()
 
         json_string = json.dumps({'crs': self.controller.forward_crs(self.manager.crs)})
         self.client_socket.send(json_string)
@@ -117,8 +116,6 @@ class ControllerServer:
         """
         Method that computes the initial greediness vector and starts the ZMQ ring
         """
-        self.add_users()
-
         json_string = json.dumps({'hvn': self.controller.start_hvn_rotation()})
         self.client_socket.send(json_string)
         self.client_socket.recv()
