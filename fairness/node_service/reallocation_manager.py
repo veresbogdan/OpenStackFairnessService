@@ -80,7 +80,7 @@ class ReallocationManager:
         """
 
         domain = self.libvirt.domain_lookup(vm_name)
-        cpu_shares = priority
+        cpu_shares = self.convert_priority_range(priority, 1, 100)
         params = domain.schedulerParameters()
         params['cpu_shares'] = long(cpu_shares)
         print 'Cpu params: ' + str(params)
