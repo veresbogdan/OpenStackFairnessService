@@ -106,37 +106,38 @@ class ThisNode:
 
         self.hvn_dict = dict(hvn_dict)
 
-        rui = np.empty([len(self.vms), 4])
-        endowments = np.empty([len(self.vms), 4])
+        if len(self.vms) != 0:
+            rui = np.empty([len(self.vms), 4])
+            endowments = np.empty([len(self.vms), 4])
 
-        # use names to ensure that rui and endowment vectors are iterated over in the same order as vms dict
-        names = list()
-        vm_iter = 0
-        for vm in self.vms:  # concatenate the endowments vector
-            rui[vm_iter, :] = self.vms[vm].rui
-            endowments[vm_iter, :] = self.vms[vm].endowment
-            names.append(vm)
-            vm_iter += 1
+            # use names to ensure that rui and endowment vectors are iterated over in the same order as vms dict
+            names = list()
+            vm_iter = 0
+            for vm in self.vms:  # concatenate the endowments vector
+                rui[vm_iter, :] = self.vms[vm].rui
+                endowments[vm_iter, :] = self.vms[vm].endowment
+                names.append(vm)
+                vm_iter += 1
 
-        greediness =\
-            greediness_raw(endowments, rui, self.crs_dict['vec'], GreedinessParameters(0.))\
-            + np.sum(self.crs_dict['vec'] * endowments, axis=1)
-        # todo: how is CPU time measured?
-        # todo: how to determine endowment of CPU usage
-        # todo: are a node's overall bogomips the product of its bogomips and cores?
+            greediness =\
+                greediness_raw(endowments, rui, self.crs_dict['vec'], GreedinessParameters(0.))\
+                + np.sum(self.crs_dict['vec'] * endowments, axis=1)
+            # todo: how is CPU time measured?
+            # todo: how to determine endowment of CPU usage
+            # todo: are a node's overall bogomips the product of its bogomips and cores?
 
-        for i in range(len(self.vms)):
-            self.vms[names[i]].heaviness = greediness[i]
+            for i in range(len(self.vms)):
+                self.vms[names[i]].heaviness = greediness[i]
 
-        # Subtract from recived dictionary, what was added in the last round
-        for user in self.added_to_hvn:
-            self.hvn_dict[user] -= self.added_to_hvn[user]
-            self.added_to_hvn[user] = 0
+            # Subtract from recived dictionary, what was added in the last round
+            for user in self.added_to_hvn:
+                self.hvn_dict[user] -= self.added_to_hvn[user]
+                self.added_to_hvn[user] = 0
 
-        # add current values to received dictionary and saves these to be subtracted in the next round
-        for vm in self.vms:
-            self.hvn_dict[self.vms[vm].owner] += self.vms[vm].heaviness
-            self.added_to_hvn[self.vms[vm].owner] = self.vms[vm].heaviness
+            # add current values to received dictionary and saves these to be subtracted in the next round
+            for vm in self.vms:
+                self.hvn_dict[self.vms[vm].owner] += self.vms[vm].heaviness
+                self.added_to_hvn[self.vms[vm].owner] = self.vms[vm].heaviness
 
         return self.hvn_dict
 
