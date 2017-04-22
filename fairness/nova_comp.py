@@ -137,7 +137,7 @@ class ThisNode:
             # add current values to received dictionary and saves these to be subtracted in the next round
             for vm in self.vms:
                 self.hvn_dict[self.vms[vm].owner] += self.vms[vm].heaviness
-                self.added_to_hvn[self.vms[vm].owner] = self.vms[vm].heaviness
+                self.added_to_hvn[self.vms[vm].owner] += self.vms[vm].heaviness
 
         return self.hvn_dict
 

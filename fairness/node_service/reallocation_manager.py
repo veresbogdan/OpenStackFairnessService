@@ -83,11 +83,8 @@ class ReallocationManager:
         cpu_shares = self.convert_priority_range(priority, 1, 100)
         params = domain.schedulerParameters()
         params['cpu_shares'] = long(cpu_shares)
-        print 'Cpu params: ' + str(params)
 
         result = domain.setSchedulerParameters(params)
-
-        print 'Result: ' + str(result)
 
         return not result
 
