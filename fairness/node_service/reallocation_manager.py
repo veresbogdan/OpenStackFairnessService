@@ -83,8 +83,11 @@ class ReallocationManager:
         cpu_shares = self.node.get_priority(vm_name, 1, 100)
         params = domain.schedulerParameters()
         params['cpu_shares'] = long(cpu_shares)
+        print 'Cpu params: ' + str(params)
 
         result = domain.setSchedulerParameters(params)
+
+        print 'Result: ' + str(result)
 
         return not result
 
